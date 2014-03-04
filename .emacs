@@ -82,6 +82,7 @@
       '((clisp ("clisp.exe"))
         (ccl ("wx86cl64.exe"))))
 (add-hook 'lisp-mode-hook 'set-linum-mode-hook)
+(add-hook 'lisp-interaction-mode-hook 'set-linum-mode-hook)
 ;; pro-tip: use M-: major-mode RET to find the value of major-mode for hooks
 
 ;; show current buffer as frame title
