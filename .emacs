@@ -1,5 +1,5 @@
 ;;;; Jeff's work emacs
-;;;; updated: sometime around 2014-02-01
+;;;; updated: 2014-03-04
 
 ;; set default font to Consolas 11
 (set-face-attribute 'default nil :font "Consolas 10")
@@ -99,6 +99,7 @@
 ;; persistant cataloging of recent files
 (recentf-mode 1)
 
+; because ido
 (ido-mode 1)
 
 ;; move point to buffers with ctrl+arrow keys
@@ -107,6 +108,7 @@
 ;; remove tool bar and scroll bar
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
+(menu-bar-mode 0) ; because you've got to force yourself to learn 'c-h m'
 
 ;; set standard indent to 4 rather than 2
 (setq standard-indent 4)
@@ -122,7 +124,6 @@
 ;; enable backup files and always automatically delete backups
 (setq make-backup-files t)
 (setq delete-old-versions t)
-
 (setq version-control t)
 
 ;; save all backup files in this dir
@@ -213,11 +214,12 @@ information on it and execute the command."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
+ '(column-number-mode t)
  '(custom-enabled-themes (quote (noctilux)))
- '(custom-safe-themes (quote ("0c311fb22e6197daba9123f43da98f273d2bfaeeaeb653007ad1ee77f0003037" "31928331f4eb5d343e70c9b56afabdbb5514e8b906fa67db1ccc6d751a05a5d4" "0d19ff470ad7029d2e1528b3472ca2d58d0182e279b9ab8acd65e2508845d2b6" "97a2b10275e3e5c67f46ddaac0ec7969aeb35068c03ec4157cf4887c401e74b1" "4a60f0178f5cfd5eafe73e0fc2699a03da90ddb79ac6dbc73042a591ae216f03" "a30d5f217d1a697f6d355817ac344d906bb0aae3e888d7abaa7595d5a4b7e2e3" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default)))
- '(fci-rule-color "#0084C8")
+ '(custom-safe-themes (quote ("0c311fb22e6197daba9123f43da98f273d2bfaeeaeb653007ad1ee77f0003037" "97a2b10275e3e5c67f46ddaac0ec7969aeb35068c03ec4157cf4887c401e74b1" "4a60f0178f5cfd5eafe73e0fc2699a03da90ddb79ac6dbc73042a591ae216f03" "a30d5f217d1a697f6d355817ac344d906bb0aae3e888d7abaa7595d5a4b7e2e3" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default)))
  '(fringe-mode (quote (nil . 0)) nil (fringe))
- '(transient-mark-mode nil))
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
