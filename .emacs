@@ -72,12 +72,17 @@
 ;; set flyspell-mode invocation to C-$
 (global-set-key (kbd "C-$") 'flyspell-mode)
 
+(defun set-linum-mode-hook ()
+  (linum-mode 1))
+
 ;; lisp settings
 (load "C:\\quicklisp\\slime-helper.el")
 (setq inferior-lisp-program "wx86cl64.exe")
 (setq slime-lisp-implementations
       '((clisp ("clisp.exe"))
         (ccl ("wx86cl64.exe"))))
+(add-hook 'lisp-mode-hook 'set-linum-mode-hook)
+;; pro-tip: use M-: major-mode RET to find the value of major-mode for hooks
 
 ;; show current buffer as frame title
 (setq frame-title-format "%b")
@@ -119,7 +124,7 @@
 ;; python-specific settings:
 (add-hook 'python-mode-hook '(lambda() (define-key python-mode-map "\C-m" 'newline-and-indent)))
 (add-hook 'python-mode-hook '(lambda() (setq python-indent-4)))
-(add-hook 'python-mode-hook 'linum-mode 1)
+(add-hook 'python-mode-hook 'set-linum-mode-hook)
 
 ;; enable backup files and always automatically delete backups
 (setq make-backup-files t)
@@ -148,6 +153,9 @@
 ;; enable matching parens
 (show-paren-mode 1)
 (setq show-paren-style 'expression) 
+
+;; replaces a selection if you start typing
+(delete-selection-mode t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; testing settings
