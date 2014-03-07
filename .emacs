@@ -1,5 +1,5 @@
 ;;;; Jeff's work emacs
-;;;; updated: 2014-03-04
+;;;; updated: 2014-03-07
 
 ;; set default font to Consolas 11
 (set-face-attribute 'default nil :font "Consolas 10")
@@ -159,9 +159,6 @@
 (delete-selection-mode t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; testing settings
-
-
 ;; set custom functions
 (defun format-kill-point ()
   "Removes Garmin GPX formatting and sends formatted string to the kill-ring.
@@ -206,6 +203,15 @@ information on it and execute the command."
     <trkseg>
 "))
 
+(defun make-frame-fullscreen ()
+  "If running Emacs in Windows, F11 maximizes the frame. Otherwise returns nil."
+  (interactive)
+  (when 
+   (string-equal system-type "windows-nt")
+    (w32-send-sys-command #xf030) ;; 0xf030 is the command for maximizing a window)
+    )
+  nil)
+
 ;; custom keybinding hooks
 (defun set-vetting-keybinds ()
   (local-set-key (kbd "C-c a") 'format-kill-point)
@@ -214,6 +220,7 @@ information on it and execute the command."
 
 ;; global custom keybindings
 (global-set-key (kbd "<f9>") 'minimap-create)
+(global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 (global-set-key (kbd "C-c a") 'format-kill-point)
 (global-set-key (kbd "C-c t") 'add-gpx-header-template)
 ; -------------------------------------------
@@ -223,11 +230,16 @@ information on it and execute the command."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
+ '(background-color "#202020")
+ '(background-mode dark)
  '(column-number-mode t)
- '(custom-enabled-themes (quote (noctilux)))
+ '(cursor-color "#cccccc")
+ '(custom-enabled-themes (quote (wombat)))
  '(custom-safe-themes (quote ("0c311fb22e6197daba9123f43da98f273d2bfaeeaeb653007ad1ee77f0003037" "97a2b10275e3e5c67f46ddaac0ec7969aeb35068c03ec4157cf4887c401e74b1" "4a60f0178f5cfd5eafe73e0fc2699a03da90ddb79ac6dbc73042a591ae216f03" "a30d5f217d1a697f6d355817ac344d906bb0aae3e888d7abaa7595d5a4b7e2e3" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default)))
+ '(foreground-color "#cccccc")
  '(fringe-mode (quote (nil . 0)) nil (fringe))
  '(show-paren-mode t)
+ '(sql-product (quote sqlite))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
