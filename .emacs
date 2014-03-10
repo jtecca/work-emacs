@@ -231,6 +231,7 @@ information on it and execute the command."
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 (global-set-key (kbd "C-c a") 'format-kill-point)
 (global-set-key (kbd "C-c t") 'add-gpx-header-template)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 ; -------------------------------------------
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
