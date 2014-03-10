@@ -212,6 +212,13 @@ information on it and execute the command."
     )
   nil)
 
+;; lifted from www.masteringemacs.org
+(defun revert-this-buffer ()
+  "Reloads (reverts) the current buffer"
+  (interactive)
+  (revert-buffer nil t t)
+  (message (concat "Reverted buffer: " (buffer-name))))
+
 ;; custom keybinding hooks
 (defun set-vetting-keybinds ()
   (local-set-key (kbd "C-c a") 'format-kill-point)
@@ -219,6 +226,7 @@ information on it and execute the command."
 (add-hook 'xml-mode-hook 'set-vetting-keybinds)
 
 ;; global custom keybindings
+(global-set-key (kbd "<f5>") 'revert-this-buffer)
 (global-set-key (kbd "<f9>") 'minimap-create)
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 (global-set-key (kbd "C-c a") 'format-kill-point)
