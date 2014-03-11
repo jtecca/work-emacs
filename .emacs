@@ -1,11 +1,37 @@
-;;;; Jeff's work emacs
-;;;; updated: 2014-03-07
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; jeff tecca
+;;;; updated: 2014-03-10
+;;;;
+;;;; dependencies: TODO
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;;;; initial setup
+;; 
+;; removing the gui elements first keeps them from showing on startup
+(when window-system
+  (progn
+    (tool-bar-mode 0)
+    (menu-bar-mode 0)
+    (scroll-bar-mode 0)))
 
-;; set default font to Consolas 11
-(set-face-attribute 'default nil :font "Consolas 10")
-
-;; set the default open file
-(setq default-directory "c:/Users/jeff.tecca/")
+;; set some platform-specific defaults
+(case system-type 
+  ('windows-nt
+   (progn
+     (w32-send-sys-command #xf030) ;; 0xf030 is the command for maximizing a window)
+     (set-face-attribute 'default nil :font "Consolas 10")
+     (setq default-directory "c:/Users/jeff.tecca/")
+     )
+   'ms-windows)
+  ('gnu/linux
+   (progn 
+     (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+                            '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
+     (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+                            '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
+     (set-face-attribute 'default nil :font "Ubuntu Mono 12")
+     (setq default-directory "~/")
+     'gnu-linux)))
 
 ;; alternative keybindings for M-x
 (global-set-key "\C-x\C-m" 'execute-extended-command)
@@ -110,11 +136,6 @@
 
 ;; move point to buffers with ctrl+arrow keys
 (windmove-default-keybindings 'ctrl)
-
-;; remove tool bar and scroll bar
-(tool-bar-mode 0)
-(scroll-bar-mode 0)
-(menu-bar-mode 0) ; because you've got to force yourself to learn 'c-h m'
 
 ;; set standard indent to 4 rather than 2
 (setq standard-indent 4)
