@@ -148,6 +148,10 @@
 ;; sets word wrap
 (toggle-word-wrap)
 
+;; C-n inserts newlines if the point is at the end of the buffer
+;; without it you get a bell and "End of buffer" in the minibuffer
+(setq next-line-add-newlines t)
+
 ;; set the fill column when pasting
 (setq-default fill-column 72)
 
