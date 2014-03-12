@@ -1,12 +1,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; jeff tecca
-;;;; updated: 2014-03-10
+;;;; jeff tecca's nt-windows & gnu/linux .emacs
+;;;; updated: 2014-03-11
 ;;;;
-;;;; dependencies: TODO
+;;;; dependencies:
+;;;;   * auto-complete
+;;;;   * concurrent
+;;;;   * deferred
+;;;;   * epc
+;;;;   * jedi
+;;;;   * markdown-mode
+;;;;   * popup
+;;;; not required (but recommended):
+;;;;   * python-mode
+;;;;   * python-pep8
+;;;;   * python-pylint
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;
+
 ;;;; initial setup
-;; 
 ;; removing the gui elements first keeps them from showing on startup
 (when window-system
   (progn
@@ -14,56 +24,97 @@
     (menu-bar-mode 0)
     (scroll-bar-mode 0)))
 
-;; set some platform-specific defaults
-(case system-type 
-  ('windows-nt
-   (progn
-     (w32-send-sys-command #xf030) ;; 0xf030 is the command for maximizing a window)
-     (set-face-attribute 'default nil :font "Consolas 10")
-     (setq default-directory "c:/Users/jeff.tecca/")
-     )
-   'ms-windows)
-  ('gnu/linux
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; os-based settings
+;; maximize the frame on startup
+(cond
+    ((string-equal system-type "windows-nt")
+    (progn
+      (w32-send-sys-command #xf030) ; nt command for maximizing a window)
+      (set-face-attribute 'default nil :font "Consolas 10")
+      (setq default-directory "c:/Users/jeff.tecca/")))
+  ((string-equal system-type "gnu/linux")
    (progn 
      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                             '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                             '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
      (set-face-attribute 'default nil :font "Ubuntu Mono 12")
-     (setq default-directory "~/")
-     'gnu-linux)))
+     (setq default-directory "~/"))))
+
+;; set the default python shell to ipython
+(cond
+    ((string-equal system-type "windows-nt")
+    (progn
+      (setq
+       python-shell-interpreter "C:\\Python33\\python.exe"
+       python-shell-interpreter-args "-i C:\\Python33\\Scripts\\ipython3-script.py" )      
+      (setq
+       python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+       python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+       python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
+       python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
+       python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"))
+    'setup-ipython-windows)
+  ((string-equal system-type "gnu/linux")
+   (progn
+     (setq
+      python-shell-interpreter "ipython"
+      python-shell-interpreter-args ""
+      python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+      python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+      python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
+      python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
+      python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+     'setup-ipython-gnu/linux)))
+
+;; setup apsell for spell checking
+;; M-$ is the default keybinding for it
+(cond
+    ((string-equal system-type "windows-nt")
+    (progn
+      (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin")
+      (setq ispell-program-name "aspell")
+      (setq ispell-personal-dictionary "C:/Program Files (x86)/Aspell/dict")
+      (require 'ispell)
+      ;; set flyspell-mode invocation to C-$
+      (global-set-key (kbd "C-$") 'flyspell-mode)
+  ((string-equal system-type "gnu/linux")
+   (global-set-key (kbd "C-$") 'flyspell-mode)))))
+
+;; lisp settings
+(defun os-cond-slime-setup ()
+  "load slime-specifc settings depending on whether or not on nt-win or linux"
+  ;; TODO this function should fail silently if one of the lisp execs can't be found
+  (interactive)
+  (cond
+   ((string-equal system-type "windows-nt")
+    (progn
+      (load "C:\\quicklisp\\slime-helper.el")
+      (setq inferior-lisp-program "wx86cl64.exe")
+      (setq slime-lisp-implementations
+	    '((clisp ("clisp.exe"))
+	      (ccl ("wx86cl64.exe"))))
+      (add-hook 'lisp-mode-hook 'set-linum-mode-hook)
+      (add-hook 'lisp-interaction-mode-hook 'set-linum-mode-hook)))
+    ((string-equal system-type "gnu/linux")
+     (progn
+       (setq inferior-lisp-program "sbcl")
+       ;(setq inferior-lisp-program "clisp")
+       (load (expand-file-name "~/quicklisp/slime-helper.el"))))))
+(os-cond-slime-setup)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; os-agnostic settings
 
 ;; alternative keybindings for M-x
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
 
-;; load markdown mode for most basic text editing
-(load-file "~/.emacs.d/packages/markdown-mode.el")
-(autoload 'markdown-mode "markdown-mode"
-  "Major mode for editing Markdown files" t)
-(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.doc\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.info\\'" . markdown-mode))
 
-;; set ipython to be the default shell
-(setq
- python-shell-interpreter "C:\\Python33\\python.exe"
- python-shell-interpreter-args
- "-i C:\\Python33\\Scripts\\ipython3-script.py")
-(setq
-  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
- python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
- python-shell-completion-setup-code
-   "from IPython.core.completerlib import module_completion"
- python-shell-completion-module-string-code
-   "';'.join(module_completion('''%s'''))\n"
- python-shell-completion-string-code
-   "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-
-;; package manager
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
@@ -75,6 +126,8 @@
 (require 'epc)
 (require 'auto-complete)
 (global-auto-complete-mode t)
+(require 'auto-complete-config)
+(ac-config-default)
 
 ;; jedi hooks
 (autoload 'jedi:setup "jedi" nil t)
@@ -83,104 +136,51 @@
 (setq jedi:setup-keys t)
 (setq jedi:complete-on-dot t)
 
-;; autocomplete hooks
-(add-to-list 'load-path "~/elpa/auto-complete-20130330.1836")
-(add-to-list 'ac-dictionary-directories "~/elpa/auto-complete-20130330.1836/dict")
-(require 'auto-complete-config)
-(ac-config-default)
-
-;; setup apsell for spell checking
-;; M-$ is the default keybinding for it
-(add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin")
-(setq ispell-program-name "aspell")
-(setq ispell-personal-dictionary "C:/Program Files (x86)/Aspell/dict")
-(require 'ispell)
-;; set flyspell-mode invocation to C-$
-(global-set-key (kbd "C-$") 'flyspell-mode)
-
-(defun set-linum-mode-hook ()
-  (linum-mode 1))
-
-;; lisp settings
-(load "C:\\quicklisp\\slime-helper.el")
-(setq inferior-lisp-program "wx86cl64.exe")
-(setq slime-lisp-implementations
-      '((clisp ("clisp.exe"))
-        (ccl ("wx86cl64.exe"))))
-(add-hook 'lisp-mode-hook 'set-linum-mode-hook)
-(add-hook 'lisp-interaction-mode-hook 'set-linum-mode-hook)
-;; pro-tip: use M-: major-mode RET to find the value of major-mode for hooks
-
-;; show current buffer as frame title
-(setq frame-title-format "%b")
-
-;; don't show the startup screen
+;;;;;;;;;;;;;;;;;;
+;;;; cosmetic customizations
+(setq frame-title-format "emacs - %b")
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
 (setq visible-bell t)
-
-;; stop the #autosave# files
-(setq auto-save-default nil)
-
-;; turn on global line wrap
 (global-visual-line-mode 1)
+(eldoc-mode) ; why isn't this always on?
 
-;; show arg list in echo area
-(eldoc-mode)
-
-;; persistant cataloging of recent files
+;;;;;;;;;;;;;;;;;;
+;;;; autosave/backup/file options
+(setq auto-save-default nil)
 (recentf-mode 1)
+(setq make-backup-files t)
+(setq delete-old-versions t)
+(setq version-control t)
+(setq backup-directory-alist (quote ((".*" . "~/.emacs_backups/"))))
+(setq delete-by-moving-to-trash t)
 
-; because ido
-(ido-mode 1)
-
-;; move point to buffers with ctrl+arrow keys
+;;;;;;;;;;;;;;;;;;
+;;;; general editor setting
+(ido-mode 1) ; because ido
 (windmove-default-keybindings 'ctrl)
-
-;; set standard indent to 4 rather than 2
 (setq standard-indent 4)
-
-;; turn off the tab character
 (setq-default indent-tabs-mode nil)
+(fset 'yes-or-no-p 'y-or-n-p)
+(line-number-mode 1)
+(column-number-mode 1)
+(toggle-word-wrap)
+(setq-default fill-column 72)
+(show-paren-mode 1)
+(setq show-paren-style 'expression)
+(delete-selection-mode t)
 
-;; python-specific settings:
+;;;;;;;;;;;;;;;;;;
+;;;; python-specific settings:
 (add-hook 'python-mode-hook '(lambda() (define-key python-mode-map "\C-m" 'newline-and-indent)))
 (add-hook 'python-mode-hook '(lambda() (setq python-indent-4)))
 (add-hook 'python-mode-hook 'set-linum-mode-hook)
 
-;; enable backup files and always automatically delete backups
-(setq make-backup-files t)
-(setq delete-old-versions t)
-(setq version-control t)
-
-;; save all backup files in this dir
-(setq backup-directory-alist (quote ((".*" . "~/.emacs_backups/"))))
-
-;; move deleted files to the trash instead of destroying them outright
-(setq delete-by-moving-to-trash t)
-
-;; set yes or no prompts to only need y or n
-(fset 'yes-or-no-p 'y-or-n-p)
-
-;; turn on line/column info
-(line-number-mode 1)
-(column-number-mode 1)
-
-;; sets word wrap
-(toggle-word-wrap)
-
-;; set the fill column when pasting
-(setq-default fill-column 72)
-
-;; enable matching parens
-(show-paren-mode 1)
-(setq show-paren-style 'expression) 
-
-;; replaces a selection if you start typing
-(delete-selection-mode t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; set custom functions
+(defun set-linum-mode-hook ()
+  (linum-mode 1))
+
 (defun format-kill-point ()
   "Removes Garmin GPX formatting and sends formatted string to the kill-ring.
 
@@ -227,11 +227,16 @@ information on it and execute the command."
 (defun make-frame-fullscreen ()
   "If running Emacs in Windows, F11 maximizes the frame. Otherwise returns nil."
   (interactive)
-  (when 
-   (string-equal system-type "windows-nt")
-    (w32-send-sys-command #xf030) ;; 0xf030 is the command for maximizing a window)
-    )
-  nil)
+  (cond
+      ((string-equal system-type "windows-nt")
+      (w32-send-sys-command #xf030)) ;; 0xf030 is the command for maximizing a window)
+      ((string-equal system-type "gnu/linux")
+       (progn 
+         (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+                                '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
+         (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+                                '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
+         ))))
 
 ;; lifted from www.masteringemacs.org
 (defun revert-this-buffer ()
@@ -254,6 +259,7 @@ information on it and execute the command."
 (global-set-key (kbd "C-c t") 'add-gpx-header-template)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 ; -------------------------------------------
+; using wombat theme
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
