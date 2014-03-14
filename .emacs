@@ -177,6 +177,10 @@
 (add-hook 'python-mode-hook '(lambda() (setq python-indent-4)))
 (add-hook 'python-mode-hook 'set-linum-mode-hook)
 
+;;;;;;;;;;;;;;;;;;
+;;;; sql-specific settings:
+(add-hook 'sql-mode-hook 'set-linum-mode-hook)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; set custom functions
 (defun set-linum-mode-hook ()
