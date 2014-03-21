@@ -78,9 +78,9 @@
       (setq ispell-personal-dictionary "C:/Program Files (x86)/Aspell/dict")
       (require 'ispell)
       ;; set flyspell-mode invocation to C-$
-      (global-set-key (kbd "C-$") 'flyspell-mode)
+      (global-set-key (kbd "C-$") 'flyspell-mode)))
   ((string-equal system-type "gnu/linux")
-   (global-set-key (kbd "C-$") 'flyspell-mode)))))
+   (global-set-key (kbd "C-$") 'flyspell-mode)))
 
 ;; lisp settings
 (defun os-cond-slime-setup ()
