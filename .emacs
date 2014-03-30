@@ -80,9 +80,9 @@
       (setq ispell-personal-dictionary "C:/Program Files (x86)/Aspell/dict")
       (require 'ispell)
       ;; set flyspell-mode invocation to C-$
-      (global-set-key (kbd "C-$") 'flyspell-mode)
+      (global-set-key (kbd "C-$") 'flyspell-mode)))
   ((string-equal system-type "gnu/linux")
-   (global-set-key (kbd "C-$") 'flyspell-mode)))))
+   (global-set-key (kbd "C-$") 'flyspell-mode)))
 
 ;; lisp settings
 (defun os-cond-slime-setup ()
@@ -178,6 +178,10 @@
 (add-hook 'python-mode-hook '(lambda() (define-key python-mode-map "\C-m" 'newline-and-indent)))
 (add-hook 'python-mode-hook '(lambda() (setq python-indent-4)))
 (add-hook 'python-mode-hook 'set-linum-mode-hook)
+
+;;;;;;;;;;;;;;;;;;
+;;;; sql-specific settings:
+(add-hook 'sql-mode-hook 'set-linum-mode-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; set custom functions
