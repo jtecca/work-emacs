@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-03-11
+;;;; updated: 2014-03-30
 ;;;;
 ;;;; dependencies:
 ;;;;   * auto-complete
@@ -28,19 +28,21 @@
 ;;;; os-based settings
 ;; maximize the frame on startup
 (cond
-    ((string-equal system-type "windows-nt")
+    ((string-equal initial-window-system "w32")
     (progn
       (w32-send-sys-command #xf030) ; nt command for maximizing a window)
       (set-face-attribute 'default nil :font "Consolas 10")
       (setq default-directory "c:/Users/jeff.tecca/")))
-  ((string-equal system-type "gnu/linux")
+  ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                             '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                             '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
-     (set-face-attribute 'default nil :font "Ubuntu Mono 12")
-     (setq default-directory "~/"))))
+     (set-face-attribute 'default nil :font "ProggyCleanTT-12")
+     (setq default-directory "~/")))
+  ((string-equal initial-window-system "nil") ; running in a term
+   (setq default-directory "~/")))
 
 ;; set the default python shell to ipython
 (cond
@@ -165,6 +167,7 @@
 (line-number-mode 1)
 (column-number-mode 1)
 (toggle-word-wrap)
+(setq next-line-add-newlines t)
 (setq-default fill-column 72)
 (show-paren-mode 1)
 (setq show-paren-style 'expression)
@@ -271,9 +274,10 @@ information on it and execute the command."
  '(column-number-mode t)
  '(cursor-color "#cccccc")
  '(custom-enabled-themes (quote (wombat)))
- '(custom-safe-themes (quote ("0c311fb22e6197daba9123f43da98f273d2bfaeeaeb653007ad1ee77f0003037" "97a2b10275e3e5c67f46ddaac0ec7969aeb35068c03ec4157cf4887c401e74b1" "4a60f0178f5cfd5eafe73e0fc2699a03da90ddb79ac6dbc73042a591ae216f03" "a30d5f217d1a697f6d355817ac344d906bb0aae3e888d7abaa7595d5a4b7e2e3" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default)))
+ '(custom-safe-themes (quote ("1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "0c311fb22e6197daba9123f43da98f273d2bfaeeaeb653007ad1ee77f0003037" "97a2b10275e3e5c67f46ddaac0ec7969aeb35068c03ec4157cf4887c401e74b1" "4a60f0178f5cfd5eafe73e0fc2699a03da90ddb79ac6dbc73042a591ae216f03" "a30d5f217d1a697f6d355817ac344d906bb0aae3e888d7abaa7595d5a4b7e2e3" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default)))
  '(foreground-color "#cccccc")
  '(fringe-mode (quote (nil . 0)) nil (fringe))
+ '(menu-bar-mode nil)
  '(show-paren-mode t)
  '(sql-product (quote sqlite))
  '(tool-bar-mode nil))
