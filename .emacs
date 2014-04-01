@@ -31,7 +31,7 @@
     ((string-equal initial-window-system "w32")
     (progn
       (w32-send-sys-command #xf030) ; nt command for maximizing a window)
-      (set-face-attribute 'default nil :font "Terminus 11")
+      (set-face-attribute 'default nil :font "ProggyClean 9")
       (setq default-directory "c:/Users/jeff.tecca/")))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
