@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-03-31
+;;;; updated: 2014-04-01
 ;;;;
 ;;;; dependencies:
 ;;;;   * auto-complete
@@ -73,38 +73,38 @@
 ;; setup apsell for spell checking
 ;; M-$ is the default keybinding for it
 (cond
-    ((string-equal system-type "windows-nt")
-    (progn
-      (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin")
-      (setq ispell-program-name "aspell")
-      (setq ispell-personal-dictionary "C:/Program Files (x86)/Aspell/dict")
-      (require 'ispell)
-      ;; set flyspell-mode invocation to C-$
-      (global-set-key (kbd "C-$") 'flyspell-mode)))
-  ((string-equal system-type "gnu/linux")
-   (global-set-key (kbd "C-$") 'flyspell-mode)))
+ ((string-equal system-type "windows-nt")
+  (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin")
+  (setq ispell-program-name "aspell")
+  (setq ispell-personal-dictionary "C:/Program Files (x86)/Aspell/dict")
+  (require 'ispell)
+  ;; set flyspell-mode invocation to C-$
+  (global-set-key (kbd "C-$") 'flyspell-mode))
+((string-equal system-type "gnu/linux")
+ (global-set-key (kbd "C-$") 'flyspell-mode)))
 
 ;; lisp settings
-(defun os-cond-slime-setup ()
-  "load slime-specifc settings depending on whether or not on nt-win or linux"
-  ;; TODO this function should fail silently if one of the lisp execs can't be found
-  (interactive)
-  (cond
-   ((string-equal system-type "windows-nt")
-    (progn
-      (load "C:\\quicklisp\\slime-helper.el")
-      (setq inferior-lisp-program "wx86cl64.exe")
-      (setq slime-lisp-implementations
-	    '((clisp ("clisp.exe"))
-	      (ccl ("wx86cl64.exe"))))
-      (add-hook 'lisp-mode-hook 'set-linum-mode-hook)
-      (add-hook 'lisp-interaction-mode-hook 'set-linum-mode-hook)))
-    ((string-equal system-type "gnu/linux")
+;; TODO this function should fail silently if one of the lisp execs can't be found
+;; C-u before M-x slime allows a specific lisp dialect to be loaded
+;; as long as the executable is in the system PATH or you give the full path.
+(cond
+ ((string-equal system-type "windows-nt")
+    (load "C:\\quicklisp\\slime-helper.el")
+    (setq inferior-lisp-program "C:/Program Files (x86)/ccl/wx86cl.exe")
+    (setq slime-net-coding-system 'utf-8-unix)
+    (slime-setup '(slime-fancy))
+    (add-hook 'lisp-mode-hook 'set-linum-mode-hook)
+    (add-hook 'lisp-interaction-mode-hook 'set-linum-mode-hook))
+ ((string-equal system-type "gnu/linux")
+    (setq inferior-lisp-program "sbcl")
+;    (setq inferior-lisp-program "clisp")
+    (load (expand-file-name "~/quicklisp/slime-helper.el"))))
+
+(if ((string-equal system-type "windows-nt")
      (progn
-       (setq inferior-lisp-program "sbcl")
-       ;(setq inferior-lisp-program "clisp")
-       (load (expand-file-name "~/quicklisp/slime-helper.el"))))))
-(os-cond-slime-setup)
+       (add-to-load-list 'load-path (expand-file-name "~/.emacs.d/ess/"))
+       (require 'ess-site)))
+    'no-ess)     
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-agnostic settings
