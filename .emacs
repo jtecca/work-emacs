@@ -21,12 +21,16 @@
 (when window-system
   (progn
     (tool-bar-mode 0)
-    (menu-bar-mode 0)
     (scroll-bar-mode 0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-based settings
 ;; maximize the frame on startup
+(cond ((string-equal system-type "windows-nt")
+       (menu-bar-mode t))
+      ((string-equal system-type "gnu/linux")
+       (menu-bar-mode 0)))
+
 (cond
     ((string-equal initial-window-system "w32")
     (progn
@@ -104,10 +108,12 @@
 (os-cond-slime-setup)
 
 ;; add ess to load-path on windows
-(if ((string-equal system-type "windows-nt")
+(if (string-equal system-type "windows-nt")
      (progn
-       (add-to-load-list 'load-path (expand-file-name "~/.emacs.d/ess/"))
-       (require 'ess-site)))
+       (add-to-list 'load-path (expand-file-name "~/.emacs.d/ess/lisp/"))
+       (require 'ess-site)
+       (ess-execute-screen-options) ; re-run this if the columns change in the buffer running R
+       'ess)
     'no-ess)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
