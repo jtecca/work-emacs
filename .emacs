@@ -195,6 +195,24 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; set custom functions
+(defun insert-date (arg)
+"inserts the current date into the buffer.  if called with an arg, changes the format to the windows-style format."
+  (interactive "P")
+  (insert (if arg
+              (format-time-string "%m/%d/%Y ")
+            (format-time-string "%Y-%m-%d "))))
+  
+(defun insert-time ()
+  (interactive)
+  (insert (format-time-string "%H:%M:%S ")))
+
+(defun insert-datetime (arg)
+"inserts the date and time into the buffer.  if called with an arg, changes the date format to the windows-style format."
+(interactive "P")
+(insert (if arg
+            (format-time-string "%m/%d/%Y %H:%M:%S ")
+          (format-time-string "%Y-%m-%d %H:%M:%S "))))
+
 (defun set-linum-mode-hook ()
   (linum-mode 1))
 
@@ -220,10 +238,10 @@ information on it and execute the command."
   (interactive "r")
   (save-excursion (
                    (beginning-of-line)
-  (setq s1 (buffer-substring p1 p2))
-  (setq s2 (replace-regexp-in-string "\".lon=\"" ", " s1))
-  (message "%s is now in the kill-ring." s2)
-  (kill-new s2))))
+                   (setq s1 (buffer-substring p1 p2))
+                   (setq s2 (replace-regexp-in-string "\".lon=\"" ", " s1))
+                   (message "%s is now in the kill-ring." s2)
+                   (kill-new s2))))
 
 (defun add-gpx-header-template ()
   "Adds a template gpx track header when track trimming."
