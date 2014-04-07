@@ -105,7 +105,6 @@
        ;(setq inferior-lisp-program "clisp")
        ;(setq inferior-lisp-program (expand-file-name "~/bin/ccl/lx86cl64")
        (load (expand-file-name "~/quicklisp/slime-helper.el"))))
-(os-cond-slime-setup)
 
 ;; add ess to load-path on windows
 (if (string-equal system-type "windows-nt")
