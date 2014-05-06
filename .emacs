@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-04-01
+;;;; updated: 2014-05-06 
 ;;;;
 ;;;; dependencies:
 ;;;;   * auto-complete
