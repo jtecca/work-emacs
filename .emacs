@@ -34,8 +34,8 @@
 (cond
     ((string-equal initial-window-system "w32")
     (progn
-      (w32-send-sys-command #xf030) ; nt command for maximizing a window)
-      (set-face-attribute 'default nil :font "ProggyClean 9")
+      (w32-send-sys-command #xf030) ; nt command for maximizing a window
+      (set-face-attribute 'default nil :font "Consolas 9")
       (setq default-directory "c:/Users/jeff.tecca/")))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
@@ -115,6 +115,15 @@
        'ess)
     'no-ess)
 
+;; set up w32-browser for launching programs from dired 
+;; according to windows mime types
+(cond ((string-equal system-type "windows-nt")
+       (require 'w32-browser)
+       (setq dired-load-hook
+             (lambda (&rest ignore)
+               (define-key dired-mode-map "z" 'dired-w32-browser)
+               (define-key dired-mode-map [mouse-2] 'dired-w32-browser)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-agnostic settings
 
@@ -133,19 +142,19 @@
 (package-initialize)
 
 ;; pull in files from package.el
-(require 'deferred)
-(require 'epc)
-(require 'auto-complete)
-(global-auto-complete-mode t)
-(require 'auto-complete-config)
-(ac-config-default)
+;; (require 'deferred)
+;; (require 'epc)
+;; (require 'auto-complete)
+;; (global-auto-complete-mode t)
+;; (require 'auto-complete-config)
+;; (ac-config-default)
 
-;; jedi hooks
-(autoload 'jedi:setup "jedi" nil t)
-(add-hook 'python-mode-hook 'jedi:setup)
-(add-hook 'c-mode-hook 'jedi:setup)
-(setq jedi:setup-keys t)
-(setq jedi:complete-on-dot t)
+;; ;; jedi hooks
+;; (autoload 'jedi:setup "jedi" nil t)
+;; (add-hook 'python-mode-hook 'jedi:setup)
+;; (add-hook 'c-mode-hook 'jedi:setup)
+;; (setq jedi:setup-keys t)
+;; (setq jedi:complete-on-dot t)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; cosmetic customizations
