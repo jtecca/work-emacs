@@ -26,11 +26,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-based settings
 ;; maximize the frame on startup
-(cond ((string-equal system-type "windows-nt")
-       (menu-bar-mode t))
-      ((string-equal system-type "gnu/linux")
-       (menu-bar-mode 0)))
-
 (cond
     ((string-equal initial-window-system "w32")
     (progn
