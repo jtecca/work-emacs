@@ -101,19 +101,10 @@
        ;(setq inferior-lisp-program (expand-file-name "~/bin/ccl/lx86cl64")
        (load (expand-file-name "~/quicklisp/slime-helper.el"))))
 
-;; add ess to load-path on windows
-(if (string-equal system-type "windows-nt")
-     (progn
-       (add-to-list 'load-path (expand-file-name "~/.emacs.d/ess/lisp/"))
-       (require 'ess-site)
-       (ess-execute-screen-options) ; re-run this if the columns change in the buffer running R
-       'ess)
-    'no-ess)
-
 ;; set up w32-browser for launching programs from dired 
 ;; according to windows mime types
 (cond ((string-equal system-type "windows-nt")
-       (require 'w32-browser)
+       ;(require 'w32-browser) ; TODO for some reason this can't be found
        (setq dired-load-hook
              (lambda (&rest ignore)
                (define-key dired-mode-map "z" 'dired-w32-browser)
@@ -296,6 +287,7 @@ information on it and execute the command."
 (global-set-key (kbd "C-c a") 'format-kill-point)
 (global-set-key (kbd "C-c t") 'add-gpx-header-template)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "M-z") 'execute-extended-command) ; because don't use zap-to-char and this lets me be sloppier
 ; -------------------------------------------
 ; using wombat theme
 (custom-set-variables
@@ -309,7 +301,7 @@ information on it and execute the command."
  '(column-number-mode t)
  '(cursor-color "#cccccc")
  '(custom-enabled-themes (quote (wombat)))
- '(custom-safe-themes (quote ("1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "0c311fb22e6197daba9123f43da98f273d2bfaeeaeb653007ad1ee77f0003037" "97a2b10275e3e5c67f46ddaac0ec7969aeb35068c03ec4157cf4887c401e74b1" "4a60f0178f5cfd5eafe73e0fc2699a03da90ddb79ac6dbc73042a591ae216f03" "a30d5f217d1a697f6d355817ac344d906bb0aae3e888d7abaa7595d5a4b7e2e3" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default)))
+ '(custom-safe-themes (quote ("60f04e478dedc16397353fb9f33f0d895ea3dab4f581307fbf0aa2f07e658a40" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" "4eaad15465961fd26ef9eef3bee2f630a71d8a4b5b0a588dc851135302f69b16" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "0c311fb22e6197daba9123f43da98f273d2bfaeeaeb653007ad1ee77f0003037" "97a2b10275e3e5c67f46ddaac0ec7969aeb35068c03ec4157cf4887c401e74b1" "4a60f0178f5cfd5eafe73e0fc2699a03da90ddb79ac6dbc73042a591ae216f03" "a30d5f217d1a697f6d355817ac344d906bb0aae3e888d7abaa7595d5a4b7e2e3" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default)))
  '(foreground-color "#cccccc")
  '(fringe-mode (quote (nil . 0)) nil (fringe))
  '(menu-bar-mode nil)
