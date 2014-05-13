@@ -93,7 +93,6 @@
     ;(setq inferior-lisp-program "clisp")
     (setq slime-net-coding-system 'utf-8-unix)
     (slime-setup '(slime-fancy))
-    (add-hook 'lisp-mode-hook 'set-linum-mode-hook))
  ((string-equal system-type "gnu/linux")
     (load (expand-file-name "~/quicklisp/slime-helper.el"))
        (setq inferior-lisp-program "sbcl")
@@ -181,7 +180,6 @@
 ;;;; python-specific settings:
 (add-hook 'python-mode-hook '(lambda() (define-key python-mode-map "\C-m" 'newline-and-indent)))
 (add-hook 'python-mode-hook '(lambda() (setq python-indent-4)))
-(add-hook 'python-mode-hook 'set-linum-mode-hook)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; sql-specific settings:
