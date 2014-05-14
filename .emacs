@@ -92,7 +92,7 @@
     (setq inferior-lisp-program "wx86cl")
     ;(setq inferior-lisp-program "clisp")
     (setq slime-net-coding-system 'utf-8-unix)
-    (slime-setup '(slime-fancy))
+    (slime-setup '(slime-fancy)))
  ((string-equal system-type "gnu/linux")
     (load (expand-file-name "~/quicklisp/slime-helper.el"))
        (setq inferior-lisp-program "sbcl")
