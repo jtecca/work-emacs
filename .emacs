@@ -29,9 +29,10 @@
 (cond
     ((string-equal initial-window-system "w32")
     (progn
-      (w32-send-sys-command #xf030) ; nt command for maximizing a window
+      ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
       (set-face-attribute 'default nil :font "Consolas 9")
-      (setq default-directory "c:/Users/jeff.tecca/")))
+      (setq default-directory "c:/Users/jeff.tecca/")
+      (set-frame-size (selected-frame) 160 55)))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
@@ -285,7 +286,7 @@ information on it and execute the command."
 (global-set-key (kbd "C-c a") 'format-kill-point)
 (global-set-key (kbd "C-c t") 'add-gpx-header-template)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "M-z") 'execute-extended-command) ; because don't use zap-to-char and this lets me be sloppier
+(global-set-key (kbd "M-z") 'execute-extended-command) ; because i don't use zap-to-char and this lets me be sloppier
 ; -------------------------------------------
 ; using wombat theme
 (custom-set-variables
@@ -298,7 +299,7 @@ information on it and execute the command."
  '(background-mode dark)
  '(column-number-mode t)
  '(cursor-color "#cccccc")
- '(custom-enabled-themes (quote (wombat)))
+ '(custom-enabled-themes (quote (monokai)))
  '(custom-safe-themes (quote ("60f04e478dedc16397353fb9f33f0d895ea3dab4f581307fbf0aa2f07e658a40" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" "4eaad15465961fd26ef9eef3bee2f630a71d8a4b5b0a588dc851135302f69b16" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "0c311fb22e6197daba9123f43da98f273d2bfaeeaeb653007ad1ee77f0003037" "97a2b10275e3e5c67f46ddaac0ec7969aeb35068c03ec4157cf4887c401e74b1" "4a60f0178f5cfd5eafe73e0fc2699a03da90ddb79ac6dbc73042a591ae216f03" "a30d5f217d1a697f6d355817ac344d906bb0aae3e888d7abaa7595d5a4b7e2e3" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default)))
  '(foreground-color "#cccccc")
  '(fringe-mode (quote (nil . 0)) nil (fringe))
@@ -312,3 +313,5 @@ information on it and execute the command."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
