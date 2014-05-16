@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-05-06 
+;;;; updated: 2014-05-16
 ;;;;
 ;;;; dependencies:
 ;;;;   * auto-complete
@@ -15,7 +15,6 @@
 ;;;;   * python-pep8
 ;;;;   * python-pylint
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;;;; initial setup
 ;; removing the gui elements first keeps them from showing on startup
 (when window-system
@@ -30,9 +29,9 @@
     ((string-equal initial-window-system "w32")
     (progn
       ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
-      (set-face-attribute 'default nil :font "Consolas 9")
+      (set-face-attribute 'default nil :font "ProggyCleanTT-12")
       (setq default-directory "c:/Users/jeff.tecca/")
-      (set-frame-size (selected-frame) 160 55)))
+      (menu-bar-mode t)))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
@@ -112,6 +111,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-agnostic settings
+;; here's a nifty auto compile of .emacs after a save
+;; stolen from: http://www.emacswiki.org/emacs/AutoRecompile
+(defun compile-dotemacs ()
+  "compile .emacs"
+  (interactive)
+  (require 'bytecomp)
+  (let ((dotemacs (expand-file-name "~/.emacs")))
+    (if (string= (buffer-file-name) (file-chase-links dotemacs))
+        (byte-compile-file dotemacs))))
+(add-hook 'after-save-hook 'autocompile)
 
 ;; alternative keybindings for M-x
 (global-set-key "\C-x\C-m" 'execute-extended-command)
@@ -182,12 +191,32 @@
 (add-hook 'python-mode-hook '(lambda() (define-key python-mode-map "\C-m" 'newline-and-indent)))
 (add-hook 'python-mode-hook '(lambda() (setq python-indent-4)))
 
-;;;;;;;;;;;;;;;;;;
-;;;; sql-specific settings:
-(add-hook 'sql-mode-hook 'set-linum-mode-hook)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; set custom functions
+(defun increase-font-size ()
+  (interactive)
+  (set-face-attribute 'default nil :height
+                      (+ (face-attribute 'default :height) 10)))
+
+(defun decrease-font-size ()
+  (interactive)
+  (set-face-attribute 'default nil :height
+                      (- (face-attribute 'default :height) 10)))
+
+(global-set-key (kbd "C-+") 'increase-font-size) ; which is really C-<Shift>-=
+(global-set-key (kbd "C-=") 'decrease-font-size)
+
+(defun set-pleasant-frame-size ()
+  "Returns a frame to a default, windowed position"
+  (interactive)
+  (when window-system
+    (set-frame-size (selected-frame) 160 55) ; two 80 column files
+    (let* ((width-offset (/ (eval (x-display-pixel-width)) 5))
+           (height-offset (/ (eval (x-display-pixel-height)) 6)))
+      (set-frame-position (selected-frame) width-offset height-offset))))
+
+(global-set-key (kbd "<f12>") 'set-pleasant-frame-size)
+
 (defun insert-date (arg)
 "inserts the current date into the buffer.  if called with an arg, changes the format to the windows-style format."
   (interactive "P")
