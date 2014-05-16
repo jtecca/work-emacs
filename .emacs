@@ -83,7 +83,6 @@
  (global-set-key (kbd "C-$") 'flyspell-mode)))
 
 ;; lisp settings
-;; TODO this function should fail silently if one of the lisp execs can't be found
 ;; C-u before M-x slime allows a specific lisp dialect to be loaded
 ;; as long as the executable is in the system PATH or you give the full path.
 (cond
@@ -100,14 +99,6 @@
        ;(setq inferior-lisp-program (expand-file-name "~/bin/ccl/lx86cl64")
        (load (expand-file-name "~/quicklisp/slime-helper.el"))))
 
-;; set up w32-browser for launching programs from dired 
-;; according to windows mime types
-(cond ((string-equal system-type "windows-nt")
-       ;(require 'w32-browser) ; TODO for some reason this can't be found
-       (setq dired-load-hook
-             (lambda (&rest ignore)
-               (define-key dired-mode-map "z" 'dired-w32-browser)
-               (define-key dired-mode-map [mouse-2] 'dired-w32-browser)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-agnostic settings
