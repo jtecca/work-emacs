@@ -16,6 +16,8 @@
 ;;;;   * python-pylint
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; initial setup
+(server-start)
+
 ;; removing the gui elements first keeps them from showing on startup
 (when window-system
   (progn
@@ -100,15 +102,6 @@
        ;(setq inferior-lisp-program (expand-file-name "~/bin/ccl/lx86cl64")
        (load (expand-file-name "~/quicklisp/slime-helper.el"))))
 
-;; set up w32-browser for launching programs from dired 
-;; according to windows mime types
-(cond ((string-equal system-type "windows-nt")
-       ;(require 'w32-browser) ; TODO for some reason this can't be found
-       (setq dired-load-hook
-             (lambda (&rest ignore)
-               (define-key dired-mode-map "z" 'dired-w32-browser)
-               (define-key dired-mode-map [mouse-2] 'dired-w32-browser)))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-agnostic settings
 ;; here's a nifty auto compile of .emacs after a save
@@ -120,7 +113,7 @@
   (let ((dotemacs (expand-file-name "~/.emacs")))
     (if (string= (buffer-file-name) (file-chase-links dotemacs))
         (byte-compile-file dotemacs))))
-(add-hook 'after-save-hook 'autocompile)
+(add-hook 'after-save-hook 'compile-dotemacs)
 
 ;; alternative keybindings for M-x
 (global-set-key "\C-x\C-m" 'execute-extended-command)
@@ -210,11 +203,18 @@
   "Returns a frame to a default, windowed position"
   (interactive)
   (when window-system
-    (set-frame-size (selected-frame) 160 55) ; two 80 column files
-    (let* ((width-offset (/ (eval (x-display-pixel-width)) 5))
-           (height-offset (/ (eval (x-display-pixel-height)) 6)))
-      (set-frame-position (selected-frame) width-offset height-offset))))
-
+    (cond
+     ((string-equal initial-window-system "w32")
+      (set-frame-size (selected-frame) 160 55)
+      (let* ((width-offset (/ (eval (x-display-pixel-width)) 5))
+             (height-offset (/ (eval (x-display-pixel-height)) 6)))
+        (set-frame-position (selected-frame) width-offset height-offset)))
+     ((string-equal initial-window-system "x")
+      (set-frame-size (selected-frame) 160 55)
+      (let* ((width-offset (/ (eval (x-display-pixel-width)) 9))
+             (height-offset (/ (eval (x-display-pixel-height)) 12)))
+        (set-frame-position (selected-frame) width-offset height-offset))))))
+      
 (global-set-key (kbd "<f12>") 'set-pleasant-frame-size)
 
 (defun insert-date (arg)
@@ -342,5 +342,3 @@ information on it and execute the command."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-
