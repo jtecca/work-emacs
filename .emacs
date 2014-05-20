@@ -1,23 +1,8 @@
-1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-05-16
-;;;;
-;;;; dependencies:
-;;;;   * auto-complete
-;;;;   * concurrent
-;;;;   * deferred
-;;;;   * epc
-;;;;   * jedi
-;;;;   * markdown-mode
-;;;;   * popup
-;;;; not required (but recommended):
-;;;;   * python-mode
-;;;;   * python-pep8
-;;;;   * python-pylint
+;;;; updated: 2014-05-20 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; initial setup
-(server-start)
-
 ;; removing the gui elements first keeps them from showing on startup
 (when window-system
   (progn
@@ -32,8 +17,7 @@
     (progn
       ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
       (set-face-attribute 'default nil :font "ProggyCleanTT-12")
-      (setq default-directory "c:/Users/jeff.tecca/")
-      (menu-bar-mode t)))
+      (setq default-directory "c:/Users/jeff.tecca/")))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
@@ -316,7 +300,6 @@ information on it and execute the command."
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "M-z") 'execute-extended-command) ; because i don't use zap-to-char and this lets me be sloppier
 ; -------------------------------------------
-; using wombat theme
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -326,15 +309,34 @@ information on it and execute the command."
  '(background-color "#202020")
  '(background-mode dark)
  '(column-number-mode t)
+ '(compilation-message-face (quote default))
  '(cursor-color "#cccccc")
- '(custom-enabled-themes (quote (monokai)))
- '(custom-safe-themes (quote ("60f04e478dedc16397353fb9f33f0d895ea3dab4f581307fbf0aa2f07e658a40" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" "4eaad15465961fd26ef9eef3bee2f630a71d8a4b5b0a588dc851135302f69b16" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "0c311fb22e6197daba9123f43da98f273d2bfaeeaeb653007ad1ee77f0003037" "97a2b10275e3e5c67f46ddaac0ec7969aeb35068c03ec4157cf4887c401e74b1" "4a60f0178f5cfd5eafe73e0fc2699a03da90ddb79ac6dbc73042a591ae216f03" "a30d5f217d1a697f6d355817ac344d906bb0aae3e888d7abaa7595d5a4b7e2e3" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default)))
+ '(custom-enabled-themes (quote (church)))
+ '(custom-safe-themes (quote ("49d35b72a2eff94e674ff93ef8b699e832b6cd4795acc63194320c37e746d9e8" "a949b0329fd0567e4398d27195abbbbc47b50d8c18f8a40721c37adc1c11e592" "072a2ffa9c332c5b73806627fdac0de6c2d012bcd9eb1e3615d25e3db3b5d474" "c05d1c24cc48d51a990cf7fd3b5beae9030588dc7f80118e50d6fe7cddd80ae7" "95e24cbe7137be4cd24d3e41a5fedf57b693e8744ec31d3ca659d1e15a4f980c" "39766937b7d7b1aba46ab9b4112f48b1e2d8cf967cbbecdbc65defb7126280c6" "1efafa066fbb3d6f9b90169ecd885ddd22b1d5dad2d8f3e9bf945622cec3a6cd" "0c8df69e41d08d49fd0da576d1064f988d54583629d8ce77f221d7007de12ea7" "c29b3444661fff11e29d80edd709dbd0a856a4223e4cd9bd1af7002cf7a3bb39" "14d09b4db0022d1c2238114bd8fba3f4438b066a5025f18959b2cc0cbb39d4db" "75a9fdc76a4b11c5a85458dbd957fe7fa9404036330651163b62a1a2cef4ade5" "7398d4ef8049572ff27137b4643637674d332af357afb44587fd5c4509f24f05" "8876d145a938620a7a4f9aea5ae34004cd371b5d46412568988ed3a61cc247ad" "ecbd57493e3266d96092d6abf10b3bb16c9d3592c2dc861264cd2cf76c714943" "088c09bdaa76ac5de16351eb01bafe474f3ba56009484118b138aae9c6db9a44" "f0934ee1d46b5467bc6f2d4de93e164bba900e5a70a97107a69d7111bbff0eec" "3083e39bb93515b5addfb8be6604d3ba3ba2717007ec590b7cc534a8f6122f80" "605eaa8f2a943d8bf9cbdea3aff56e90723b3718b89dc66b84f173ca66ba138a" "44d7fd8dacafd6cae3f0974cfc839a2dc1170ea545bcf783b3858f46ed9b4903" "4a59180216a3b8393107e537b16f0cefc67e55c535b3067fe341612f1f143a34" "535ca3dd301ad12d920fbf5f546e97a58de0552aac31b16cab50c8d507960d75" "c1aa9b3db94f34184940cde1266fe535d76315efde7ea20a68d289ef24232148" "eaf474d1d5e03ed12932d391d29146a3a76fd17bc374f61af18da648bec4c3b1" "193427aa65bea45dbfb7781f583bc1b0a59cb6b469289719bc5f016c00cd75ef" "ac4a6814a427b7678fdf954eb76d46acf24d5f7b936c8573396074b9e8768628" "d8cf63bfd1a7fa42e0c1a11fce4f1c0347e29fd7049cbaff622c2b55bfc5d7e1" "bf648fd77561aae6722f3d53965a9eb29b08658ed045207fe32ffed90433eb52" "0ebe0307942b6e159ab794f90a074935a18c3c688b526a2035d14db1214cf69c" "a774c5551bc56d7a9c362dca4d73a374582caedb110c201a09b410c0ebbb5e70" "d77cea9809c860ee271a8e9dbcca85f6dcdd5ffd3a3eb9a5524529b9b54ac214" "e26780280b5248eb9b2d02a237d9941956fc94972443b0f7aeec12b5c15db9f3" "60f04e478dedc16397353fb9f33f0d895ea3dab4f581307fbf0aa2f07e658a40" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" "4eaad15465961fd26ef9eef3bee2f630a71d8a4b5b0a588dc851135302f69b16" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "0c311fb22e6197daba9123f43da98f273d2bfaeeaeb653007ad1ee77f0003037" "97a2b10275e3e5c67f46ddaac0ec7969aeb35068c03ec4157cf4887c401e74b1" "4a60f0178f5cfd5eafe73e0fc2699a03da90ddb79ac6dbc73042a591ae216f03" "a30d5f217d1a697f6d355817ac344d906bb0aae3e888d7abaa7595d5a4b7e2e3" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default)))
+ '(fci-rule-color "#383838")
  '(foreground-color "#cccccc")
  '(fringe-mode (quote (nil . 0)) nil (fringe))
+ '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
+ '(highlight-tail-colors (quote (("#49483E" . 0) ("#67930F" . 20) ("#349B8D" . 30) ("#21889B" . 50) ("#968B26" . 60) ("#A45E0A" . 70) ("#A41F99" . 85) ("#49483E" . 100))))
+ '(linum-format " %7i ")
+ '(magit-diff-use-overlays nil)
  '(menu-bar-mode nil)
+ '(rainbow-identifiers-cie-l*a*b*-lightness 80)
+ '(rainbow-identifiers-cie-l*a*b*-saturation 18)
  '(show-paren-mode t)
  '(sql-product (quote sqlite))
- '(tool-bar-mode nil))
+ '(syslog-debug-face (quote ((t :background unspecified :foreground "#A1EFE4" :weight bold))))
+ '(syslog-error-face (quote ((t :background unspecified :foreground "#F92672" :weight bold))))
+ '(syslog-hour-face (quote ((t :background unspecified :foreground "#A6E22E"))))
+ '(syslog-info-face (quote ((t :background unspecified :foreground "#66D9EF" :weight bold))))
+ '(syslog-ip-face (quote ((t :background unspecified :foreground "#E6DB74"))))
+ '(syslog-su-face (quote ((t :background unspecified :foreground "#FD5FF0"))))
+ '(syslog-warn-face (quote ((t :background unspecified :foreground "#FD971F" :weight bold))))
+ '(tool-bar-mode nil)
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map (quote ((20 . "#BC8383") (40 . "#CC9393") (60 . "#DFAF8F") (80 . "#D0BF8F") (100 . "#E0CF9F") (120 . "#F0DFAF") (140 . "#5F7F5F") (160 . "#7F9F7F") (180 . "#8FB28F") (200 . "#9FC59F") (220 . "#AFD8AF") (240 . "#BFEBBF") (260 . "#93E0E3") (280 . "#6CA0A3") (300 . "#7CB8BB") (320 . "#8CD0D3") (340 . "#94BFF3") (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3")
+ '(weechat-color-list (quote (unspecified "#272822" "#49483E" "#A20C41" "#F92672" "#67930F" "#A6E22E" "#968B26" "#E6DB74" "#21889B" "#66D9EF" "#A41F99" "#FD5FF0" "#349B8D" "#A1EFE4" "#F8F8F2" "#F8F8F0"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
