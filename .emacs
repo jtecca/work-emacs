@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-08-04 
+;;;; updated: 2014-08-06
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; initial setup
 ;; removing the gui elements first keeps them from showing on startup
@@ -24,9 +24,9 @@
     ((string-equal initial-window-system "w32")
     (progn
       ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
-      (set-face-attribute 'default nil :font "Consolas-10")
+      (set-face-attribute 'default nil :font "Consolas-11")
       (setq default-directory "c:/Users/jeff.tecca/")
-      (hl-line-mode t) 
+      (hl-line-mode t)
       ))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
@@ -54,13 +54,13 @@
   ((string-equal system-type "gnu/linux")
    (progn
      (setq
-      python-shell-interpreter "ipython"
-      python-shell-interpreter-args ""
-      python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-      python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-      python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
-      python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
-      python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+      python-shell-interpreter "ipython")
+      ;python-shell-interpreter-args ""
+      ;python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+      ;python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+      ;python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
+      ;python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
+      ;python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
      'setup-ipython-gnu/linux)))
 
 ;; setup apsell for spell checking
@@ -92,8 +92,8 @@
 ;; alternative keybindings for M-x
 ;; commenting out the rebinds below because ergoemacs
 ;; completely remaps these keys to C-x + enter
-;(global-set-key "\C-x\C-m" 'execute-extended-command)
-;(global-set-key "\C-c\C-m" 'execute-extended-command)
+(global-set-key "\C-x\C-m" 'execute-extended-command)
+(global-set-key "\C-c\C-m" 'execute-extended-command)
 
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
@@ -112,7 +112,7 @@
 (setq initial-scratch-message "")
 (setq visible-bell t)
 (global-visual-line-mode 1)
-(eldoc-mode) ; why isn't this always on?
+(eldoc-mode t) ; why isn't this always on?
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; autosave/backup/file options
@@ -125,7 +125,7 @@
 (setq delete-by-moving-to-trash t)
 
 ;;;;;;;;;;;;;;;;;;
-;;;; general editor setting
+ ;;;; general editor setting
 (ido-mode 1) ; because ido
 (windmove-default-keybindings 'ctrl)
 (setq standard-indent 4)
@@ -142,19 +142,16 @@
 (delete-selection-mode t)
 
 ;;;;;;;;;;;;;;;;;;
-;; auto-complete setup
-(require 'auto-complete)
-(global-auto-complete-mode t)
+;; icicles setup
+(require 'icicles)
+(icy-mode t)
 
 ;;;;;;;;;;;;;;;;;;
-;; ergoemacs settings
-;; below sets the theme to training wheels lvl2, which only sets the 
-;; movements keys to i,j,k,l + meta
-;; move by word to M-u M-o, and delete by word or char
-;; to M-e, M-r, and M-d M-f
-;; as of 2014-08-04, turned off by default.  not sure if this is what I want
-;(setq ergoemacs-theme "lvl2")
-;(ergoemacs-mode t)
+;; auto-complete setup
+;; trying turning off auto-complete because I think it is conflicting with jedi
+;; in strange, non-fatal ways
+;(require 'auto-complete)
+;(global-auto-complete-mode t)
 
 ;;;;;;;;;;;;;;;;;;
 ;; org-mode settings:
@@ -165,18 +162,19 @@
 ;;;;;;;;;;;;;;;;;;
 ;;;; python-specific settings:
 (require 'python-mode) ; use the ehanced python mode instead of python.el
-;(add-hook 'python-mode-hook '(lambda () (define-key python-mode-map "\C-m" 'newline-and-indent)))
 (add-hook 'python-mode-hook '(lambda () (setq python-indent-4)))
 (add-hook 'python-mode-hook '(lambda () (fci-mode t)))
 (add-hook 'python-mode-hook '(lambda () (set-linum-mode-hook)))
-;; remap py-execute-region
-;; (this might be pointing to only python.el)
-(add-hook 'python-mode-hook '(lambda () (define-key python-mode-map "\C-c \C-r" 'py-execute-region)))
+(add-hook 'python-mode-hook '(lambda () (define-key 'python-key-map (kbd "<f12>") 'find-function)))
+(add-hook 'python-mode-hook '(lambda () (define-key 'python-key-map (kbd "<f6>") 'goto-line)))
 ; use ipython3 as the default interpreter
 (setq-default py-shell-name "ipython3")
-(setq-default py-which-bufname "IPython")
+(setq-default py-which-bufname "IPython")(setq py-smart-indentation)
+(setq py-split-windows-on-execute-p nil) ; this is frustrating with this on
 (setq py-force-py-shell-name-p t)
 (setq py-smart-indentation t)
+;; bind the breakpoint function
+(add-hook 'python-mode-hook '(lambda () (python-add-breakpoint)))
 ;; jedi hooks
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
@@ -193,8 +191,10 @@
   (set-face-attribute 'default nil :height
                       (- (face-attribute 'default :height) 10)))
 
-(global-set-key (kbd "C-+") 'increase-font-size) ; which is really C-<Shift>-=
-(global-set-key (kbd "C-=") 'decrease-font-size)
+;; with ergoemacs-mode, these are already bound to the respective keys,
+;; removing here to not conflict with anything
+;(global-set-key (kbd "C-+") 'increase-font-size) ; which is really C-<Shift>-=
+;(global-set-key (kbd "C-=") 'decrease-font-size)
 
 (defun insert-date (arg)
 "inserts the current date into the buffer.  if called with an arg, changes the format to the windows-style format."
@@ -216,6 +216,12 @@
 
 (defun set-linum-mode-hook ()
   (linum-mode 1))
+
+(defun python-add-breakpoint ()
+  "Adds a breakpoint to the buffer and highlights all other breakpoints in the buffer."
+  (interactive)
+  (insert "import pdb; pdb.set_trace()")
+  (highlight-lines-matching-regexp "^[]*import pdb; pdb.set_trace()"))
 
 ;; disabled these functions because i may not have to use them again
 ;; but left commented for the time being in case I need to quickly reenable them
@@ -289,6 +295,7 @@
 
 ;; global custom keybindings
 (global-set-key (kbd "<f5>") 'revert-this-buffer)
+(global-set-key (kbd "C-z") 'repeat) ; less bulky than C-x z, z... for repeating, more like vim
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "M-z") 'execute-extended-command) ; because i don't use zap-to-char and this lets me be sloppier
@@ -302,7 +309,6 @@
  '(custom-enabled-themes (quote (gruvbox)))
  '(custom-safe-themes (quote ("454dc6f3a1e9e062f34c0f988bcef5d898146edc5df4aa666bf5c30bed2ada2e" default)))
  '(delete-selection-mode t)
- '(ergoemacs-mode nil)
  '(initial-scratch-message "")
  '(org-CUA-compatible nil)
  '(recentf-mode t)
