@@ -30,6 +30,7 @@
    (progn 
      (set-face-attribute 'default nil :font "ProggyCleanTT-12")
      (setq default-directory "~/")
+     (hl-line-mode t)
      ))
   ((string-equal initial-window-system "nil") ; running in a term
    (setq default-directory "~/")))
@@ -138,7 +139,6 @@
 (setq standard-indent 4)
 (setq-default indent-tabs-mode nil)
 (fset 'yes-or-no-p 'y-or-n-p)
-(hl-line-mode 1)
 (line-number-mode 1)
 (column-number-mode 1)
 (toggle-word-wrap)
