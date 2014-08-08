@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-08-06
+;;;; updated: 2014-08-08
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; initial setup
 ;; removing the gui elements first keeps them from showing on startup
@@ -24,7 +24,7 @@
     ((string-equal initial-window-system "w32")
     (progn
       ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
-      (set-face-attribute 'default nil :font "Consolas-11")
+      (set-face-attribute 'default nil :font "Terminus-12")
       (setq default-directory "c:/Users/jeff.tecca/")))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
@@ -34,31 +34,33 @@
   ((string-equal initial-window-system "nil") ; running in a term
    (setq default-directory "~/")))
 
+;; commented out to see if this breaks anything since i have
+;; switched to using python-mode.el instead of python.el
 ;; set the default python shell to ipython
-(cond
-    ((string-equal system-type "windows-nt")
-    (progn
-      (setq
-       python-shell-interpreter "C:\\Python33\\python.exe"
-       python-shell-interpreter-args "-i C:\\Python33\\Scripts\\ipython3-script.py" )      
-      (setq
-       python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-       python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-       python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
-       python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
-       python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"))
-    'setup-ipython-windows)
-  ((string-equal system-type "gnu/linux")
-   (progn
-     (setq
-      python-shell-interpreter "ipython")
-      ;python-shell-interpreter-args ""
-      ;python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-      ;python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-      ;python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
-      ;python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
-      ;python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-     'setup-ipython-gnu/linux)))
+;; (cond
+;;     ((string-equal system-type "windows-nt")
+;;     (progn
+;;       (setq
+;;        python-shell-interpreter "C:\\Python33\\python.exe"
+;;        python-shell-interpreter-args "-i C:\\Python33\\Scripts\\ipython3-script.py" )      
+;;       (setq
+;;        python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+;;        python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+;;        python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
+;;        python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
+;;        python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"))
+;;     'setup-ipython-windows)
+;;   ((string-equal system-type "gnu/linux")
+;;    (progn
+;;      (setq
+;;       python-shell-interpreter "ipython")
+;;       ;python-shell-interpreter-args ""
+;;       ;python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+;;       ;python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+;;       ;python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
+;;       ;python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
+;;       ;python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+;;      'setup-ipython-gnu/linux)))
 
 ;; setup apsell for spell checking
 ;; M-$ is the default keybinding for it
@@ -86,21 +88,29 @@
         (byte-compile-file dotemacs))))
 (add-hook 'after-save-hook 'compile-dotemacs)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; custom keybindings
 ;; alternative keybindings for M-x
-;; commenting out the rebinds below because ergoemacs
-;; completely remaps these keys to C-x + enter
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
-
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.info\\'" . markdown-mode))
-
 ;; rebind C-x o to M-o for faster buffer switching
 (global-set-key "\M-o" 'other-window)
 ;; rebind undo (C-x u) to M-u
+;; C-/ is also usable as an undo key
 ;; this overwrites the upcase-word binding, but I rarely use that
 (global-set-key "\M-u" 'undo)
+;; bind some functions for getting around more efficiently
+(global-set-key (kbd "<f12>") 'find-function)
+; <f11> will be bound to fullscreen the frame
+; <f10> is bound to the menu bar
+(global-set-key (kbd "<f9>") 'imenu) ; icicles will help with completions
+
+;;;;;;;;;;;;;;;;;;
+;; markdown settings
+;; set markdown filetypes
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.info\\'" . markdown-mode))
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; cosmetic customizations
@@ -135,6 +145,7 @@
 (setq next-line-add-newlines t)
 (setq-default fill-column 72) ; this controls the fcl-mode line
 (require 'fill-column-indicator)
+(fci-mode t)
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
 (delete-selection-mode t)
@@ -145,34 +156,40 @@
 (icy-mode t)
 
 ;;;;;;;;;;;;;;;;;;
+;; use ido for finding files and switching buffers
+;; icicles has problems with autocomplete, and has a hard time finding
+;; $HOME on windows, but ido works well across both linux and win
+;; note that this needs to be set after icicles so it doesn't clobber
+;; the keybinding
+(global-set-key (kbd "C-x C-f") 'ido-find-file)
+(global-set-key (kbd "C-x b") 'ido-switch-buffer)
+;; note that C-x C-b still opens ibuffer
+
 ;; auto-complete setup
 ;; trying turning off auto-complete because I think it is conflicting with jedi
 ;; in strange, non-fatal ways
-;(require 'auto-complete)
-;(global-auto-complete-mode t)
+(require 'auto-complete)
+(global-auto-complete-mode t)
 
 ;;;;;;;;;;;;;;;;;;
-;; org-mode settings:
+;; org-mode settings
+;; make each new layer indent for easier reading
 (add-hook 'org-mode-hook '(lambda () (org-indent-mode t)))
 ;; set the possible task keywords
 (setq org-todo-keywords '((sequence "TODO" "WORKING" "STOPPED" "REVIEW" "DONE")))
 
 ;;;;;;;;;;;;;;;;;;
-;;;; python-specific settings:
-(require 'python-mode) ; use the ehanced python mode instead of python.el
-(add-hook 'python-mode-hook '(lambda () (setq python-indent-4)))
-(add-hook 'python-mode-hook '(lambda () (fci-mode t)))
-(add-hook 'python-mode-hook '(lambda () (set-linum-mode-hook)))
-(add-hook 'python-mode-hook '(lambda () (define-key 'python-key-map (kbd "<f12>") 'find-function)))
-(add-hook 'python-mode-hook '(lambda () (define-key 'python-key-map (kbd "<f6>") 'goto-line)))
+;;;; python-specific settings
+(require 'python-mode)
+(add-hook 'python-mode-hook 'set-linum-mode-hook)
 ; use ipython3 as the default interpreter
 (setq-default py-shell-name "ipython3")
 (setq-default py-which-bufname "IPython")(setq py-smart-indentation)
 (setq py-split-windows-on-execute-p nil) ; this is frustrating with this on
 (setq py-force-py-shell-name-p t)
 (setq py-smart-indentation t)
-;; bind the breakpoint function
-(add-hook 'python-mode-hook '(lambda () (python-add-breakpoint)))
+;; bind the breakpoint function to C-c i(nsert breakpoint)
+(add-hook 'python-mode-hook '(lambda () (local-set-key (kbd "C-c i") 'python-insert-breakpoint)))
 ;; jedi hooks
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
@@ -198,25 +215,25 @@
 "inserts the current date into the buffer.  if called with an arg, changes the format to the windows-style format."
   (interactive "P")
   (insert (if arg
-              (format-time-string "%m/%d/%Y ")
-            (format-time-string "%Y-%m-%d "))))
+              (format-time-string "%m/%d/%Y")
+            (format-time-string "%Y-%m-%d"))))
   
 (defun insert-time ()
   (interactive)
-  (insert (format-time-string "%H:%M:%S ")))
+  (insert (format-time-string "%H:%M:%S")))
 
 (defun insert-datetime (arg)
 "inserts the date and time into the buffer.  if called with an arg, changes the date format to the windows-style format."
 (interactive "P")
 (insert (if arg
-            (format-time-string "%m/%d/%Y %H:%M:%S ")
-          (format-time-string "%Y-%m-%d %H:%M:%S "))))
+            (format-time-string "%m/%d/%Y %H:%M:%S")
+          (format-time-string "%Y-%m-%d %H:%M:%S"))))
 
 (defun set-linum-mode-hook ()
   (linum-mode 1))
 
-(defun python-add-breakpoint ()
-  "Adds a breakpoint to the buffer and highlights all other breakpoints in the buffer."
+(defun python-insert-breakpoint ()
+  "Inserts a breakpoint to the buffer and highlights all other breakpoints in the buffer."
   (interactive)
   (insert "import pdb; pdb.set_trace()")
   (highlight-lines-matching-regexp "^[]*import pdb; pdb.set_trace()"))
