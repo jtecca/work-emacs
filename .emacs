@@ -91,9 +91,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom keybindings
-;; alternative keybindings for M-x
-(global-set-key "\C-x\C-m" 'execute-extended-command)
-(global-set-key "\C-c\C-m" 'execute-extended-command)
+
 ;; rebind C-x o to M-o for faster buffer switching
 (global-set-key "\M-o" 'other-window)
 ;; rebind undo (C-x u) to M-u
@@ -151,11 +149,6 @@
 (delete-selection-mode t)
 
 ;;;;;;;;;;;;;;;;;;
-;; icicles setup
-(require 'icicles)
-(icy-mode t)
-
-;;;;;;;;;;;;;;;;;;
 ;; use ido for finding files and switching buffers
 ;; icicles has problems with autocomplete, and has a hard time finding
 ;; $HOME on windows, but ido works well across both linux and win
@@ -205,11 +198,6 @@
   (interactive)
   (set-face-attribute 'default nil :height
                       (- (face-attribute 'default :height) 10)))
-
-;; with ergoemacs-mode, these are already bound to the respective keys,
-;; removing here to not conflict with anything
-;(global-set-key (kbd "C-+") 'increase-font-size) ; which is really C-<Shift>-=
-;(global-set-key (kbd "C-=") 'decrease-font-size)
 
 (defun insert-date (arg)
 "inserts the current date into the buffer.  if called with an arg, changes the format to the windows-style format."
@@ -269,7 +257,13 @@
 (global-set-key (kbd "C-z") 'repeat) 
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+;; smex bindings
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (global-set-key (kbd "M-z") 'execute-extended-command) ; because i don't use zap-to-char and this lets me be sloppier
+;; alternative keybindings for M-x
+(global-set-key "\C-x\C-m" 'smex)
+(global-set-key "\C-c\C-m" 'smex)
 ; -------------------------------------------
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
