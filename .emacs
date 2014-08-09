@@ -238,51 +238,6 @@
   (insert "import pdb; pdb.set_trace()")
   (highlight-lines-matching-regexp "^[]*import pdb; pdb.set_trace()"))
 
-;; disabled these functions because i may not have to use them again
-;; but left commented for the time being in case I need to quickly reenable them
-;; (defun format-kill-point ()
-;;   "Removes Garmin GPX formatting and sends formatted string to the kill-ring.
-
-;; Works on a line-by-line basis, so just move the point to a line with GPX
-;; information on it and execute the command."
-;;   (interactive)
-;;   (setq s1 (buffer-substring (line-beginning-position) (line-end-position)))
-;;   (message "%s" s1)
-;;   (setq s2 (replace-regexp-in-string ".*<trkpt lat=\"" "" s1))
-;;   (setq s3 (replace-regexp-in-string "\">.*" "" s2))
-;;   (setq s4 (replace-regexp-in-string "\".lon=\"" ", " s3))
-;;   (message "%s is now in the kill-ring." s4)
-;;   (kill-new s4))
-
-;; (defun format-kill-point-copy (p1 p2)
-;;   "Removes Garmin GPX formatting and sends formatted string to the kill-ring.
-
-;; Works on a line-by-line basis, so just move the point to a line with GPX
-;; information on it and execute the command."
-;;   (interactive "r")
-;;   (save-excursion (
-;;                    (beginning-of-line)
-;;                    (setq s1 (buffer-substring p1 p2))
-;;                    (setq s2 (replace-regexp-in-string "\".lon=\"" ", " s1))
-;;                    (message "%s is now in the kill-ring." s2)
-;;                    (kill-new s2))))
-
-;; (defun add-gpx-header-template ()
-;;   "Adds a template gpx track header when track trimming."
-;;   (interactive)
-;;   (insert "    </trkseg>
-;;   </trk>
-
-;;   <trk>
-;;     <name>Active Log: DD MMM YYYY HH:SS - TRIMMED</name>
-;;     <extensions>
-;;       <gpxx:TrackExtension>
-;;         <gpxx:DisplayColor>DarkGray</gpxx:DisplayColor>
-;;       </gpxx:TrackExtension>
-;;     </extensions>
-;;     <trkseg>
-;; "))
-
 (defun make-frame-fullscreen ()
   "If not running Emacs in a terminal (through a window manager), f11 maximizes the frame. otherwise returns nil."
   (interactive)
@@ -310,7 +265,8 @@
 
 ;; global custom keybindings
 (global-set-key (kbd "<f5>") 'revert-this-buffer)
-(global-set-key (kbd "C-z") 'repeat) ; less bulky than C-x z, z... for repeating, more like vim
+; below is less bulky than C-x z, z... for repeating, more like vim
+(global-set-key (kbd "C-z") 'repeat) 
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "M-z") 'execute-extended-command) ; because i don't use zap-to-char and this lets me be sloppier
@@ -327,7 +283,7 @@
  '(initial-scratch-message "")
  '(org-CUA-compatible nil)
  '(recentf-mode t)
-v '(shift-select-mode nil)
+ '(shift-select-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
