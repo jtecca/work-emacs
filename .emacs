@@ -28,7 +28,7 @@
       (setq default-directory "c:/Users/jeff.tecca/")))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
-     (set-face-attribute 'default nil :font "ProggyCleanTT-12")
+     (set-face-attribute 'default nil :font "Ubuntu Mono-11")
      (setq default-directory "~/")
      (hl-line-mode t)
      ))
@@ -327,7 +327,7 @@
  '(initial-scratch-message "")
  '(org-CUA-compatible nil)
  '(recentf-mode t)
- '(shift-select-mode nil)
+v '(shift-select-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
