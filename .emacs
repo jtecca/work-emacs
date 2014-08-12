@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-08-11
+;;;; updated: 2014-08-12
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; initial setup
 ;; removing the gui elements first keeps them from showing on startup
@@ -25,7 +25,7 @@
     ((string-equal initial-window-system "w32")
     (progn
       ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
-      (set-face-attribute 'default nil :font "Terminus-10")
+      (set-face-attribute 'default nil :font "Ubuntu Mono-12")
       (setq default-directory "c:/Users/jeff.tecca/")))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
@@ -35,34 +35,6 @@
      ))
   ((string-equal initial-window-system "nil") ; running in a term
    (setq default-directory "~/")))
-
-;; commented out to see if this breaks anything since i have
-;; switched to using python-mode.el instead of python.el
-;; set the default python shell to ipython
-;; (cond
-;;     ((string-equal system-type "windows-nt")
-;;     (progn
-;;       (setq
-;;        python-shell-interpreter "C:\\Python33\\python.exe"
-;;        python-shell-interpreter-args "-i C:\\Python33\\Scripts\\ipython3-script.py" )      
-;;       (setq
-;;        python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-;;        python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-;;        python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
-;;        python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
-;;        python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"))
-;;     'setup-ipython-windows)
-;;   ((string-equal system-type "gnu/linux")
-;;    (progn
-;;      (setq
-;;       python-shell-interpreter "ipython")
-;;       ;python-shell-interpreter-args ""
-;;       ;python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-;;       ;python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-;;       ;python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
-;;       ;python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
-;;       ;python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-;;      'setup-ipython-gnu/linux)))
 
 ;; setup apsell for spell checking
 ;; M-$ is the default keybinding for it
@@ -241,7 +213,7 @@
 
 ;; lifted from www.masteringemacs.org
 (defun revert-this-buffer ()
-  "Reloads (reverts) the current buffer"
+  "Reloads (reverts) the current buffer to its saved state in a file"
   (interactive)
   (revert-buffer nil t t)
   (message (concat "Reverted buffer: " (buffer-name))))
