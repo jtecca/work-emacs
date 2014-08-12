@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-08-08
+;;;; updated: 2014-08-11
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; initial setup
 ;; removing the gui elements first keeps them from showing on startup
@@ -14,7 +14,8 @@
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("elpy" . "http://jorgenschaefer.github.io/packages/")))
 (package-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24,7 +25,7 @@
     ((string-equal initial-window-system "w32")
     (progn
       ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
-      (set-face-attribute 'default nil :font "Terminus-12")
+      (set-face-attribute 'default nil :font "Terminus-10")
       (setq default-directory "c:/Users/jeff.tecca/")))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
@@ -91,7 +92,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom keybindings
-
 ;; rebind C-x o to M-o for faster buffer switching
 (global-set-key "\M-o" 'other-window)
 ;; rebind undo (C-x u) to M-u
@@ -102,7 +102,20 @@
 (global-set-key (kbd "<f12>") 'find-function)
 ; <f11> will be bound to fullscreen the frame
 ; <f10> is bound to the menu bar
-(global-set-key (kbd "<f9>") 'imenu) ; icicles will help with completions
+(global-set-key (kbd "<f9>") 'imenu)
+(global-set-key (kbd "<f5>") 'revert-this-buffer)
+; below is less bulky than C-x z, z... for repeating, more like vim
+(global-set-key (kbd "C-z") 'repeat) 
+(global-set-key (kbd "<f11>") 'make-frame-fullscreen)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+;; smex bindings
+(require 'smex)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+(global-set-key (kbd "M-z") 'smex) ; because i don't use zap-to-char and this lets me be sloppier
+;; alternative keybindings for M-x
+(global-set-key "\C-x\C-m" 'smex)
+(global-set-key "\C-c\C-m" 'smex)
 
 ;;;;;;;;;;;;;;;;;;
 ;; markdown settings
@@ -150,19 +163,9 @@
 
 ;;;;;;;;;;;;;;;;;;
 ;; use ido for finding files and switching buffers
-;; icicles has problems with autocomplete, and has a hard time finding
-;; $HOME on windows, but ido works well across both linux and win
-;; note that this needs to be set after icicles so it doesn't clobber
-;; the keybinding
 (global-set-key (kbd "C-x C-f") 'ido-find-file)
 (global-set-key (kbd "C-x b") 'ido-switch-buffer)
 ;; note that C-x C-b still opens ibuffer
-
-;; auto-complete setup
-;; trying turning off auto-complete because I think it is conflicting with jedi
-;; in strange, non-fatal ways
-(require 'auto-complete)
-(global-auto-complete-mode t)
 
 ;;;;;;;;;;;;;;;;;;
 ;; org-mode settings
@@ -177,15 +180,14 @@
 (add-hook 'python-mode-hook 'set-linum-mode-hook)
 ; use ipython3 as the default interpreter
 (setq-default py-shell-name "ipython3")
-(setq-default py-which-bufname "IPython")(setq py-smart-indentation)
-(setq py-split-windows-on-execute-p nil) ; this is frustrating with this on
+(setq-default py-which-bufname "IPython")
+(setq py-split-windows-on-execute-p t) ; this is frustrating with this on
 (setq py-force-py-shell-name-p t)
+(setq py-execute-no-temp-p t)
 (setq py-smart-indentation t)
 ;; bind the breakpoint function to C-c i(nsert breakpoint)
 (add-hook 'python-mode-hook '(lambda () (local-set-key (kbd "C-c i") 'python-insert-breakpoint)))
-;; jedi hooks
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
+(elpy-enable)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; set custom functions
@@ -244,26 +246,6 @@
   (revert-buffer nil t t)
   (message (concat "Reverted buffer: " (buffer-name))))
 
-;; custom keybinding hooks
-;; commented because these functions have been removed as of 2014-08-04
-;; (defun set-vetting-keybinds ()
-;;   (local-set-key (kbd "C-c a") 'format-kill-point)
-;;   (local-set-key (kbd "C-c t") 'add-gpx-header-template))
-;; (add-hook 'xml-mode-hook 'set-vetting-keybinds)
-
-;; global custom keybindings
-(global-set-key (kbd "<f5>") 'revert-this-buffer)
-; below is less bulky than C-x z, z... for repeating, more like vim
-(global-set-key (kbd "C-z") 'repeat) 
-(global-set-key (kbd "<f11>") 'make-frame-fullscreen)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-;; smex bindings
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-(global-set-key (kbd "M-z") 'execute-extended-command) ; because i don't use zap-to-char and this lets me be sloppier
-;; alternative keybindings for M-x
-(global-set-key "\C-x\C-m" 'smex)
-(global-set-key "\C-c\C-m" 'smex)
 ; -------------------------------------------
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -286,4 +268,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
+
+
 
