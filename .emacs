@@ -30,7 +30,12 @@
    (progn 
      (set-face-attribute 'default nil :font "Ubuntu Mono-11")
      (setq default-directory "~/")
-     (hl-line-mode t)
+     (set-language-environment "utf-8")
+     ;; lisp/slime setup
+     (setq inferior-lisp-program "sbcl")
+     (add-to-list 'load-path (expand-file-name "~/slime/"))
+     (require 'slime)
+     (slime-setup '(slime-fancy))
      ))
   ((string-equal initial-window-system "nil") ; running in a term
    (setq default-directory "~/")))
