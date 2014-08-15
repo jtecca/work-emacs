@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-08-08
+;;;; updated: 2014-08-12
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; initial setup
 ;; removing the gui elements first keeps them from showing on startup
@@ -14,7 +14,8 @@
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("elpy" . "http://jorgenschaefer.github.io/packages/")))
 (package-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24,7 +25,7 @@
     ((string-equal initial-window-system "w32")
     (progn
       ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
-      (set-face-attribute 'default nil :font "Terminus-12")
+      (set-face-attribute 'default nil :font "Ubuntu Mono-12")
       (setq default-directory "c:/Users/jeff.tecca/")))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
@@ -39,34 +40,6 @@
      ))
   ((string-equal initial-window-system "nil") ; running in a term
    (setq default-directory "~/")))
-
-;; commented out to see if this breaks anything since i have
-;; switched to using python-mode.el instead of python.el
-;; set the default python shell to ipython
-;; (cond
-;;     ((string-equal system-type "windows-nt")
-;;     (progn
-;;       (setq
-;;        python-shell-interpreter "C:\\Python33\\python.exe"
-;;        python-shell-interpreter-args "-i C:\\Python33\\Scripts\\ipython3-script.py" )      
-;;       (setq
-;;        python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-;;        python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-;;        python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
-;;        python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
-;;        python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"))
-;;     'setup-ipython-windows)
-;;   ((string-equal system-type "gnu/linux")
-;;    (progn
-;;      (setq
-;;       python-shell-interpreter "ipython")
-;;       ;python-shell-interpreter-args ""
-;;       ;python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-;;       ;python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-;;       ;python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
-;;       ;python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
-;;       ;python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-;;      'setup-ipython-gnu/linux)))
 
 ;; setup apsell for spell checking
 ;; M-$ is the default keybinding for it
@@ -96,7 +69,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom keybindings
-
 ;; rebind C-x o to M-o for faster buffer switching
 (global-set-key "\M-o" 'other-window)
 ;; rebind undo (C-x u) to M-u
@@ -107,7 +79,20 @@
 (global-set-key (kbd "<f12>") 'find-function)
 ; <f11> will be bound to fullscreen the frame
 ; <f10> is bound to the menu bar
-(global-set-key (kbd "<f9>") 'imenu) ; icicles will help with completions
+(global-set-key (kbd "<f9>") 'imenu)
+(global-set-key (kbd "<f5>") 'revert-this-buffer)
+; below is less bulky than C-x z, z... for repeating, more like vim
+(global-set-key (kbd "C-z") 'repeat) 
+(global-set-key (kbd "<f11>") 'make-frame-fullscreen)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+;; smex bindings
+(require 'smex)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+(global-set-key (kbd "M-z") 'smex) ; because i don't use zap-to-char and this lets me be sloppier
+;; alternative keybindings for M-x
+(global-set-key "\C-x\C-m" 'smex)
+(global-set-key "\C-c\C-m" 'smex)
 
 ;;;;;;;;;;;;;;;;;;
 ;; markdown settings
@@ -136,7 +121,7 @@
 (setq delete-by-moving-to-trash t)
 
 ;;;;;;;;;;;;;;;;;;
- ;;;; general editor setting
+;;;; general editor setting
 (ido-mode 1) ; because ido
 (windmove-default-keybindings 'ctrl)
 (setq standard-indent 4)
@@ -152,22 +137,17 @@
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
 (delete-selection-mode t)
+(tooltip-mode -1)
+(setq ido-create-new-buffer 'always)
+(setq confirm-nonexistent-file-or-buffer nil)
+(setq redisplay-dont-pause t)
+
 
 ;;;;;;;;;;;;;;;;;;
 ;; use ido for finding files and switching buffers
-;; icicles has problems with autocomplete, and has a hard time finding
-;; $HOME on windows, but ido works well across both linux and win
-;; note that this needs to be set after icicles so it doesn't clobber
-;; the keybinding
 (global-set-key (kbd "C-x C-f") 'ido-find-file)
 (global-set-key (kbd "C-x b") 'ido-switch-buffer)
 ;; note that C-x C-b still opens ibuffer
-
-;; auto-complete setup
-;; trying turning off auto-complete because I think it is conflicting with jedi
-;; in strange, non-fatal ways
-(require 'auto-complete)
-(global-auto-complete-mode t)
 
 ;;;;;;;;;;;;;;;;;;
 ;; org-mode settings
@@ -182,15 +162,14 @@
 (add-hook 'python-mode-hook 'set-linum-mode-hook)
 ; use ipython3 as the default interpreter
 (setq-default py-shell-name "ipython3")
-(setq-default py-which-bufname "IPython")(setq py-smart-indentation)
-(setq py-split-windows-on-execute-p nil) ; this is frustrating with this on
+(setq-default py-which-bufname "IPython")
+(setq py-split-windows-on-execute-p t) ; this is frustrating with this on
 (setq py-force-py-shell-name-p t)
+(setq py-execute-no-temp-p t)
 (setq py-smart-indentation t)
 ;; bind the breakpoint function to C-c i(nsert breakpoint)
 (add-hook 'python-mode-hook '(lambda () (local-set-key (kbd "C-c i") 'python-insert-breakpoint)))
-;; jedi hooks
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
+(elpy-enable)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; set custom functions
@@ -244,51 +223,40 @@
 
 ;; lifted from www.masteringemacs.org
 (defun revert-this-buffer ()
-  "Reloads (reverts) the current buffer"
+  "Reloads (reverts) the current buffer to its saved state in a file"
   (interactive)
   (revert-buffer nil t t)
   (message (concat "Reverted buffer: " (buffer-name))))
 
-;; custom keybinding hooks
-;; commented because these functions have been removed as of 2014-08-04
-;; (defun set-vetting-keybinds ()
-;;   (local-set-key (kbd "C-c a") 'format-kill-point)
-;;   (local-set-key (kbd "C-c t") 'add-gpx-header-template))
-;; (add-hook 'xml-mode-hook 'set-vetting-keybinds)
-
-;; global custom keybindings
-(global-set-key (kbd "<f5>") 'revert-this-buffer)
-; below is less bulky than C-x z, z... for repeating, more like vim
-(global-set-key (kbd "C-z") 'repeat) 
-(global-set-key (kbd "<f11>") 'make-frame-fullscreen)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-;; smex bindings
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-(global-set-key (kbd "M-z") 'execute-extended-command) ; because i don't use zap-to-char and this lets me be sloppier
-;; alternative keybindings for M-x
-(global-set-key "\C-x\C-m" 'smex)
-(global-set-key "\C-c\C-m" 'smex)
 ; -------------------------------------------
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
  '(column-number-mode t)
  '(custom-enabled-themes (quote (gruvbox)))
- '(custom-safe-themes (quote ("454dc6f3a1e9e062f34c0f988bcef5d898146edc5df4aa666bf5c30bed2ada2e" default)))
+ '(custom-safe-themes (quote ("49d35b72a2eff94e674ff93ef8b699e832b6cd4795acc63194320c37e746d9e8" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" "454dc6f3a1e9e062f34c0f988bcef5d898146edc5df4aa666bf5c30bed2ada2e" default)))
  '(delete-selection-mode t)
+ '(fci-rule-color "#383838")
  '(initial-scratch-message "")
  '(org-CUA-compatible nil)
  '(recentf-mode t)
  '(shift-select-mode nil)
  '(show-paren-mode t)
- '(tool-bar-mode nil))
+ '(tool-bar-mode nil)
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map (quote ((20 . "#BC8383") (40 . "#CC9393") (60 . "#DFAF8F") (80 . "#D0BF8F") (100 . "#E0CF9F") (120 . "#F0DFAF") (140 . "#5F7F5F") (160 . "#7F9F7F") (180 . "#8FB28F") (200 . "#9FC59F") (220 . "#AFD8AF") (240 . "#BFEBBF") (260 . "#93E0E3") (280 . "#6CA0A3") (300 . "#7CB8BB") (320 . "#8CD0D3") (340 . "#94BFF3") (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
+
+
 
