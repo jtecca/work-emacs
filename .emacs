@@ -130,7 +130,7 @@
 (column-number-mode 1)
 (toggle-word-wrap)
 (setq next-line-add-newlines t)
-(setq-default fill-column 72) ; this controls the fcl-mode line
+(setq-default fill-column 72)
 (require 'fill-column-indicator)
 (fci-mode t)
 (show-paren-mode 1)
@@ -237,7 +237,6 @@
  '(custom-enabled-themes (quote (gruvbox)))
  '(custom-safe-themes (quote ("49d35b72a2eff94e674ff93ef8b699e832b6cd4795acc63194320c37e746d9e8" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" "454dc6f3a1e9e062f34c0f988bcef5d898146edc5df4aa666bf5c30bed2ada2e" default)))
  '(delete-selection-mode t)
- '(elpy-rpc-python-command "python2")
  '(fci-rule-color "#383838")
  '(initial-scratch-message "")
  '(org-CUA-compatible nil)
