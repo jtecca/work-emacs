@@ -14,8 +14,7 @@
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")
-                         ("elpy" . "http://jorgenschaefer.github.io/packages/")))
+                         ("melpa" . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -103,7 +102,7 @@
 (setq initial-scratch-message "")
 (setq visible-bell t)
 (global-visual-line-mode 1)
-(eldoc-mode t) ; why isn't this always on?
+(eldoc-mode t)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; autosave/backup/file options
@@ -153,18 +152,17 @@
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; python-specific settings
-(require 'python-mode)
+(cond
+    ((string-equal initial-window-system "w32")
+    (progn
+      (setq python-command "ipython2")))
+  ((string-equal initial-window-system "x") ; emacs running in an x window
+   (progn 
+     (setq python-command "ipython3")
+     )))
 (add-hook 'python-mode-hook 'set-linum-mode-hook)
-; use ipython3 as the default interpreter
-(setq-default py-shell-name "ipython3")
-(setq-default py-which-bufname "IPython")
-(setq py-split-windows-on-execute-p t) ; this is frustrating with this on
-(setq py-force-py-shell-name-p t)
-(setq py-execute-no-temp-p t)
-(setq py-smart-indentation t)
-;; bind the breakpoint function to C-c i(nsert breakpoint)
+;; ;; bind the breakpoint function to C-c i(nsert breakpoint)
 (add-hook 'python-mode-hook '(lambda () (local-set-key (kbd "C-c i") 'python-insert-breakpoint)))
-(elpy-enable)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; set custom functions
@@ -234,6 +232,7 @@
  '(custom-enabled-themes (quote (gruvbox)))
  '(custom-safe-themes (quote ("49d35b72a2eff94e674ff93ef8b699e832b6cd4795acc63194320c37e746d9e8" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" "454dc6f3a1e9e062f34c0f988bcef5d898146edc5df4aa666bf5c30bed2ada2e" default)))
  '(delete-selection-mode t)
+ '(elpy-rpc-python-command "python2")
  '(fci-rule-color "#383838")
  '(initial-scratch-message "")
  '(org-CUA-compatible nil)
