@@ -78,7 +78,7 @@
 here's a nifty auto compile of .emacs after a save
 stolen from: http://www.emacswiki.org/emacs/AutoRecompile
 (defun compile-dotemacs ()
-  "compile .emacs automagically on saving the .emacs file"v
+  "compile .emacs automagically on saving the .emacs file"
   (interactive)
   (require 'bytecomp)
   (let ((dotemacs (expand-file-name "~/.emacs")))
