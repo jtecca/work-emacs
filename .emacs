@@ -1,7 +1,27 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-08-12
+;;;; updated: 2014-08-27
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; required packages:
+;; auto-complete
+;; concurrent
+;; fill-column-indicator
+;; idomenu
+;; magit
+;; markdown-mode
+;; paredit
+;; popup
+;; pydoc-info
+;; python-mode
+;; rainbow-delimiters
+;; smex
+;; smooth-scrolling
+;; subatomic-enhanced
+;; tree-mode
+;; undo-tree
+;; websocket
+;; yasnippet
+
 ;;;; initial setup
 ;; removing the gui elements first keeps them from showing on startup
 (when window-system
@@ -24,7 +44,7 @@
     ((string-equal initial-window-system "w32")
     (progn
       ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
-      (set-face-attribute 'default nil :font "Ubuntu Mono-12")
+      (set-face-attribute 'default nil :font "Cousine-10")
       (setq default-directory "c:/Users/jeff.tecca/")))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn 
@@ -34,11 +54,11 @@
      ;; lisp/slime setup
      (setq inferior-lisp-program "sbcl")
      (add-to-list 'load-path (expand-file-name "~/slime/"))
-     (require 'slime)
-     (slime-setup '(slime-fancy))
-     ))
-  ((string-equal initial-window-system "nil") ; running in a term
-   (setq default-directory "~/")))
+     (require 'slime))
+   (slime-setup '(slime-fancy))
+     
+   ((string-equal initial-window-system "nil") ; running in a term
+    (setq default-directory "~/"))))
 
 ;; setup apsell for spell checking
 ;; M-$ is the default keybinding for it
@@ -55,10 +75,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-agnostic settings
-;; here's a nifty auto compile of .emacs after a save
-;; stolen from: http://www.emacswiki.org/emacs/AutoRecompile
+here's a nifty auto compile of .emacs after a save
+stolen from: http://www.emacswiki.org/emacs/AutoRecompile
 (defun compile-dotemacs ()
-  "compile .emacs automagically on saving the .emacs file"
+  "compile .emacs automagically on saving the .emacs file"v
   (interactive)
   (require 'bytecomp)
   (let ((dotemacs (expand-file-name "~/.emacs")))
@@ -68,6 +88,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom keybindings
+;; make C-x C-k another kill buffer, because I can't type
+(global-set-key "\C-x \C-k" 'ido-kill-buffer)
 ;; rebind C-x o to M-o for faster buffer switching
 (global-set-key "\M-o" 'other-window)
 ;; rebind undo (C-x u) to M-u
@@ -107,7 +129,10 @@
 (setq initial-scratch-message "")
 (setq visible-bell t)
 (global-visual-line-mode 1)
-(eldoc-mode t)
+(eldoc-mode)
+(require 'rainbow-delimiters)
+(global-rainbow-delimiters-mode)
+(require 'smooth-scrolling)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; autosave/backup/file options
@@ -121,26 +146,47 @@
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; general editor setting
-(ido-mode 1) ; because ido
-(windmove-default-keybindings 'ctrl)
+(require 'ido)
+(ido-mode t)
 (setq standard-indent 4)
 (setq-default indent-tabs-mode nil)
 (fset 'yes-or-no-p 'y-or-n-p)
-(line-number-mode 1)
-(column-number-mode 1)
-(toggle-word-wrap)
+(line-number-mode t)
+(column-number-mode t)
+(toggle-word-wrap t)
 (setq next-line-add-newlines t)
-(setq-default fill-column 72)
+(setq-default fill-column 79)
 (require 'fill-column-indicator)
-(fci-mode t)
-(show-paren-mode 1)
+(setq-default fci-rule-column fill-column)
+(turn-on-fci-mode t)
+(show-paren-mode t)
 (setq show-paren-style 'parenthesis)
 (delete-selection-mode t)
 (tooltip-mode -1)
 (setq ido-create-new-buffer 'always)
 (setq confirm-nonexistent-file-or-buffer nil)
 (setq redisplay-dont-pause t)
+(require 'auto-complete)
+;; TODO turn this on for elisp mode
+(global-auto-complete-mode t)
+(global-linum-mode t)
 
+;;;;;;;;;;;;;;;;;;
+;; paredit settings
+;; note that this is required for both linux and windows, since elisp tends
+;; to get written on both types of oses
+(autoload 'enable-paredit-mode "paredit" "Turn on structural editing of Lisp code." t)
+(add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+(add-hook 'ielm-mode-hook #'enable-paredit-mode)
+(add-hook 'lisp-mode-hook #'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+(add-hook 'scheme-mode-hook #'enable-paredit-mode)
+(add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
+;; make eldoc aware of paredit
+(eldoc-add-command
+ 'paredit-backward-delete
+ 'paredit-close-round)
 
 ;;;;;;;;;;;;;;;;;;
 ;; use ido for finding files and switching buffers
@@ -153,21 +199,40 @@
 ;; make each new layer indent for easier reading
 (add-hook 'org-mode-hook '(lambda () (org-indent-mode t)))
 ;; set the possible task keywords
-(setq org-todo-keywords '((sequence "TODO" "WORKING" "STOPPED" "REVIEW" "DONE")))
+(setq org-todo-keywords
+      '((sequence "TODO" "WORKING" "STOPPED" "REVIEW" "DONE")))
+;; update counts after removing a line from an org todo-list
+(defun myorg-update-parent-cookie ()
+  (when (equal major-mode 'org-mode)
+    (save-excursion
+      (ignore-errors
+        (org-back-to-heading)
+        (org-update-parent-todo-statistics)))))
+
+(defadvice org-kill-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
+
+(defadvice kill-whole-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; python-specific settings
-(cond
-    ((string-equal initial-window-system "w32")
-    (progn
-      (setq python-command "ipython2")))
-  ((string-equal initial-window-system "x") ; emacs running in an x window
-   (progn 
-     (setq python-command "ipython3")
-     )))
-(add-hook 'python-mode-hook 'set-linum-mode-hook)
-;; ;; bind the breakpoint function to C-c i(nsert breakpoint)
-(add-hook 'python-mode-hook '(lambda () (local-set-key (kbd "C-c i") 'python-insert-breakpoint)))
+;; load in the updated development version of python-mode.el (6.1.4, 6.1.3 in elpa)
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-vmode))
+(add-to-list 'interpreter-mode-alist '("python" . python-mode))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/python-mode/"))
+(require 'python-mode)
+()
+;; I can get a workable ipython repl inside of emacs of I run a specific set of instructions:
+;; M-x python RET
+;; import IPython
+;; IPython.embed()
+;; otherwise, calling M-x ipython works, but I have no line numbers, intro text
+(setq py-python-command-args '("-i" "-c" "import IPython; IPython.embed()"))
+(setq py-always-split-windows-p t)
+
+(add-hook 'python-mode-hook
+          '(lambda () (local-set-key (kbd "C-c i") 'python-insert-breakpoint)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; set custom functions
@@ -198,9 +263,6 @@
 (insert (if arg
             (format-time-string "%m/%d/%Y %H:%M:%S")
           (format-time-string "%Y-%m-%d %H:%M:%S"))))
-
-(defun set-linum-mode-hook ()
-  (linum-mode 1))
 
 (defun python-insert-breakpoint ()
   "Inserts a breakpoint to the buffer and highlights all other breakpoints in the buffer."
@@ -234,12 +296,18 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
  '(column-number-mode t)
- '(custom-enabled-themes (quote (gruvbox)))
- '(custom-safe-themes (quote ("49d35b72a2eff94e674ff93ef8b699e832b6cd4795acc63194320c37e746d9e8" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" "454dc6f3a1e9e062f34c0f988bcef5d898146edc5df4aa666bf5c30bed2ada2e" default)))
+ '(custom-enabled-themes (quote (subatomic-enhanced)))
+ '(custom-safe-themes (quote ("b6f7795c2fbf75baf3419c60ef7625154c046fc2b10e3fdd188e5757e08ac0ec" "394504bd559027641b544952d6e9e1c6dcb306b4d1b2c4ad6b98d3e6b5459683" "8dd5991bf912b39dc4ae77e2d6aa4882949f4441570222eaf25e07ec38c44d50" "4a60f0178f5cfd5eafe73e0fc2699a03da90ddb79ac6dbc73042a591ae216f03" "ad9fc392386f4859d28fe4ef3803585b51557838dbc072762117adad37e83585" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" "49d35b72a2eff94e674ff93ef8b699e832b6cd4795acc63194320c37e746d9e8" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" "454dc6f3a1e9e062f34c0f988bcef5d898146edc5df4aa666bf5c30bed2ada2e" default)))
  '(delete-selection-mode t)
  '(fci-rule-color "#383838")
  '(initial-scratch-message "")
+ '(main-line-color1 "#29282E")
+ '(main-line-color2 "#292A24")
  '(org-CUA-compatible nil)
+ '(powerline-color1 "#29282E")
+ '(powerline-color2 "#292A24")
+ '(py-shell-name "ipython")
+ '(py-start-run-ipython-shell t)
  '(recentf-mode t)
  '(shift-select-mode nil)
  '(show-paren-mode t)
@@ -253,8 +321,3 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-
-
-
-
