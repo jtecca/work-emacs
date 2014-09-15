@@ -16,11 +16,9 @@
 ;; rainbow-delimiters
 ;; smex
 ;; smooth-scrolling
-;; subatomic-enhanced
 ;; tree-mode
 ;; undo-tree
 ;; websocket
-;; yasnippet
 
 ;;;; initial setup
 ;; removing the gui elements first keeps them from showing on startup
@@ -87,7 +85,7 @@
 (add-hook 'after-save-hook 'compile-dotemacs)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; custom keybindings
+;; custom global keybindings
 ;; make C-x C-k another kill buffer, because I can't type
 (global-set-key "\C-x \C-k" 'ido-kill-buffer)
 ;; rebind C-x o to M-o for faster buffer switching
@@ -106,7 +104,6 @@
 (require 'smex)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-(global-set-key (kbd "M-z") 'smex) ; because i don't use zap-to-char and this lets me be sloppier
 ;; alternative keybindings for M-x
 (global-set-key "\C-x\C-m" 'smex)
 (global-set-key "\C-c\C-m" 'smex)
@@ -125,7 +122,7 @@
 (setq initial-scratch-message "")
 (setq visible-bell t)
 (global-visual-line-mode 1)
-(eldoc-mode)
+(eldoc-mode t)
 (require 'rainbow-delimiters)
 (global-rainbow-delimiters-mode)
 (require 'smooth-scrolling)
@@ -213,31 +210,29 @@
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; python-specific settings
-;; load in the updated development version of python-mode.el (6.1.)4, 6.1.3 in elpa)
-(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
-(add-to-list 'interpreter-mode-alist '("python" . python-mode))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/python-mode/"))
-(require 'python-mode)
-()
-;; I can get a workable ipython repl inside of emacs of I run a specific set of instructions:
-;; M-x python RET
-;; import IPython
-;; IPython.embed()
-;; otherwise, calling M-x ipython works, but I have no line numbers, intro text
-;; on windows, this seems to call Anaconda!
-;; however, autocompletion still doesn't seem to work
-(setq py-python-command-args '("-i" "-c" "import IPython; IPython.embed()"))
-(setq py-always-split-windows-p t)
+;; windows settings, assumes that you have the Anaconda distribution installed
+;; to the default location
+(setq
+ python-shell-interpreter "C:\\Users\\jeff.tecca\\AppData\\Local\\Continuum\\Anaconda\\python.exe"
+ python-shell-interpreter-args
+ "-i C:\\Users\\jeff.tecca\\AppData\\Local\\Continuum\\Anaconda\\Scripts\\ipython-script.py"
+ python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+ python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+ python-shell-completion-setup-code
+   "from IPython.core.completerlib import module_completion"
+ python-shell-completion-module-string-code
+   "';'.join(module_completion('''%s'''))\n"
+ python-shell-completion-string-code
+   "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+;; custom python keybindings
 (add-hook 'python-mode-hook
           '(lambda ()
-             "Set various python-mode keybindings."
              (turn-on-fci-mode)
              (local-set-key (kbd "C-c i") 'python-insert-breakpoint)
-             (local-set-key (kbd "<f8>") 'py-shell-complete)
              (local-set-key (kbd "<f1>") 'magit-status)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; set custom functions
+;; define custom functions
 (defun increase-font-size ()
   (interactive)
   (set-face-attribute 'default nil :height
@@ -298,7 +293,7 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(custom-enabled-themes (quote (church)))
- '(custom-safe-themes (quote ("3fdd718695d948ca0576bea245af183f053b01567ea2b5da7266b564ad07a5ac" "5699a205d01cfa88ed9292e2244e26b82a3f55bd18caecbba90f376efe31f52e" "1e00c42b7ae2d826e233b65b57822579a0dd7b9cd95b7a5eef94555d6f507b09" "950a135f35029110f8c938dad4ff5c35f77a038995b6b8bba98b65dae1c3cabe" "04fc5453daaba865d6ae45f4e45c8a50e4167a008d9481a0aafe0de7f6b237da" "eaa0610de527691a0bd4648e0541821bca3478ae9d8bb957cf8995de7805800e" "53766ce623ded9a5677ebbaeca49b52e6c9be6b678c8240906954e2d01b72c9e" "028ad3c88a0c9e0e21946617871318e91c337e8a43f50644b78619865d130691" "9d321de2c3f777c6edea494c77337bb0c230ea12032a4c0c0125a7b2fdea25a3" "b8e3c880be5aeee7f0134fb241a9ba9636bf63a9827249474b471ac7c3e8ef93" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
+ '(custom-safe-themes (quote ("4c4c7d19b9a3844da4b499664ff2be2edd44e56303e896936329b21f657d75fa" "45d3aa79d35b2b3e31e6f6c8e79bc8e8a8a4183b4294ff41c8027f26e42dbe5a" "6036c315dd7f9d8f930d9c7fe0e46a6b8942736f0a1f3e3c060d5324dc7d3a86" "6ba69d237b3e2465492b87f4836ab1b82e324056eafae6aaa3ebde9b2cd5ec7c" "3fdd718695d948ca0576bea245af183f053b01567ea2b5da7266b564ad07a5ac" "5699a205d01cfa88ed9292e2244e26b82a3f55bd18caecbba90f376efe31f52e" "1e00c42b7ae2d826e233b65b57822579a0dd7b9cd95b7a5eef94555d6f507b09" "950a135f35029110f8c938dad4ff5c35f77a038995b6b8bba98b65dae1c3cabe" "04fc5453daaba865d6ae45f4e45c8a50e4167a008d9481a0aafe0de7f6b237da" "eaa0610de527691a0bd4648e0541821bca3478ae9d8bb957cf8995de7805800e" "53766ce623ded9a5677ebbaeca49b52e6c9be6b678c8240906954e2d01b72c9e" "028ad3c88a0c9e0e21946617871318e91c337e8a43f50644b78619865d130691" "9d321de2c3f777c6edea494c77337bb0c230ea12032a4c0c0125a7b2fdea25a3" "b8e3c880be5aeee7f0134fb241a9ba9636bf63a9827249474b471ac7c3e8ef93" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
  '(fci-rule-color "#383838")
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map (quote ((20 . "#BC8383") (40 . "#CC9393") (60 . "#DFAF8F") (80 . "#D0BF8F") (100 . "#E0CF9F") (120 . "#F0DFAF") (140 . "#5F7F5F") (160 . "#7F9F7F") (180 . "#8FB28F") (200 . "#9FC59F") (220 . "#AFD8AF") (240 . "#BFEBBF") (260 . "#93E0E3") (280 . "#6CA0A3") (300 . "#7CB8BB") (320 . "#8CD0D3") (340 . "#94BFF3") (360 . "#DC8CC3"))))
