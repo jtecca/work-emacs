@@ -1,18 +1,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-08-27
+;;;; updated: 2014-09-15
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; required packages:
 ;; auto-complete
 ;; concurrent
+;; church-theme
 ;; fill-column-indicator
 ;; idomenu
 ;; magit
 ;; markdown-mode
 ;; paredit
 ;; popup
-;; pydoc-info
-;; python-mode
 ;; rainbow-delimiters
 ;; smex
 ;; smooth-scrolling
@@ -86,6 +85,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom global keybindings
+(global-set-key (kbd "C-x C-f") 'ido-find-file)
+(global-set-key (kbd "C-x b") 'ido-switch-buffer)
 ;; make C-x C-k another kill buffer, because I can't type
 (global-set-key "\C-x \C-k" 'ido-kill-buffer)
 ;; rebind C-x o to M-o for faster buffer switching
@@ -124,7 +125,7 @@
 (global-visual-line-mode 1)
 (eldoc-mode t)
 (require 'rainbow-delimiters)
-(global-rainbow-delimiters-mode)
+(global-rainbow-delimiters-mode t)
 (require 'smooth-scrolling)
 (setq cursor-type 'box)
 (highlight-numbers-mode t)
@@ -152,6 +153,7 @@
 (setq next-line-add-newlines t)
 (setq-default fill-column 79)
 (require 'fill-column-indicator)
+(fci-mode t)
 (show-paren-mode t)
 (setq show-paren-style 'parenthesis)
 (delete-selection-mode t)
@@ -182,12 +184,6 @@
  'paredit-close-round)
 
 ;;;;;;;;;;;;;;;;;;
-;; use ido for finding files and switching buffers
-(global-set-key (kbd "C-x C-f") 'ido-find-file)
-(global-set-key (kbd "C-x b") 'ido-switch-buffer)
-;; note that C-x C-b still opens ibuffer
-
-;;;;;;;;;;;;;;;;;;
 ;; org-mode settings
 ;; make each new layer indent for easier reading
 (add-hook 'org-mode-hook '(lambda () (org-indent-mode t)))
@@ -209,7 +205,7 @@
   (myorg-update-parent-cookie))
 
 ;;;;;;;;;;;;;;;;;;
-;;;; python-specific settings
+;;;; python settings
 ;; windows settings, assumes that you have the Anaconda distribution installed
 ;; to the default location
 (setq
