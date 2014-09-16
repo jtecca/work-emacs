@@ -44,7 +44,7 @@
       (set-face-attribute 'default nil :font "Cousine Bold-10")
       (setq default-directory "c:/Users/jeff.tecca/")))
   ((string-equal initial-window-system "x") ; emacs running in an x window
-   (progn 
+   (progn
      (set-face-attribute 'default nil :font "Ubuntu Mono-11")
      (setq default-directory "~/")
      (set-language-environment "utf-8")
@@ -53,7 +53,7 @@
      (add-to-list 'load-path (expand-file-name "~/slime/"))
      (require 'slime))
    (slime-setup '(slime-fancy))
-     
+
    ((string-equal initial-window-system "nil") ; running in a term
     (setq default-directory "~/"))))
 
@@ -98,7 +98,7 @@
 (global-set-key (kbd "<f9>") 'imenu)
 (global-set-key (kbd "<f5>") 'revert-this-buffer)
 ; below is less bulky than C-x z, z... for repeating, more like vim
-(global-set-key (kbd "C-z") 'repeat) 
+(global-set-key (kbd "C-z") 'repeat)
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 ;; smex bindings
@@ -161,9 +161,9 @@
 (setq ido-create-new-buffer 'always)
 (setq confirm-nonexistent-file-or-buffer nil)
 (setq redisplay-dont-pause t)
-;(require 'auto-complete)
+(require 'auto-complete)
 ;; TODO turn this on for elisp mode
-;(global-auto-complete-mode t)
+(global-auto-complete-mode t)
 (global-linum-mode t)
 
 ;;;;;;;;;;;;;;;;;;
@@ -177,7 +177,7 @@
 (add-hook 'lisp-mode-hook #'enable-paredit-mode)
 (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
 (add-hook 'scheme-mode-hook #'enable-paredit-mode)
-(add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
+(add-hook 'slime-repl-mode-hook '(lambda () (paredit-mode t)))
 ;; make eldoc aware of paredit
 (eldoc-add-command
  'paredit-backward-delete
@@ -240,18 +240,22 @@
                       (- (face-attribute 'default :height) 10)))
 
 (defun insert-date (arg)
-"inserts the current date into the buffer.  if called with an arg, changes the format to the windows-style format."
+"inserts the current date into the buffer.
+
+if called with an arg, changes the format to the windows-style format."
   (interactive "P")
   (insert (if arg
               (format-time-string "%m/%d/%Y")
             (format-time-string "%Y-%m-%d"))))
-  
+
 (defun insert-time ()
   (interactive)
   (insert (format-time-string "%H:%M:%S")))
 
 (defun insert-datetime (arg)
-"inserts the date and time into the buffer.  if called with an arg, changes the date format to the windows-style format."
+"inserts the date and time into the buffer.
+
+if called with an arg, changes the date format to the windows-style format."
 (interactive "P")
 (insert (if arg
             (format-time-string "%m/%d/%Y %H:%M:%S")
@@ -270,7 +274,7 @@
       ((string-equal system-type "windows-nt")
       (w32-send-sys-command #xf030)) ;; 0xf030 is the command for maximizing a window)
       ((string-equal system-type "gnu/linux")
-       (progn 
+       (progn
          (set-frame-parameter nil 'fullscreen
                               (when (not (frame-parameter nil 'fullscreen)) 'fullboth))))))
 
@@ -289,7 +293,7 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(custom-enabled-themes (quote (church)))
- '(custom-safe-themes (quote ("4c4c7d19b9a3844da4b499664ff2be2edd44e56303e896936329b21f657d75fa" "45d3aa79d35b2b3e31e6f6c8e79bc8e8a8a4183b4294ff41c8027f26e42dbe5a" "6036c315dd7f9d8f930d9c7fe0e46a6b8942736f0a1f3e3c060d5324dc7d3a86" "6ba69d237b3e2465492b87f4836ab1b82e324056eafae6aaa3ebde9b2cd5ec7c" "3fdd718695d948ca0576bea245af183f053b01567ea2b5da7266b564ad07a5ac" "5699a205d01cfa88ed9292e2244e26b82a3f55bd18caecbba90f376efe31f52e" "1e00c42b7ae2d826e233b65b57822579a0dd7b9cd95b7a5eef94555d6f507b09" "950a135f35029110f8c938dad4ff5c35f77a038995b6b8bba98b65dae1c3cabe" "04fc5453daaba865d6ae45f4e45c8a50e4167a008d9481a0aafe0de7f6b237da" "eaa0610de527691a0bd4648e0541821bca3478ae9d8bb957cf8995de7805800e" "53766ce623ded9a5677ebbaeca49b52e6c9be6b678c8240906954e2d01b72c9e" "028ad3c88a0c9e0e21946617871318e91c337e8a43f50644b78619865d130691" "9d321de2c3f777c6edea494c77337bb0c230ea12032a4c0c0125a7b2fdea25a3" "b8e3c880be5aeee7f0134fb241a9ba9636bf63a9827249474b471ac7c3e8ef93" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
+ '(custom-safe-themes (quote ("0969c6c3dd7ea3a806cf9c02e880ae8eb25fa3c5acda384c831f16d997e5969e" "bf022cbe1e77f694439857b812eedcb320313ef725e1bdddb980a4630888db3a" "47c4286586da078b8946889f008276d209022df41cca28a2b4d3147f5b450162" "953263458f4b251401274b2224aa0804191cb90655976a9e852ea4ca9b76d398" "3d381872a4502adbc9db1b46a270bc4fbff5202ed5bb9d5e95d15491ed5601eb" "891c439a6dc3f077345bf773b2a9bfafdd4cefeab08d13ee700ba9ea66f5aa62" "85968d3e525a9dddde055088e65e78c0a1fc5737b8e4ae906ecdacef76341ee8" "aebbabdcf83ef29c6384eb6d75b6f8da05bcf4c6c8b89e762670a476cc3af55a" "afd805c5e6d682741bd1f3e52047c10deda38aed85f16f37d97c31b226245952" "cb7e81fd18e1c43469c6bb529cce9268fe452cce01326fc625d7e2071c81b4c1" "31dc7bc9a83e27bcefc10d0d6e7001c644cdbdc5b2955e775cf18bc138dab7d9" "7b0df3af11ea466aa1831754b74388d96a4b64ef98971cc7126c4b35c8cc60df" "a53d74bd879773bcea6e85257f78e67fdb61f0c6ec4e648acdff0a7dc879c6c9" "5c98366f283b97e43b6576296663532620f47851364df9875a6af354cee73a89" "b9278adb8f29c8b57e30bf925eaa9134c08420d31ad82bdffb2c3d803152588c" "a951e552a76ca104c48ee9cfd68fc2386db5660e880d54ee33882cf4e486f591" "4c36bc42ca033ed989ffa34e48679b2a6e6c97aa4d50e3619338296d20b883f8" "0e2966df314f1fd3ab00484ac3f8a59cfbf10157ce1c927311c2c0a79fb7bbff" "fbab2780a309fed6c7000d522de70e95ca4812fde9e54931b577a9e07b2d1641" "b23121deed3790fbb1bc567ca2a0b04de733143fa06a99124ed2f1c4ee811c90" "0bce907b038c49bac4e60c329c084c29d4f88347352642f443be716f733fe2f5" "e791713b8d918c7f3c6fd499f0cd87b9f40e03c3ae882ff6057b2cd2d13a35af" "d8dbcb1fa5a26ff351f104f8144b00498819ab1a9b053eb98cceb0bf1a02b9a0" "4c4c7d19b9a3844da4b499664ff2be2edd44e56303e896936329b21f657d75fa" "45d3aa79d35b2b3e31e6f6c8e79bc8e8a8a4183b4294ff41c8027f26e42dbe5a" "6036c315dd7f9d8f930d9c7fe0e46a6b8942736f0a1f3e3c060d5324dc7d3a86" "6ba69d237b3e2465492b87f4836ab1b82e324056eafae6aaa3ebde9b2cd5ec7c" "3fdd718695d948ca0576bea245af183f053b01567ea2b5da7266b564ad07a5ac" "5699a205d01cfa88ed9292e2244e26b82a3f55bd18caecbba90f376efe31f52e" "1e00c42b7ae2d826e233b65b57822579a0dd7b9cd95b7a5eef94555d6f507b09" "950a135f35029110f8c938dad4ff5c35f77a038995b6b8bba98b65dae1c3cabe" "04fc5453daaba865d6ae45f4e45c8a50e4167a008d9481a0aafe0de7f6b237da" "eaa0610de527691a0bd4648e0541821bca3478ae9d8bb957cf8995de7805800e" "53766ce623ded9a5677ebbaeca49b52e6c9be6b678c8240906954e2d01b72c9e" "028ad3c88a0c9e0e21946617871318e91c337e8a43f50644b78619865d130691" "9d321de2c3f777c6edea494c77337bb0c230ea12032a4c0c0125a7b2fdea25a3" "b8e3c880be5aeee7f0134fb241a9ba9636bf63a9827249474b471ac7c3e8ef93" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
  '(fci-rule-color "#383838")
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map (quote ((20 . "#BC8383") (40 . "#CC9393") (60 . "#DFAF8F") (80 . "#D0BF8F") (100 . "#E0CF9F") (120 . "#F0DFAF") (140 . "#5F7F5F") (160 . "#7F9F7F") (180 . "#8FB28F") (200 . "#9FC59F") (220 . "#AFD8AF") (240 . "#BFEBBF") (260 . "#93E0E3") (280 . "#6CA0A3") (300 . "#7CB8BB") (320 . "#8CD0D3") (340 . "#94BFF3") (360 . "#DC8CC3"))))
