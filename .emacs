@@ -47,15 +47,21 @@
    (progn
      (set-face-attribute 'default nil :font "Ubuntu Mono-11")
      (setq default-directory "~/")
-     (set-language-environment "utf-8")
-     ;; lisp/slime setup
-     (setq inferior-lisp-program "sbcl")
-     (add-to-list 'load-path (expand-file-name "~/slime/"))
-     (require 'slime))
-   (slime-setup '(slime-fancy))
-
+     (set-language-environment "utf-8")))
    ((string-equal initial-window-system "nil") ; running in a term
-    (setq default-directory "~/"))))
+    (setq default-directory "~/")))
+
+;; lisp
+(cond
+ ((string-equal initial-window-system "w32")
+  (progn
+    (setq inferior-lisp-program "wx86cl64")))
+ ((string-equal initial-window-system "x")
+  (progn
+    (setq inferior-lisp-program "sbcl"))))
+;; (add-to-list 'load-path (expand-file-name "~/quicklisp/slime-helper.el"))
+;; (require 'slime)
+;; (slime-setup '(slime-fance))
 
 ;; setup apsell for spell checking
 ;; M-$ is the default keybinding for it
@@ -106,8 +112,10 @@
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; alternative keybindings for M-x
-(global-set-key "\C-x\C-m" 'smex)
-(global-set-key "\C-c\C-m" 'smex)
+(global-set-key (kbd "C-x C-m") 'smex)
+(global-set-key (kbd "C-c C-m") 'smex)
+;; copy-line keybinding
+(global-set-key (kbd "C-c k") 'copy-line)
 
 ;;;;;;;;;;;;;;;;;;
 ;; markdown settings
@@ -121,12 +129,15 @@
 (setq frame-title-format "emacs - %b")
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
-(setq visible-bell t)
+(setq visible-bell nil)
 (global-visual-line-mode 1)
 (eldoc-mode t)
 (require 'rainbow-delimiters)
 (global-rainbow-delimiters-mode t)
 (require 'smooth-scrolling)
+(setq smooth-scroll-margin 5)
+(setq scroll-conservatively 9999
+      scroll-preserve-screen-position t)
 (setq cursor-type 'box)
 (highlight-numbers-mode t)
 
@@ -284,6 +295,16 @@ if called with an arg, changes the date format to the windows-style format."
   (interactive)
   (revert-buffer nil t t)
   (message (concat "Reverted buffer: " (buffer-name))))
+
+(defun copy-line ()
+  "Copies the entire line to the kill-ring without killing the text.  
+Intended to behave like vi's 'yy' command."
+  (interactive)
+  (save-excursion
+    (let ((bol (progn (back-to-indentation) (point)))
+          (eol (progn (end-of-visual-line) (point))))
+      (kill-ring-save bol eol)))
+  (message "Copied line to kill-ring"))
 
 ; -------------------------------------------
 (custom-set-variables
