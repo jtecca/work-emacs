@@ -188,7 +188,7 @@
 (add-hook 'lisp-mode-hook #'enable-paredit-mode)
 (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
 (add-hook 'scheme-mode-hook #'enable-paredit-mode)
-(add-hook 'slime-repl-mode-hook '(lambda () (paredit-mode t)))
+(add-hook 'slime-repl-mode-hook #'enable-paredit-mode)
 ;; make eldoc aware of paredit
 (eldoc-add-command
  'paredit-backward-delete
@@ -272,6 +272,15 @@ if called with an arg, changes the date format to the windows-style format."
             (format-time-string "%m/%d/%Y %H:%M:%S")
           (format-time-string "%Y-%m-%d %H:%M:%S"))))
 
+(defun prettify-json-document ()
+"Runs a python module to prettify a selected JSON document.
+
+A region must be used to highlight the JSON document to be parsed, otherwise nothing is parsed."
+  (interactive)
+  (if (use-region-p)
+        (shell-command-on-region (region-beginning) (region-end) "python -mjson.tool" nil t)))
+
+
 (defun python-insert-breakpoint ()
   "Inserts a breakpoint to the buffer and highlights all other breakpoints in the buffer."
   (interactive)
@@ -325,3 +334,4 @@ Intended to behave like vi's 'yy' command."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'upcase-region 'disabled nil)
