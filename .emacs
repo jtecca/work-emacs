@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-09-15
+;;;; updated: 2014-10-09
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; required packages:
 ;; auto-complete
@@ -41,7 +41,7 @@
     ((string-equal initial-window-system "w32")
     (progn
       ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
-      (set-face-attribute 'default nil :font "Cousine Bold-10")
+      (set-face-attribute 'default nil :font "Cousine-10")
       (setq default-directory "c:/Users/jeff.tecca/")))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn
