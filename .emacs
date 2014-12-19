@@ -210,7 +210,7 @@
  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
  python-shell-completion-setup-code
    "from IPython.core.completerlib import module_completion"
- python-shell-completion-module-string-code
+ python-shell-completion-string-code
    "';'.join(module_completion('''%s'''))\n"
  python-shell-completion-string-code
    "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
@@ -268,6 +268,12 @@ A region must be used to highlight the JSON document to be parsed, otherwise not
   (interactive)
   (if (use-region-p)
         (shell-command-on-region (region-beginning) (region-end) "python -m json.tool" nil t)))
+
+(defun python-insert-breakpoint ()
+  "Inserts a breakpoint to the buffer and highlights all other breakpoints in the buffer."
+  (interactive)
+  (insert "import pdb; pdb.set_trace()")
+  (highlight-lines-matching-regexp "^[]*import pdb; pdb.set_trace()"))
 
 (defun make-frame-fullscreen ()
   "If not running Emacs in a terminal (through a window manager), f11 maximizes the frame. otherwise returns nil."
@@ -341,9 +347,3 @@ Intended to behave like vi's 'yy' command."
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
-
-
-
-
-
-
