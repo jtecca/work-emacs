@@ -45,7 +45,11 @@
     (setq inferior-lisp-program "wx86cl64")))
  ((string-equal initial-window-system "x")
   (progn
-    (setq inferior-lisp-program "sbcl")
+    (setq inferior-lisp-program "ccl64")
+    (load (expand-file-name "~/quicklisp/slime-helper.el"))))
+ ((string-equal initial-window-system "nil")
+  (progn
+    (setq inferior-lisp-program "ccl64")
     (load (expand-file-name "~/quicklisp/slime-helper.el")))))
 
 ;; setup apsell for spell checking
