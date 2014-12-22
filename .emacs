@@ -1,7 +1,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's nt-windows & gnu/linux .emacs
-;;;; updated: 2014-12-19
+;;;; updated: 2014-12-22
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; note:
+;; recently changed from smex, ido to helm
+;; you can safely remove smex and ido* packages
+;; but install helm and helm-projectile before pulling in new git changes
 
 ;;;; initial setup
 ;; removing the gui elements first keeps them from showing on startup
@@ -79,24 +83,25 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom global keybindings
-(global-set-key (kbd "C-x C-f") 'ido-find-file)
-(global-set-key (kbd "C-x b") 'ido-switch-buffer)
-(global-set-key (kbd "C-x C-k") 'ido-kill-buffer)
+;; (global-set-key (kbd "C-x C-f") 'ido-find-file)
+;; (global-set-key (kbd "C-x b") 'ido-switch-buffer)
+;; (global-set-key (kbd "C-x C-k") 'ido-kill-buffer)
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "<f8>") 'dirtree-show)
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
-(global-set-key (kbd "<f12>") 'find-function)
+;; (global-set-key (kbd "<f12>") 'find-function)
 ; <f10> is bound to pull down the menu bar (useful when in terminal)
 ; next keybinding is purposely cumbersome to reduce accidental reversions
 (global-set-key (kbd "M-C-<f5>") 'revert-this-buffer)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+;; (global-set-key (kbd "C-x C-b") 'ibuffer)
 ;; smex bindings
-(require 'smex)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; alternative keybindings for M-x
-(global-set-key (kbd "C-x C-m") 'smex)
-(global-set-key (kbd "C-c C-m") 'smex)
+;; (require 'smex)
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; ;; alternative keybindings for M-x
+;; (global-set-key (kbd "C-x m") 'smex) ; ugh, i am a sloppy keyboardist
+;; (global-set-key (kbd "C-x C-m") 'smex)
+;; (global-set-key (kbd "C-c C-m") 'smex)
 ;; copy-line keybinding
 (global-set-key (kbd "C-c k") 'copy-line)
 ;; move up and down lines with meta as well as ctrl
@@ -140,29 +145,47 @@
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; general editor setting
-(require 'dirtree)
-(require 'ido)
-(ido-mode t)
+(require 'dirtree) ;; may not need anymore with helm
+;; (require 'ido)
+;; (ido-mode t)
+(semantic-mode 1)
 (setq standard-indent 4)
 (setq-default indent-tabs-mode nil)
 (fset 'yes-or-no-p 'y-or-n-p)
-(line-number-mode t)
-(column-number-mode t)
-(toggle-word-wrap t)
+(line-number-mode 1)
+(column-number-mode 1)
+(toggle-word-wrap 1)
 (setq next-line-add-newlines t)
 (setq-default fill-column 79)
 (require 'fill-column-indicator)
-(fci-mode t)
-(show-paren-mode t)
+(fci-mode 1)
+(show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
-(delete-selection-mode t)
+(delete-selection-mode 1)
 (tooltip-mode -1)
 (setq ido-create-new-buffer 'always)
 (setq confirm-nonexistent-file-or-buffer nil)
-(setq redisplay-dont-pause t)
-(require 'auto-complete)
-(global-auto-complete-mode t)
-(global-linum-mode t)
+(setq redisplay-dont-pause 1)
+;; (require 'auto-complete)
+;; (global-auto-complete-mode t)
+(global-linum-mode 1)
+
+;;;;;;;;;;;;;;;;;;
+;; helm
+(require 'helm-config)
+;; helm's default prefix keybinding is too close to C-x C-c
+(global-set-key (kbd "C-c j") 'helm-command-prefix)
+;; i - imenu, which shows major function definitions, variable defitinitions
+(global-unset-key (kbd "C-x c"))
+(global-unset-key (kbd "C-z"))
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-m") 'helm-M-x)
+(global-set-key (kbd "C-x m") 'helm-M-x)
+(global-set-key (kbd "C-x b") 'helm-mini)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(setq helm-lisp-fuzzy-completion t)
+(helm-mode 1)
 
 ;;;;;;;;;;;;;;;;;;
 ;; paredit settings
