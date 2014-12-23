@@ -148,7 +148,6 @@
 (require 'dirtree) ;; may not need anymore with helm
 ;; (require 'ido)
 ;; (ido-mode t)
-(semantic-mode 1)
 (setq standard-indent 4)
 (setq-default indent-tabs-mode nil)
 (fset 'yes-or-no-p 'y-or-n-p)
