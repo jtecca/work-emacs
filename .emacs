@@ -118,7 +118,7 @@ Intended to behave like vi's 'yy' command."
       ;; add some command-line tools to emacs' path
       (push "c:/MinGW/bin" exec-path)
       (push (expand-file-name "~/AppData/Local/Continuum/Anaconda") exec-path)
-      (push "c:/Program Files (x86)/cmder/vendor/msysgit/bin" exec-path))))
+      (push "c:/Program Files (x86)/cmder/vendor/msysgit/bin" exec-path)))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn
      (set-face-attribute 'default nil :font "Ubuntu Mono-11")
@@ -129,10 +129,10 @@ Intended to behave like vi's 'yy' command."
 
 ;; lisp
 (cond
- ((string-equal initial-window-system "w32")
-  (progn
-    (load (expand-file-name "~/quicklisp/slime-helper.el"))
-    (setq inferior-lisp-program "wx86cl64")))
+ ;; ((string-equal initial-window-system "w32")
+ ;;  (progn
+ ;;    (load (expand-file-name "~/quicklisp/slime-helper.el"))
+ ;;    (setq inferior-lisp-program "wx86cl64")))
  ((string-equal initial-window-system "x")
   (progn
     (setq inferior-lisp-program "ccl64")
@@ -266,7 +266,7 @@ Intended to behave like vi's 'yy' command."
 ;; i think there's readline issues with the default pgadmin psql
 ;; may need to try cygwin's psql.exe for output
 (setq sql-postgres-program "C:/Program Files (x86)/pgAdmin III/1.18/psql.exe")
-(setq sql-postgres-options (file-to-string "~/postgresql/connection.info"))
+;(setq sql-postgres-options (file-to-string "~/postgresql/connection.info"))
 ;; disable truncating lines for large tables
 (add-hook 'sql-interactive-mode-hook
           (function (lambda ()
