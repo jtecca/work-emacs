@@ -129,10 +129,10 @@ Intended to behave like vi's 'yy' command."
 
 ;; lisp
 (cond
- ;; ((string-equal initial-window-system "w32")
- ;;  (progn
- ;;    (load (expand-file-name "~/quicklisp/slime-helper.el"))
- ;;    (setq inferior-lisp-program "wx86cl64")))
+ ((string-equal initial-window-system "w32")
+  (progn
+    (load (expand-file-name "~/quicklisp/slime-helper.el"))
+    (setq inferior-lisp-program "wx86cl64")))
  ((string-equal initial-window-system "x")
   (progn
     (setq inferior-lisp-program "ccl64")
