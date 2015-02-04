@@ -169,6 +169,8 @@ Intended to behave like vi's 'yy' command."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom global keybindings
+(global-set-key (kbd "<S-wheel-up>") 'increase-font-size)
+(global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 ;; (global-set-key (kbd "<f12>") 'find-function)
