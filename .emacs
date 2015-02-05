@@ -118,12 +118,14 @@ Intended to behave like vi's 'yy' command."
       ;; add some command-line tools to emacs' path
       (push "c:/MinGW/bin" exec-path)
       (push (expand-file-name "~/AppData/Local/Continuum/Anaconda") exec-path)
-      (push (expand-file-name "~/../../bin/cmder/vendor/msysgit/bin") exec-path)))
+      (push (expand-file-name "~/../../bin/cmder/vendor/msysgit/bin") exec-path)
+      (load-theme 'church)))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn
      (set-face-attribute 'default nil :font "Ubuntu Mono-11")
      (setq default-directory "~/")
-     (set-language-environment "utf-8")))
+     (set-language-environment "utf-8")
+     (load-theme 'cyberpunk)))
    ((string-equal initial-window-system "nil") ; running in a term
     (setq default-directory "~/")))
 
@@ -380,19 +382,3 @@ Intended to behave like vi's 'yy' command."
              (local-set-key (kbd "<f1>") 'magit-status)))
 
 ; -------------------------------------------
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (church)))
- '(custom-safe-themes
-   (quote
-    ("f0a99f53cbf7b004ba0c1760aa14fd70f2eabafe4e62a2b3cf5cabae8203113b" "192edf3e03e4ec83a3dabc95481e78c8e0968b4770093443e2ca28218a044ee7" "1a348d9bd42fdd81d5adcff34008bb49e3c0b0183ee00024962414834b077b91" "1aa98638bb7fc15e37df9b76cd7a1a9b4818a0639e72e439a412a43e4ca75ef0" "3d784265f44f64157d3f84d67697278f0f3b5ac538ffeed4138ae9f02f3e0663" "49803d4bcc9e86100cb360ca6ff9da7b8594cc59b4bde8a986e7c727f87dc4d9" "ac4297427c08bbd7286a9410a3586a0840b66d4aa4946bd3142399f96aa53eff" "0d44dfe3ab8efffab9051c4ea0224d8388d83ab2404e56811dfd8d1d82715c1b" "eb0f45bfa6d520185e1f8934e4e7dcba0b53fc161658ae7f65365ed52005cbee" "27f7350e7050c46ecfc40efb23f9e9e85159b2dd597618bc5d91b83f1a18bcf5" default))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(put 'downcase-region 'disabled nil)
