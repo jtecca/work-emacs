@@ -125,9 +125,10 @@ Intended to behave like vi's 'yy' command."
      (set-face-attribute 'default nil :font "Ubuntu Mono-11")
      (setq default-directory "~/")
      (set-language-environment "utf-8")
-     (load-theme 'cyberpunk)))
-   ((string-equal initial-window-system "nil") ; running in a term
-    (setq default-directory "~/")))
+     (load-theme 'cyberpunk t)))
+   ((string-equal initial-window-system "nil") ; running in a term, or emacsclient
+    (setq default-directory "~/")
+    (load-theme 'tsdh-dark t)))
 
 ;; lisp
 (cond
@@ -137,11 +138,11 @@ Intended to behave like vi's 'yy' command."
     (setq inferior-lisp-program "wx86cl64")))
  ((string-equal initial-window-system "x")
   (progn
-    (setq inferior-lisp-program "ccl64")
+    (setq inferior-lisp-program "sbcl")
     (load (expand-file-name "~/quicklisp/slime-helper.el"))))
  ((string-equal initial-window-system "nil")
   (progn
-    (setq inferior-lisp-program "ccl64")
+    (setq inferior-lisp-program "sbcl")
     (load (expand-file-name "~/quicklisp/slime-helper.el")))))
 
 ;; setup apsell for spell checking
