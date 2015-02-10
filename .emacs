@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-01-28
+;;;; updated: 2015-02-10
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;; initial setup
@@ -176,6 +176,7 @@ Intended to behave like vi's 'yy' command."
 (global-set-key (kbd "<S-wheel-up>") 'increase-font-size)
 (global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
 (global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "M-i") 'helm-semantic-or-imenu) ; or C-c j i
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 ;; (global-set-key (kbd "<f12>") 'find-function)
 ; <f10> is bound to pull down the menu bar (useful when in terminal)
