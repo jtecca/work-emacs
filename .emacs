@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-02-10
+;;;; updated: 2015-02-13
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;; initial setup
@@ -109,6 +109,14 @@ Intended to behave like vi's 'yy' command."
       (kill-ring-save bol eol)))
   (message "Copied line to kill-ring"))
 
+(defun jeff-other-window (arg)
+  "Call vanilla (other-window) unless total buffer count is more than 4,
+in which case call ace-window."
+  (interactive "P")
+  (if (> (length (window-list)) 4)
+      (ace-window arg)
+    (other-window 1)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-specific settings
 ;; maximize the frame on startup
@@ -177,7 +185,7 @@ Intended to behave like vi's 'yy' command."
 (global-set-key (kbd "C-z") 'repeat)
 (global-set-key (kbd "<S-wheel-up>") 'increase-font-size)
 (global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
-;(global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "M-o") 'jeff-other-window)
 (global-set-key (kbd "M-i") 'helm-semantic-or-imenu) ; or C-c j i
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 ;; (global-set-key (kbd "<f12>") 'find-function)
@@ -367,10 +375,9 @@ Intended to behave like vi's 'yy' command."
 ;; FAQ      : https://github.com/winterTTr/ace-jump-mode/wiki/AceJump-FAQ
 ;; setup ace window for quick jumping between windows
 (require 'ace-window)
-(global-set-key (kbd "M-o") 'ace-window)
 (setf aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 (setf aw-scope 'frame)
-
+ 
 ;;;;;;;;;;;;;;;;;;
 ;;;; python settings
 ;; windows settings, assumes that you have the Anaconda distribution installed
