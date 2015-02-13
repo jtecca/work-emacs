@@ -10,6 +10,9 @@
     (tool-bar-mode 0)
     (scroll-bar-mode 0)))
 
+(setf user-full-name "Jeff Tecca"
+      user-mail-address "jeff.tecca@gmail.com")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; startup and load external packages
 (require 'package)
@@ -124,7 +127,6 @@ Intended to behave like vi's 'yy' command."
    (progn
      (set-face-attribute 'default nil :font "Ubuntu Mono-11")
      (setq default-directory "~/")
-     (set-language-environment "utf-8")
      (load-theme 'cyberpunk t)))
    ((string-equal initial-window-system "nil") ; running in a term, or emacsclient
     (setq default-directory "~/")
@@ -175,7 +177,7 @@ Intended to behave like vi's 'yy' command."
 (global-set-key (kbd "C-z") 'repeat)
 (global-set-key (kbd "<S-wheel-up>") 'increase-font-size)
 (global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
-(global-set-key (kbd "M-o") 'other-window)
+;(global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "M-i") 'helm-semantic-or-imenu) ; or C-c j i
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 ;; (global-set-key (kbd "<f12>") 'find-function)
@@ -232,7 +234,8 @@ Intended to behave like vi's 'yy' command."
 (setq delete-by-moving-to-trash t)
 
 ;;;;;;;;;;;;;;;;;;
-;;;; general editor setting
+;;;; general editor settings
+(set-language-environment "utf-8")
 (setq confirm-kill-emacs (quote y-or-n-p))
 (setq standard-indent 4)
 (setq-default indent-tabs-mode nil)
@@ -250,10 +253,12 @@ Intended to behave like vi's 'yy' command."
 (setq ido-create-new-buffer 'always)
 (setq confirm-nonexistent-file-or-buffer nil)
 (setq redisplay-dont-pause 1)
+(setf x-stretch-cursor 1)
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
 (require 'helm-config)
+;; look into helm-swoop as a find replacement
 ;; helm's default prefix keybinding is too close to C-x C-c
 (global-set-key (kbd "C-c j") 'helm-command-prefix)
 ;; i - imenu, which shows major function definitions, variable defitinitions
@@ -360,6 +365,11 @@ Intended to behave like vi's 'yy' command."
 ;;; For more information
 ;; Intro Doc: https://github.com/winterTTr/ace-jump-mode/wiki
 ;; FAQ      : https://github.com/winterTTr/ace-jump-mode/wiki/AceJump-FAQ
+;; setup ace window for quick jumping between windows
+(require 'ace-window)
+(global-set-key (kbd "M-o") 'ace-window)
+(setf aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+(setf aw-scope 'frame)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; python settings
