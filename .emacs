@@ -124,7 +124,7 @@ in which case call ace-window."
     ((string-equal initial-window-system "w32")
     (progn
       ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
-      (set-face-attribute 'default nil :font "Bitstream Vera Sans Mono-10")
+      (set-face-attribute 'default nil :font "Dina-9")
       (setq default-directory "c:/Users/jeff.tecca/")
       ;; add some command-line tools to emacs' path
       (push "c:/MinGW/bin" exec-path)
@@ -262,6 +262,9 @@ in which case call ace-window."
 (setq confirm-nonexistent-file-or-buffer nil)
 (setq redisplay-dont-pause 1)
 (setf x-stretch-cursor 1)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; if above ends up being slow, i can add this to a specific mode hook, eg:
+;; (add-hook 'c-mode-hook (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
@@ -342,7 +345,7 @@ in which case call ace-window."
 (add-hook 'org-mode-hook '(lambda () (org-indent-mode t)))
 ;; set the task keywords
 (setq org-todo-keywords
-      '((sequence "TODO" "WORKING" "STOPPED" "REVIEW" "DONE")))
+      '((sequence "TODO" "WORKING" "STOPPED" "DONE")))
 ;; update counts after removing a line from an org todo-list
 (defun myorg-update-parent-cookie ()
   (when (equal major-mode 'org-mode)
