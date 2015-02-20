@@ -184,7 +184,12 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
        (not (string-equal system-type "windows-nt")))
   (progn
     (setq inferior-lisp-program "sbcl")
-    (load (expand-file-name "~/quicklisp/slime-helper.el")))))
+    (load (expand-file-name "~/quicklisp/slime-helper.el"))))
+ ((and (string-equal initial-window-system "nil")
+       (string-equal system-type "windows-nt"))
+  (progn
+    (setq inferior-lisp-program "wx86cl64")
+    (load (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el")))))
 
 ;; setup apsell for spell checking
 ;; M-$ is the default keybinding for it
