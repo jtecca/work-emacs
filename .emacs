@@ -117,6 +117,36 @@ in which case call ace-window."
       (ace-window arg)
     (other-window 1)))
 
+(defun endless/comment-line (n)
+  "Comment or uncomment current line and leave point after it.
+With positive prefix, apply to N lines including current line.
+With negative prefix, apply to -N lines above.
+Shamelessly stolen from:
+http://endlessparentheses.com/implementing-comment-line.html
+Note that this function will be included in emacs 25.1. as #'comment-line."
+  (interactive "p")
+  (if (use-region-p)
+      (comment-or-uncomment-region
+       (region-beginning) (region-end))
+    (let ((range
+           (list (line-beginning-position)
+                 (goto-char (line-end-position n)))))
+      (comment-or-uncomment-region
+       (apply #'min range)
+       (apply #'max range)))
+    (forward-line 1)
+    (back-to-indentation)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; defadvice macros
+; courtesy of https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-specific settings
 ;; maximize the frame on startup
@@ -130,7 +160,7 @@ in which case call ace-window."
       (push "c:/MinGW/bin" exec-path)
       (push (expand-file-name "~/AppData/Local/Continuum/Anaconda") exec-path)
       (push (expand-file-name "~/../../bin/cmder/vendor/msysgit/bin") exec-path)
-      (load-theme 'church)))
+      (load-theme 'zenburn)))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn
      (set-face-attribute 'default nil :font "Ubuntu Mono-11")
@@ -150,7 +180,8 @@ in which case call ace-window."
   (progn
     (setq inferior-lisp-program "sbcl")
     (load (expand-file-name "~/quicklisp/slime-helper.el"))))
- ((string-equal initial-window-system "nil")
+ ((and (string-equal initial-window-system "nil")
+       (not (string-equal system-type "windows-nt")))
   (progn
     (setq inferior-lisp-program "sbcl")
     (load (expand-file-name "~/quicklisp/slime-helper.el")))))
@@ -188,8 +219,7 @@ in which case call ace-window."
 (global-set-key (kbd "M-o") 'jeff-other-window)
 (global-set-key (kbd "M-i") 'helm-semantic-or-imenu) ; or C-c j i
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
-;; (global-set-key (kbd "<f12>") 'find-function)
-; <f10> is bound to pull down the menu bar (useful when in terminal)
+(global-set-key (kbd "C-;") 'endless/comment-line)
 ; next keybinding is purposely cumbersome to reduce accidental reversions
 (global-set-key (kbd "M-C-<f5>") 'revert-this-buffer)
 ;; copy-line keybinding
@@ -216,20 +246,12 @@ in which case call ace-window."
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
 (setq visible-bell nil)
-(eldoc-mode t)
-;(require 'rainbow-delimiters)
-;(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (setq smooth-scroll-margin 5)
 (setq scroll-conservatively 9999
       scroll-preserve-screen-position t)
 (setq cursor-type 'box)
 (require 'highlight-numbers)
 (add-hook 'prog-mode-hook 'highlight-numbers-mode)
-(require 'sml-modeline)
-(sml-modeline-mode 1)
-(setq default-frame-alist
-      (append default-frame-alist
-              '((background-color . "grey88"))))
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; autosave/backup/file options
@@ -253,7 +275,7 @@ in which case call ace-window."
 (setq next-line-add-newlines t)
 (setq-default fill-column 79)
 (require 'fill-column-indicator)
-(fci-mode 1)
+(turn-on-fci-mode)
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
 (delete-selection-mode 1)
@@ -380,7 +402,7 @@ in which case call ace-window."
 (require 'ace-window)
 (setf aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 (setf aw-scope 'frame)
- 
+
 ;;;;;;;;;;;;;;;;;;
 ;;;; python settings
 ;; windows settings, assumes that you have the Anaconda distribution installed
