@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-02-13
+;;;; updated: 2015-02-25
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;; initial setup
@@ -12,6 +12,9 @@
 
 (setf user-full-name "Jeff Tecca"
       user-mail-address "jeff.tecca@gmail.com")
+
+(setq custom-file  (expand-file-name "~/.emacs.d/custom.el"))
+(load custom-file)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; startup and load external packages
@@ -109,14 +112,6 @@ Intended to behave like vi's 'yy' command."
       (kill-ring-save bol eol)))
   (message "Copied line to kill-ring"))
 
-(defun jeff-other-window (arg)
-  "Call vanilla (other-window) unless total buffer count is more than 4,
-in which case call ace-window."
-  (interactive "P")
-  (if (> (length (window-list)) 4)
-      (ace-window arg)
-    (other-window 1)))
-
 (defun endless/comment-line (n)
   "Comment or uncomment current line and leave point after it.
 With positive prefix, apply to N lines including current line.
@@ -160,15 +155,16 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
       (push "c:/MinGW/bin" exec-path)
       (push (expand-file-name "~/AppData/Local/Continuum/Anaconda") exec-path)
       (push (expand-file-name "~/../../bin/cmder/vendor/msysgit/bin") exec-path)
-      (load-theme 'zenburn)))
+      ;; setup a shortcut key to automatically jump to your todo list
+      (global-set-key (kbd "<f6>") (lambda () (interactive) (find-file "~/../../Dropbox/todo.org")))))
   ((string-equal initial-window-system "x") ; emacs running in an x window
    (progn
      (set-face-attribute 'default nil :font "Ubuntu Mono-11")
-     (setq default-directory "~/")
-     (load-theme 'cyberpunk t)))
+     ;; setup a shortcut key to automatically jump to your todo list
+     (global-set-key (kbd "<f6>") (lambda () (interactive) (find-file "~/Dropbox/todo.org")))
+     (setq default-directory "~/")))
    ((string-equal initial-window-system "nil") ; running in a term, or emacsclient
-    (setq default-directory "~/")
-    (load-theme 'tsdh-dark t)))
+    (setq default-directory "~/")))
 
 ;; lisp
 (cond
@@ -221,10 +217,11 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
 (global-set-key (kbd "C-z") 'repeat)
 (global-set-key (kbd "<S-wheel-up>") 'increase-font-size)
 (global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
-(global-set-key (kbd "M-o") 'jeff-other-window)
+(global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "M-i") 'helm-semantic-or-imenu) ; or C-c j i
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 (global-set-key (kbd "C-;") 'endless/comment-line)
+(global-set-key (kbd "C-c .") 'find-function-at-point)
 ; next keybinding is purposely cumbersome to reduce accidental reversions
 (global-set-key (kbd "M-C-<f5>") 'revert-this-buffer)
 ;; copy-line keybinding
@@ -237,6 +234,35 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
 (global-set-key (kbd "<C-down>") 'enlarge-window)
 (global-set-key (kbd "<C-left>") 'enlarge-window-horizontally)
 (global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
+
+;;;;;;;;;;;;;;;;;;
+;; hydras
+;; trying out hydra package with a few examples set to the function keys
+;; just to see if it fits well with my workflow
+(require 'hydra)
+(defhydra hydra-zoom (global-map "<f9>")
+  "zoom"
+  ("i" text-scale-increase "in")
+  ("o" text-scale-decrease "out")
+  ("q" nil "quit" :color blue))
+
+(require 'hydra-examples)
+(defhydra hydra-splitter (global-map "<f10>")
+  "splitter"
+  ("h" hydra-move-splitter-left)
+  ("j" hydra-move-splitter-down)
+  ("k" hydra-move-splitter-up)
+  ("l" hydra-move-splitter-right)
+  ("q" nil "quit" :color blue))
+
+(require 'windmove)
+(defhydra hydra-windmove (global-map "<f11>")
+  "windmove"
+  ("h" windmove-left)
+  ("j" windmove-down)
+  ("k" windmove-up)
+  ("l" windmove-right)
+  ("q" nil "quit" :color blue))
 
 ;;;;;;;;;;;;;;;;;;
 ;; markdown settings
@@ -352,19 +378,19 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
 (add-hook 'scheme-mode-hook #'eldoc-mode)
 (add-hook 'slime-repl-mode-hook #'enable-paredit-mode)
 (add-hook 'slime-repl-mode-hook #'eldoc-mode)
-(cond
- ;; something in windows is capturing C-), which messes up my paredit
- ;; keybindings, so rebind them when on windows and remove old keybindings
- ;; i hope this doesn't screw up my linux muscle memory for paredit...
- ((string-equal initial-window-system "w32")
-  (progn
-    (define-key paredit-mode-map (kbd "C-*") 'paredit-forward-slurp-sexp)
-    (define-key paredit-mode-map (kbd "C-&") 'paredit-backward-slurp-sexp)
-    (define-key paredit-mode-map (kbd "C-(") nil))))
 ;; make eldoc aware of paredit
 (eldoc-add-command
  'paredit-backward-delete
  'paredit-close-round)
+(cond
+;; something in windows is capturing C-), which messes up my paredit
+;; keybindings, so rebind them when on windows and remove old keybindings
+;; i hope this doesn't screw up my linux muscle memory for paredit...
+((string-equal initial-window-system "w32")
+ (progn
+   (define-key paredit-mode-map (kbd "C-*") 'paredit-forward-slurp-sexp)
+   (define-key paredit-mode-map (kbd "C-&") 'paredit-backward-slurp-sexp)
+   (define-key paredit-mode-map (kbd "C-(") nil))))
 
 ;;;;;;;;;;;;;;;;;;
 ;; org-mode settings
@@ -400,18 +426,25 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
   '(ace-jump-mode-enable-mark-sync))
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 (define-key global-map (kbd "C-c C-SPC") 'ace-jump-mode)
+(setq ace-jump-mode-submode-list
+      '(ace-jump-word-mode
+        ace-jump-char-mode
+        ace-jump-line-mode))
+(setq ace-jump-mode-gray-background t)
+(setq ace-jump-mode-scope 'window)
+;; PROTIP: you can use C-c C-c to switch between char, word, and line modes
+;; after you enter a character to search for.  however, it doesn't work
+;; when you haven't entered anything to search for
 ;;; For more information
 ;; Intro Doc: https://github.com/winterTTr/ace-jump-mode/wiki
 ;; FAQ      : https://github.com/winterTTr/ace-jump-mode/wiki/AceJump-FAQ
 ;; setup ace window for quick jumping between windows
-(require 'ace-window)
-(setf aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-(setf aw-scope 'frame)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; python settings
-;; windows settings, assumes that you have the Anaconda distribution installed
-;; to the default location
+;;; TODO things are still kind of broken on windows, like autocomplete framework
+;;; TODO also think about using yassnippet for common patterns
+;;; TODO and research some good project management tools
 (setq
  python-shell-interpreter "C:\\Users\\jeff.tecca\\AppData\\Local\\Continuum\\Anaconda\\python.exe"
  python-shell-interpreter-args
@@ -430,5 +463,14 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
              (turn-on-fci-mode)
              (local-set-key (kbd "C-c i") 'python-insert-breakpoint)
              (local-set-key (kbd "<f1>") 'magit-status)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; set colors
+;;; PROTIP: use (list-faces-display) to see all of the current faces
+(set-face-background 'cursor "#ff1111")
+(set-face-background 'default "#fcfcfc")
+(set-face-background 'helm-selection "#9aff9a")
+(set-face-background 'region "#Ffebcd")
+;; (list-faces-display)
 
 ; -------------------------------------------
