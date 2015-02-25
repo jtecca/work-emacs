@@ -467,10 +467,12 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set colors
 ;;; PROTIP: use (list-faces-display) to see all of the current faces
-(set-face-background 'cursor "#ff1111")
-(set-face-background 'default "#fcfcfc")
-(set-face-background 'helm-selection "#9aff9a")
-(set-face-background 'region "#Ffebcd")
-;; (list-faces-display)
+(when
+    window-system
+  (set-face-background 'cursor "#ff1111")
+  (set-face-background 'default "#fcfcfc")
+  (set-face-background 'helm-selection "#9aff9a")
+  (set-face-background 'region "#Ffebcd"))
+;; (list-faces-display))
 
 ; -------------------------------------------
