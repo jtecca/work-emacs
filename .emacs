@@ -470,9 +470,14 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
 (when
     window-system
   (set-face-background 'cursor "#ff1111")
-  (set-face-background 'default "#fcfcfc")
+  (set-face-background 'default "#ececec")
   (set-face-background 'helm-selection "#9aff9a")
-  (set-face-background 'region "#Ffebcd"))
-;; (list-faces-display))
+  (set-face-background 'region "#Ffebcd")
+  (set-face-foreground 'comint-highlight-prompt "#228b22")
+  )
+
+;; (list-faces-display)
+;; if you want to inspect what face is being used under the cursor,
+;; use C-u C-x = and search for 'face'.
 
 ; -------------------------------------------
