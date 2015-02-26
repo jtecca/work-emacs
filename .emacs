@@ -170,7 +170,7 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
 (cond
  ((string-equal initial-window-system "w32")
   (progn
-    (load (expand-file-name "~/quicklisp/slime-helper.el"))
+    (load (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el"))
     (setq inferior-lisp-program "wx86cl64")))
  ((string-equal initial-window-system "x")
   (progn
@@ -364,6 +364,7 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
 
 ;;;;;;;;;;;;;;;;;;
 ;; paredit settings
+(require 'paredit)
 (autoload 'enable-paredit-mode "paredit" "Turn on structural editing of Lisp code." t)
 (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
 (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
@@ -474,8 +475,13 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
   (set-face-background 'helm-selection "#9aff9a")
   (set-face-background 'region "#Ffebcd")
   (set-face-foreground 'comint-highlight-prompt "#228b22")
+  (set-face-foreground 'font-lock-builtin-face "#00accc")
+  (set-face-foreground 'font-lock-keyword-face "#8a2be2")
+  (set-face-foreground 'font-lock-type-face "#00bb00")
+  (set-face-foreground 'font-lock-string-face "#8b3a3a")
+  (set-face-background 'show-paren-match "#00fa9a")
   )
-
+(list-faces-display)
 ;; (list-faces-display)
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
