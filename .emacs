@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-02-25
+;;;; updated: 2015-02-27
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;; initial setup
@@ -79,10 +79,9 @@ A region must be used to highlight the JSON document to be parsed, otherwise not
         (shell-command-on-region (region-beginning) (region-end) "python -m json.tool" nil t)))
 
 (defun python-insert-breakpoint ()
-  "Inserts a breakpoint to the buffer and highlights all other breakpoints in the buffer."
+  "Inserts a breakpoint to the buffer."
   (interactive)
-  (insert "import pdb; pdb.set_trace()")
-  (highlight-lines-matching-regexp "^[]*import pdb; pdb.set_trace()"))
+  (insert "import ipdb; ipdb.set_trace()"))
 
 (defun make-frame-fullscreen ()
   "If not running Emacs in a terminal (through a window manager), f11 maximizes the frame. otherwise returns nil."
@@ -155,6 +154,7 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
       (push "c:/MinGW/bin" exec-path)
       (push (expand-file-name "~/AppData/Local/Continuum/Anaconda") exec-path)
       (push (expand-file-name "~/../../bin/cmder/vendor/msysgit/bin") exec-path)
+      (push (expand-file-name "~/bin/cmder/vendor/msysgit/bin/") exec-path)
       ;; setup a shortcut key to automatically jump to your todo list
       (global-set-key (kbd "<f6>") (lambda () (interactive) (find-file "~/../../Dropbox/todo.org")))))
   ((string-equal initial-window-system "x") ; emacs running in an x window
@@ -234,6 +234,7 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
 (global-set-key (kbd "<C-down>") 'enlarge-window)
 (global-set-key (kbd "<C-left>") 'enlarge-window-horizontally)
 (global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
+(global-set-key (kbd "<f8>") 'magit-status)
 
 ;;;;;;;;;;;;;;;;;;
 ;; hydras
@@ -316,8 +317,6 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
 (setq redisplay-dont-pause 1)
 (setf x-stretch-cursor 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-;; if above ends up being slow, i can add this to a specific mode hook, eg:
-;; (add-hook 'c-mode-hook (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
@@ -462,8 +461,7 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
 (add-hook 'python-mode-hook
           '(lambda ()
              (turn-on-fci-mode)
-             (local-set-key (kbd "C-c i") 'python-insert-breakpoint)
-             (local-set-key (kbd "<f1>") 'magit-status)))
+             (local-set-key (kbd "C-c i") 'python-insert-breakpoint)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set colors
@@ -474,14 +472,19 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
   (set-face-background 'default "#ececec")
   (set-face-background 'helm-selection "#9aff9a")
   (set-face-background 'region "#Ffebcd")
+  (set-face-background 'show-paren-match "#00fa9a")
+  (set-face-background 'lazy-highlight "#Ffd700")
+  (set-face-background 'isearch "#9400d3")
+  (set-face-foreground 'isearch "#F5fffa")
   (set-face-foreground 'comint-highlight-prompt "#228b22")
+  ;; font-lock settings
   (set-face-foreground 'font-lock-builtin-face "#00accc")
   (set-face-foreground 'font-lock-keyword-face "#8a2be2")
   (set-face-foreground 'font-lock-type-face "#00bb00")
-  (set-face-foreground 'font-lock-string-face "#8b3a3a")
-  (set-face-background 'show-paren-match "#00fa9a")
+  (set-face-foreground 'font-lock-string-face "#8b1a1a")
+  (set-face-foreground 'font-lock-comment-face "#8b2500")
+  (set-face-foreground 'font-lock-variable-name-face "#Ee4000")
   )
-(list-faces-display)
 ;; (list-faces-display)
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
