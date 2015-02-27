@@ -131,6 +131,12 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
     (forward-line 1)
     (back-to-indentation)))
 
+(defun copy-rectangle (start end)
+  "Copies a region-rectangle
+Stolen from www.emacswiki.org/emacs/RectangleCommands"
+  (interactive "r")
+  (setq killed-rectangle (extract-rectangle start end)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; defadvice macros
 ; courtesy of https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
@@ -234,6 +240,7 @@ Note that this function will be included in emacs 25.1. as #'comment-line."
 (global-set-key (kbd "<C-down>") 'enlarge-window)
 (global-set-key (kbd "<C-left>") 'enlarge-window-horizontally)
 (global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
+(global-set-key (kbd "C-x r M-w") 'copy-rectangle)
 (global-set-key (kbd "<f8>") 'magit-status)
 
 ;;;;;;;;;;;;;;;;;;
