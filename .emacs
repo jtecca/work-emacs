@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-02-27
+;;;; updated: 2015-03-01
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;; initial setup
@@ -88,15 +88,16 @@ A region must be used to highlight the JSON document to be parsed, otherwise not
   (interactive)
   (cond
       ((string-equal system-type "windows-nt")
-      (w32-send-sys-command #xf030)) ;; 0xf030 is the command for maximizing a window)
+      (w32-send-sys-command #xf030))
       ((string-equal system-type "gnu/linux")
        (progn
          (set-frame-parameter nil 'fullscreen
                               (when (not (frame-parameter nil 'fullscreen)) 'fullboth))))))
 
-;; lifted from www.masteringemacs.org
+
 (defun revert-this-buffer ()
-  "Reloads (reverts) the current buffer to its saved state in a file"
+  "Reloads (reverts) the current buffer to its saved state in a file.
+lifted from www.masteringemacs.org"
   (interactive)
   (revert-buffer nil t t)
   (message (concat "Reverted buffer: " (buffer-name))))
@@ -139,9 +140,10 @@ Stolen from www.emacswiki.org/emacs/RectangleCommands"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; defadvice macros
-; courtesy of https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
+
 (defadvice kill-region (before slick-cut activate compile)
-  "When called interactively with no active region, kill a single line instead."
+  "When called interactively with no active region, kill a single line instead.
+courtesy of https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el"
   (interactive
    (if mark-active (list (region-beginning) (region-end))
      (list (line-beginning-position)
@@ -153,26 +155,22 @@ Stolen from www.emacswiki.org/emacs/RectangleCommands"
 (cond
     ((string-equal initial-window-system "w32")
     (progn
-      ;(w32-send-sys-command #xf030) ; nt command for maximizing a window
       (set-face-attribute 'default nil :font "Dina-9")
       (setq default-directory "c:/Users/jeff.tecca/")
-      ;; add some command-line tools to emacs' path
       (push "c:/MinGW/bin" exec-path)
       (push (expand-file-name "~/AppData/Local/Continuum/Anaconda") exec-path)
       (push (expand-file-name "~/../../bin/cmder/vendor/msysgit/bin") exec-path)
       (push (expand-file-name "~/bin/cmder/vendor/msysgit/bin/") exec-path)
-      ;; setup a shortcut key to automatically jump to your todo list
       (global-set-key (kbd "<f6>") (lambda () (interactive) (find-file "~/../../Dropbox/todo.org")))))
-  ((string-equal initial-window-system "x") ; emacs running in an x window
+  ((string-equal initial-window-system "x")
    (progn
      (set-face-attribute 'default nil :font "Ubuntu Mono-11")
-     ;; setup a shortcut key to automatically jump to your todo list
      (global-set-key (kbd "<f6>") (lambda () (interactive) (find-file "~/Dropbox/todo.org")))
      (setq default-directory "~/")))
-   ((string-equal initial-window-system "nil") ; running in a term, or emacsclient
+   ((string-equal initial-window-system "nil")
     (setq default-directory "~/")))
 
-;; lisp
+;; lisp setups
 (cond
  ((string-equal initial-window-system "w32")
   (progn
@@ -201,16 +199,13 @@ Stolen from www.emacswiki.org/emacs/RectangleCommands"
   (setq ispell-program-name "aspell")
   (setq ispell-personal-dictionary "C:/Program Files (x86)/Aspell/dict")
   (require 'ispell)
-  ;; set flyspell-mode invocation to C-$
   (global-set-key (kbd "C-$") 'flyspell-mode))
 ((string-equal system-type "gnu/linux")
  (global-set-key (kbd "C-$") 'flyspell-mode)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; here's a nifty auto compile of .emacs after a save
-;; stolen from: http://www.emacswiki.org/emacs/AutoRecompile
 (defun compile-dotemacs ()
-  "compile .emacs automagically on saving the .emacs file"
+  "compile .emacs automagically on saving the .emacs file.
+stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
   (interactive)
   (require 'bytecomp)
   (let ((dotemacs (expand-file-name "~/.emacs")))
@@ -228,8 +223,7 @@ Stolen from www.emacswiki.org/emacs/RectangleCommands"
 (global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 (global-set-key (kbd "C-;") 'endless/comment-line)
 (global-set-key (kbd "C-c .") 'find-function-at-point)
-; next keybinding is purposely cumbersome to reduce accidental reversions
-(global-set-key (kbd "M-C-<f5>") 'revert-this-buffer)
+(global-set-key (kbd "M-C-<f5>") 'revert-this-buffer) ; keybinding is purposely cumbersome to reduce accidental reversions
 ;; copy-line keybinding
 (global-set-key (kbd "C-c k") 'copy-line)
 ;; move up and down lines with meta as well as ctrl
@@ -476,23 +470,23 @@ Stolen from www.emacswiki.org/emacs/RectangleCommands"
 (when
     window-system
   (set-face-background 'cursor "#ff1111")
-  (set-face-background 'default "#ececec")
+  (set-face-background 'default "#ffffff")
   (set-face-background 'helm-selection "#9aff9a")
-  (set-face-background 'region "#Ffebcd")
+  (set-face-background 'region "#Eedd82")
   (set-face-background 'show-paren-match "#00fa9a")
-  (set-face-background 'lazy-highlight "#Ffd700")
+  (set-face-background 'lazy-highlight "#Ffff00")
   (set-face-background 'isearch "#9400d3")
-  (set-face-foreground 'isearch "#F5fffa")
   (set-face-foreground 'comint-highlight-prompt "#228b22")
-  ;; font-lock settings
-  (set-face-foreground 'font-lock-builtin-face "#00accc")
+  (set-face-foreground 'font-lock-builtin-face "#191970")
+  (set-face-bold 'font-lock-function-name-face t)
   (set-face-foreground 'font-lock-keyword-face "#8a2be2")
   (set-face-foreground 'font-lock-type-face "#00bb00")
-  (set-face-foreground 'font-lock-string-face "#8b1a1a")
-  (set-face-foreground 'font-lock-comment-face "#8b2500")
+  (set-face-foreground 'font-lock-string-face "#698b22")
+  (set-face-italic 'font-lock-string-face t)
+  (set-face-foreground 'font-lock-comment-face "#Ff0000")
+  (set-face-background 'font-lock-comment-face "#Ffbfb9")
   (set-face-foreground 'font-lock-variable-name-face "#Ee4000")
   )
-;; (list-faces-display)
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
 
