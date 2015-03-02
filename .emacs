@@ -471,6 +471,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
     window-system
   (set-face-background 'cursor "#ff1111")
   (set-face-background 'default "#ffffff")
+  ;; (set-face-background 'default "#ececec")
   (set-face-background 'helm-selection "#9aff9a")
   (set-face-background 'region "#Eedd82")
   (set-face-background 'show-paren-match "#00fa9a")
@@ -478,6 +479,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
   (set-face-background 'isearch "#9400d3")
   (set-face-foreground 'comint-highlight-prompt "#228b22")
   (set-face-foreground 'font-lock-builtin-face "#191970")
+  (set-face-foreground 'font-lock-function-name-face "#1c86ee")
   (set-face-bold 'font-lock-function-name-face t)
   (set-face-foreground 'font-lock-keyword-face "#8a2be2")
   (set-face-foreground 'font-lock-type-face "#00bb00")
