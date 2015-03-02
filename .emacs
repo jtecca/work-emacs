@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-03-01
+;;;; updated: 2015-03-02
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;; initial setup
@@ -9,9 +9,6 @@
   (progn
     (tool-bar-mode 0)
     (scroll-bar-mode 0)))
-
-(setf user-full-name "Jeff Tecca"
-      user-mail-address "jeff.tecca@gmail.com")
 
 (setq custom-file  (expand-file-name "~/.emacs.d/custom.el"))
 (load custom-file)
@@ -155,7 +152,7 @@ courtesy of https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el"
 (cond
     ((string-equal initial-window-system "w32")
     (progn
-      (set-face-attribute 'default nil :font "Dina-9")
+
       (setq default-directory "c:/Users/jeff.tecca/")
       (push "c:/MinGW/bin" exec-path)
       (push (expand-file-name "~/AppData/Local/Continuum/Anaconda") exec-path)
@@ -477,15 +474,17 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
   (set-face-background 'show-paren-match "#00fa9a")
   (set-face-background 'lazy-highlight "#Ffff00")
   (set-face-background 'isearch "#9400d3")
+  (set-face-foreground 'isearch "#ffffff")
+  (set-face-bold 'isearch t)
   (set-face-foreground 'comint-highlight-prompt "#228b22")
-  (set-face-foreground 'font-lock-builtin-face "#191970")
+  (set-face-foreground 'font-lock-builtin-face "#27408b")
   (set-face-foreground 'font-lock-function-name-face "#1c86ee")
   (set-face-bold 'font-lock-function-name-face t)
   (set-face-foreground 'font-lock-keyword-face "#8a2be2")
   (set-face-foreground 'font-lock-type-face "#00bb00")
   (set-face-foreground 'font-lock-string-face "#698b22")
-  (set-face-italic 'font-lock-string-face t)
   (set-face-foreground 'font-lock-comment-face "#Ff0000")
+  (set-face-background 'font-lock-comment-face "#ffefef")
   (set-face-background 'font-lock-comment-face "#Ffbfb9")
   (set-face-foreground 'font-lock-variable-name-face "#Ee4000")
   )
