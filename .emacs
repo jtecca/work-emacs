@@ -233,6 +233,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
 (global-set-key (kbd "C-x r M-w") 'copy-rectangle)
 (global-set-key (kbd "<f8>") 'magit-status)
+(global-set-key (kbd "C-M-y") 'yank-pop)
 
 ;;;;;;;;;;;;;;;;;;
 ;; hydras
@@ -477,7 +478,8 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
   (set-face-foreground 'isearch "#ffffff")
   (set-face-bold 'isearch t)
   (set-face-foreground 'comint-highlight-prompt "#228b22")
-  (set-face-foreground 'font-lock-builtin-face "#27408b")
+  ;; (set-face-foreground 'font-lock-builtin-face "#27408b")
+  (set-face-foreground 'font-lock-builtin-face "#00688b")
   (set-face-foreground 'font-lock-function-name-face "#1c86ee")
   (set-face-bold 'font-lock-function-name-face t)
   (set-face-foreground 'font-lock-keyword-face "#8a2be2")
@@ -485,7 +487,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
   (set-face-foreground 'font-lock-string-face "#698b22")
   (set-face-foreground 'font-lock-comment-face "#Ff0000")
   (set-face-background 'font-lock-comment-face "#ffefef")
-  (set-face-background 'font-lock-comment-face "#Ffbfb9")
   (set-face-foreground 'font-lock-variable-name-face "#Ee4000")
   )
 ;; if you want to inspect what face is being used under the cursor,
