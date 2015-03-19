@@ -135,6 +135,34 @@ Stolen from www.emacswiki.org/emacs/RectangleCommands"
   (interactive "r")
   (setq killed-rectangle (extract-rectangle start end)))
 
+(defun increment-number-at-point ()
+  "A time-saver that increments any number (not hex) at the point.
+Stolen from http://www.danielehrman.com/blog/2014/5/25/11-must-haves-for-every-power-programmer
+which I think was in turn stolen from the emacswiki.org."
+  (interactive)
+  (skip-chars-backward "0123456789")
+  (or (looking-at "[0123456789]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
+
+(defun th/swap-window-buffers-by-dnd (drag-event)
+  "Swaps the buffers displayed in the DRAG-EVENT's start and end
+window.
+Stolen from https://tsdh.wordpress.com/2015/03/03/swapping-emacs-windows-using-dragndrop/"
+  (interactive "e")
+  (let ((start-win (cl-caadr drag-event))
+        (end-win   (cl-caaddr drag-event)))
+    (when (and (windowp start-win)
+               (windowp end-win)
+               (not (eq start-win end-win))
+               (not (memq (minibuffer-window)
+                          (list start-win end-win))))
+      (let ((bs (window-buffer start-win))
+            (be (window-buffer end-win)))
+        (unless (eq bs be)
+          (set-window-buffer start-win be)
+          (set-window-buffer end-win bs))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; defadvice macros
 (defadvice kill-region (before slick-cut activate compile)
@@ -240,6 +268,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (global-set-key (kbd "C-x r M-w") 'copy-rectangle)
 (global-set-key (kbd "<f8>") 'magit-status)
 (global-set-key (kbd "C-M-y") 'yank-pop)
+(global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
 
 ;;;;;;;;;;;;;;;;;;
 ;; hydras
