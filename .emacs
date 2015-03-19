@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-03-02
+;;;; updated: 2015-03-19
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;; initial setup
@@ -316,6 +316,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (setq redisplay-dont-pause 1)
 (setf x-stretch-cursor 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+(setq scroll-conservatively 10000)
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
