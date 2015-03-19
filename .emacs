@@ -145,7 +145,11 @@ courtesy of https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el"
      (list (line-beginning-position)
            (line-beginning-position 2)))))
 
+<<<<<<< HEAD
 (defadvice mark-paragraph (after fix-point activate compile)
+=======
+(defadvice mark-paragraph (after fix-mark activate compile)
+>>>>>>> 5ff851c2241089aaa053d6bb03a045660c10b6c5
   "Moves the point down a line so no extra newline is in the region.
 If you test this advice in this def block, the cursor should end up at the first paren
 before the 'd' in defadvice.  Otherwise, the cursor would end up in the line above this."
