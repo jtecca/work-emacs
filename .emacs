@@ -137,7 +137,6 @@ Stolen from www.emacswiki.org/emacs/RectangleCommands"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; defadvice macros
-
 (defadvice kill-region (before slick-cut activate compile)
   "When called interactively with no active region, kill a single line instead.
 courtesy of https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el"
@@ -145,6 +144,12 @@ courtesy of https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el"
    (if mark-active (list (region-beginning) (region-end))
      (list (line-beginning-position)
            (line-beginning-position 2)))))
+
+(defadvice mark-paragraph (after fix-mark activate compile)
+  "Moves the point down a line so no extra newline is in the region.
+If you test this advice in this def block, the cursor should end up at the first paren
+before the 'd' in defadvice.  Otherwise, the cursor would end up in the line above this."
+  (next-line))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-specific settings
