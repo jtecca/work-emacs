@@ -354,6 +354,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq scroll-conservatively 10000)
 (require 'sr-speedbar)
+(setq speedbar-show-unknown-files t)
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
@@ -385,18 +386,23 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
                       (setq truncate-lines nil))))
 
 ;;;;;;;;;;;;;;;;;;
-;; auto complete
-(require 'auto-complete)
-(ac-config-default)
-;; plugins with other packages
-(require 'ac-helm)
-(define-key ac-complete-mode-map (kbd "C-:") 'ac-complete-with-helm)
-(require 'ac-python)
-(require 'ac-slime)
-(add-hook 'slime-mode-hook 'set-up-slime-ac)
-(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'slime-repl-mode))
+;; company-mode
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(setq company-backends (delete 'company-semantic company-backends))
+(define-key c-mode-map [(tab)] 'company-complete)
+(define-key c++-mode-map [(tab)] 'company-complete)
+;; define your project include dirs here to be seen by company-clang-complete
+;; ((nil . ((company-clang-arguments . ("-I/home/<user>/project_root/include1/"
+                                     ;; "-I/home/<user>/project_root/include2/")))))
+(add-to-list 'company-backends 'company-c-headers)
+(add-to-list 'company-c-headers-path-system "/usr/include/c++/4.9/")
+
+;;;;;;;;;;;;;;;;;;
+;; c/c++ settings
+(setq c-default-style "linux")
+(define-key c-mode-map (kbd "RET") 'newline-and-indent)
+(define-key c++-mode-map (kbd "RET") 'newline-and-indent)
 
 ;;;;;;;;;;;;;;;;;;
 ;; paredit settings
@@ -479,7 +485,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; python settings
-;;; TODO things are still kind of broken on windows, like autocomplete framework
 ;;; TODO also think about using yassnippet for common patterns
 ;;; TODO and research some good project management tools
 (setq
