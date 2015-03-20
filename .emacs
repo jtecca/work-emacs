@@ -269,6 +269,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (global-set-key (kbd "<f8>") 'magit-status)
 (global-set-key (kbd "C-M-y") 'yank-pop)
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
+(global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
 
 ;;;;;;;;;;;;;;;;;;
 ;; hydras
@@ -352,6 +353,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (setf x-stretch-cursor 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq scroll-conservatively 10000)
+(require 'sr-speedbar)
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
