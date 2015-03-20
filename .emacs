@@ -178,7 +178,8 @@ courtesy of https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el"
   "Moves the point down a line so no extra newline is in the region.
 If you test this advice in this def block, the cursor should end up at the first paren
 before the 'd' in defadvice.  Otherwise, the cursor would end up in the line above this."
-  (next-line))
+  (next-line)
+  (back-to-indentation))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-specific settings
@@ -353,8 +354,28 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (setf x-stretch-cursor 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq scroll-conservatively 10000)
+(add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+
+;;;;;;;;;;;;;;;;;;
+;; c/c++ settings
+(require 'cc-mode)
+(setq c-default-style "linux" c-basic-offset 4)
+(define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+(add-hook 'c-mode-common-hook 'hs-minor-mode)
+(setq gdb-many-windows t gdb-show-main t)
+(define-key c-mode-base-map (kbd "C-c c") (lambda ()
+                            (interactive)
+                            (setq-local compilation-read-command nil)
+                            (call-interactively 'compile)))
+
+;;;;;;;;;;;;;;;;;;
+;; sr-speedbar setup
 (require 'sr-speedbar)
 (setq speedbar-show-unknown-files t)
+(setq sr-speedbar-skip-other-window-p t) ; C-x o won't go to speedbar if opened
+(make-face 'speedbar-face)
+(set-face-font 'speedbar-face "ProFontWindows-10")
+(setq speedbar-mode-hook '(lambda () (buffer-face-set 'speedbar-face)))
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
@@ -375,6 +396,35 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (helm-mode 1)
 
 ;;;;;;;;;;;;;;;;;;
+;; tags setup
+(require 'ggtags) ; for gnu global tagging system
+(require 'helm-gtags) ; use helm to browse tags
+(setq
+ helm-gtags-ignore-case t
+ helm-gtags-auto-update t
+ helm-gtags-use-input-at-cursor t
+ helm-gtags-pulse-at-cursor t
+ helm-gtags-prefix-key "\C-cg" ; so C-c g is your tag prefix key
+ helm-gtags-suggested-key-mapping nil
+ )
+
+;; Enable helm-gtags-mode
+(add-hook 'dired-mode-hook 'helm-gtags-mode)
+(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+(define-key helm-gtags-mode-map (kbd "C-c g s") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+;; remember to cd to project root and run 'gtags' to generate tags
+;; you'll have a GTAGS def db, GRTAGS ref database, and GPATH path name db
+
+;;;;;;;;;;;;;;;;;;
 ;; sql settings
 ;; i think there's readline issues with the default pgadmin psql
 ;; may need to try cygwin's psql.exe for output
@@ -388,21 +438,17 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 ;;;;;;;;;;;;;;;;;;
 ;; company-mode
 (require 'company)
+(require 'company-c-headers)
 (add-hook 'after-init-hook 'global-company-mode)
-(setq company-backends (delete 'company-semantic company-backends))
-(define-key c-mode-map [(tab)] 'company-complete)
-(define-key c++-mode-map [(tab)] 'company-complete)
+;; on linux + clang, remove semantic backend
+(cond ((eq system-type 'gnu/linux)
+       (progn
+         (setq company-backends (delete 'company-semantic company-backends)))))
 ;; define your project include dirs here to be seen by company-clang-complete
 ;; ((nil . ((company-clang-arguments . ("-I/home/<user>/project_root/include1/"
                                      ;; "-I/home/<user>/project_root/include2/")))))
 (add-to-list 'company-backends 'company-c-headers)
 (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.9/")
-
-;;;;;;;;;;;;;;;;;;
-;; c/c++ settings
-(setq c-default-style "linux")
-(define-key c-mode-map (kbd "RET") 'newline-and-indent)
-(define-key c++-mode-map (kbd "RET") 'newline-and-indent)
 
 ;;;;;;;;;;;;;;;;;;
 ;; paredit settings
@@ -425,6 +471,8 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (eldoc-add-command
  'paredit-backward-delete
  'paredit-close-round)
+;; make eldoc aware of ggtags
+(setq-local eldoc-documentation-function #'ggtags-eldoc-function)
 (cond
 ;; something in windows is capturing C-), which messes up my paredit
 ;; keybindings, so rebind them when on windows and remove old keybindings
@@ -434,6 +482,14 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
    (define-key paredit-mode-map (kbd "C-*") 'paredit-forward-slurp-sexp)
    (define-key paredit-mode-map (kbd "C-&") 'paredit-backward-slurp-sexp)
    (define-key paredit-mode-map (kbd "C-(") nil))))
+
+;;;;;;;;;;;;;;;;;;
+;; smartparens setup
+;; TODO: spend some time reading about this and configuring it
+;; TODO: smartparens includes a lot of paredit functionality, and the two shouldn't overlap
+;; TODO: so keeping it commented out for now, see https://github.com/Fuco1/smartparens/wiki/Quick-tour
+;; (require 'smartparens)
+;; (smartparens-global-mode nil)
 
 ;;;;;;;;;;;;;;;;;;
 ;; org-mode settings
@@ -500,9 +556,9 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
  python-shell-completion-string-code
    "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 ;; custom python keybindings
+(add-hook 'python-mode-hook 'hs-minor-mode)
 (add-hook 'python-mode-hook
           '(lambda ()
-             (turn-on-fci-mode)
              (local-set-key (kbd "C-c i") 'python-insert-breakpoint)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -521,7 +577,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
   (set-face-foreground 'isearch "#ffffff")
   (set-face-bold 'isearch t)
   (set-face-foreground 'comint-highlight-prompt "#228b22")
-  ;; (set-face-foreground 'font-lock-builtin-face "#27408b")
   (set-face-foreground 'font-lock-builtin-face "#00688b")
   (set-face-foreground 'font-lock-function-name-face "#1c86ee")
   (set-face-bold 'font-lock-function-name-face t)
