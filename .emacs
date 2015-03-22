@@ -320,7 +320,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (setq cursor-type 'box)
 (require 'highlight-numbers)
 (add-hook 'prog-mode-hook 'highlight-numbers-mode)
-
+(add-hook 'prog-mode-hook 'hs-minor-mode)
 ;;;;;;;;;;;;;;;;;;
 ;;;; autosave/backup/file options
 (setq auto-save-default nil)
@@ -361,7 +361,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (require 'cc-mode)
 (setq c-default-style "linux" c-basic-offset 4)
 (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
-(add-hook 'c-mode-common-hook 'hs-minor-mode)
 (setq gdb-many-windows t gdb-show-main t)
 (define-key c-mode-base-map (kbd "C-c c") (lambda ()
                             (interactive)
@@ -449,6 +448,8 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
                                      ;; "-I/home/<user>/project_root/include2/")))))
 (add-to-list 'company-backends 'company-c-headers)
 (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.9/")
+(add-to-list 'company-c-headers-path-system "/usr/include/c++/4.8/")
+(add-to-list 'company-c-headers-path-system "/usr/include/c++/4.7/")
 
 ;;;;;;;;;;;;;;;;;;
 ;; paredit settings
@@ -556,7 +557,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
  python-shell-completion-string-code
    "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 ;; custom python keybindings
-(add-hook 'python-mode-hook 'hs-minor-mode)
 (add-hook 'python-mode-hook
           '(lambda ()
              (local-set-key (kbd "C-c i") 'python-insert-breakpoint)))
@@ -566,26 +566,25 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 ;;; PROTIP: use (list-faces-display) to see all of the current faces
 (when
     window-system
-  (set-face-background 'cursor "#ff1111")
+  (set-face-background 'cursor "#ff1744")
   (set-face-background 'default "#ffffff")
-  ;; (set-face-background 'default "#ececec")
-  (set-face-background 'helm-selection "#9aff9a")
-  (set-face-background 'region "#Eedd82")
-  (set-face-background 'show-paren-match "#00fa9a")
-  (set-face-background 'lazy-highlight "#Ffff00")
-  (set-face-background 'isearch "#9400d3")
+  (set-face-background 'helm-selection "#76ff03")
+  (set-face-background 'region "#e6ee9c")
+  (set-face-background 'show-paren-match "#1de9b6")
+  (set-face-background 'lazy-highlight "#Ffff8d")
+  (set-face-background 'isearch "#673ab7")
   (set-face-foreground 'isearch "#ffffff")
   (set-face-bold 'isearch t)
-  (set-face-foreground 'comint-highlight-prompt "#228b22")
-  (set-face-foreground 'font-lock-builtin-face "#00688b")
-  (set-face-foreground 'font-lock-function-name-face "#1c86ee")
+  (set-face-foreground 'comint-highlight-prompt "#4caf50")
+  (set-face-foreground 'font-lock-builtin-face "#0d47a1")
+  (set-face-foreground 'font-lock-function-name-face "#2979ff")
   (set-face-bold 'font-lock-function-name-face t)
-  (set-face-foreground 'font-lock-keyword-face "#8a2be2")
-  (set-face-foreground 'font-lock-type-face "#00bb00")
-  (set-face-foreground 'font-lock-string-face "#698b22")
-  (set-face-foreground 'font-lock-comment-face "#Ff0000")
+  (set-face-foreground 'font-lock-keyword-face "#8e24aa")
+  (set-face-foreground 'font-lock-type-face "#26a69a")
+  (set-face-foreground 'font-lock-string-face "#33691e")
+  (set-face-foreground 'font-lock-comment-face "#f44336")
   (set-face-background 'font-lock-comment-face "#ffefef")
-  (set-face-foreground 'font-lock-variable-name-face "#Ee4000")
+  (set-face-foreground 'font-lock-variable-name-face "#f4511e")
   )
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
