@@ -373,9 +373,9 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (require 'sr-speedbar)
 (setq speedbar-show-unknown-files t)
 (setq sr-speedbar-skip-other-window-p t) ; C-x o won't go to speedbar if opened
-(make-face 'speedbar-face)
-(set-face-font 'speedbar-face "ProFontWindows-10")
-(setq speedbar-mode-hook '(lambda () (buffer-face-set 'speedbar-face)))
+;; (make-face 'speedbar-face)
+;; (set-face-font 'speedbar-face "ProFontWindows-10")
+;; (setq speedbar-mode-hook '(lambda () (buffer-face-set 'speedbar-face)))
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
