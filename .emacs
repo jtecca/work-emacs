@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-03-19
+;;;; updated: 2015-03-23
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;; initial setup
@@ -586,6 +586,19 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
   (set-face-background 'font-lock-comment-face "#ffefef")
   (set-face-foreground 'font-lock-variable-name-face "#f4511e")
   )
+;; org colors level tweaks
+(when
+    window-system
+  (set-face-foreground 'org-level-1 "#242424")
+  (set-face-bold 'org-level-1 nil)
+  (set-face-foreground 'org-level-2 "#00008b")
+  (set-face-foreground 'org-level-3 "#551a8b")
+  (set-face-foreground 'org-level-4 "#8b0000")
+  (set-face-background 'org-level-4 "#ffffff")
+  (set-face-foreground 'org-level-5 "#008b8b")
+  (set-face-foreground 'org-level-5 "#8b2500")
+  )
+
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
 
