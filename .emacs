@@ -450,6 +450,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.9/")
 (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.8/")
 (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.7/")
+(global-set-key (kbd "M-'") 'company-complete)
 
 ;;;;;;;;;;;;;;;;;;
 ;; paredit settings
