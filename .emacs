@@ -1,4 +1,4 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+d;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
 ;;;; updated: 2015-03-23
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -357,10 +357,14 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 ;;;;;;;;;;;;;;;;;;
 ;; generic programming settings
 (require 'highlight-numbers)
-(require 'projectile)
 (add-hook 'prog-mode-hook 'highlight-numbers-mode)
 (add-hook 'prog-mode-hook 'hs-minor-mode)
+
+;;;;;;;;;;;;;;;;;;
+;; projectile setup
+(require 'projectile)
 (add-hook 'prog-mode-hook 'projectile-global-mode)
+(setq projectile-enable-caching t)
 
 ;;;;;;;;;;;;;;;;;;
 ;; c/c++ settings
