@@ -318,9 +318,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (setq scroll-conservatively 9999
       scroll-preserve-screen-position t)
 (setq cursor-type 'box)
-(require 'highlight-numbers)
-(add-hook 'prog-mode-hook 'highlight-numbers-mode)
-(add-hook 'prog-mode-hook 'hs-minor-mode)
+
 ;;;;;;;;;;;;;;;;;;
 ;;;; autosave/backup/file options
 (setq auto-save-default nil)
@@ -355,6 +353,14 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq scroll-conservatively 10000)
 (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+
+;;;;;;;;;;;;;;;;;;
+;; generic programming settings
+(require 'highlight-numbers)
+(require 'projectile)
+(add-hook 'prog-mode-hook 'highlight-numbers-mode)
+(add-hook 'prog-mode-hook 'hs-minor-mode)
+(add-hook 'prog-mode-hook 'projectile-global-mode)
 
 ;;;;;;;;;;;;;;;;;;
 ;; c/c++ settings
