@@ -163,6 +163,13 @@ Stolen from https://tsdh.wordpress.com/2015/03/03/swapping-emacs-windows-using-d
           (set-window-buffer start-win be)
           (set-window-buffer end-win bs))))))
 
+;; load temporary site functions if file exists
+;; this file is used to house multi-session functions
+;; but not permanent enough to be placed in my .emacs
+(setq temp-func-file  (expand-file-name "~/.emacs.d/temp-func.el"))
+(if (file-exists-p temp-func-file)
+    (load temp-func-file))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; defadvice macros
 (defadvice kill-region (before slick-cut activate compile)
