@@ -180,13 +180,20 @@ courtesy of https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el"
      (list (line-beginning-position)
            (line-beginning-position 2)))))
 
-
 (defadvice mark-paragraph (after fix-point activate compile)
   "Moves the point down a line so no extra newline is in the region.
 If you test this advice in this def block, the cursor should end up at the first paren
 before the 'd' in defadvice.  Otherwise, the cursor would end up in the line above this."
   (next-line)
   (back-to-indentation))
+
+(defadvice isearch-repeat-forward (after forward-recenter-pos activate compile)
+  "After a repeated isearch-forward (C-s), recenter the next found item to the center of the buffer."
+  (recenter))
+
+(defadvice isearch-repeat-backward (after backward-recenter-pos activate compile)
+  "After a repeated isearch-backwar (C-r), recenter the next found item to the center of the buffer."
+  (recenter))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-specific settings
@@ -575,7 +582,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (global-set-key (kbd "C-M-y") 'yank-pop)
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
 (global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
-(global-set-key (kbd "M-k") 'kill-whole-line) ; this is immeasurably more useful than kill-sentence
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set colors
