@@ -252,33 +252,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
         (byte-compile-file dotemacs))))
 (add-hook 'after-save-hook 'compile-dotemacs)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; custom global keybindings
-(global-set-key (kbd "C-z") 'repeat)
-(global-set-key (kbd "<S-wheel-up>") 'increase-font-size)
-(global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
-(global-set-key (kbd "M-o") 'other-window)
-(global-set-key (kbd "M-i") 'helm-semantic-or-imenu) ; or C-c j i
-(global-set-key (kbd "<f11>") 'make-frame-fullscreen)
-(global-set-key (kbd "C-;") 'endless/comment-line)
-(global-set-key (kbd "C-c .") 'find-function-at-point)
-(global-set-key (kbd "M-C-<f5>") 'revert-this-buffer) ; keybinding is purposely cumbersome to reduce accidental reversions
-;; copy-line keybinding
-(global-set-key (kbd "C-c k") 'copy-line)
-;; move up and down lines with meta as well as ctrl
-;; very useful for meta-heavy commands without switching between M and C
-(global-set-key (kbd "M-n") 'next-line)
-(global-set-key (kbd "M-p") 'previous-line)
-(global-set-key (kbd "<C-up>") 'shrink-window)
-(global-set-key (kbd "<C-down>") 'enlarge-window)
-(global-set-key (kbd "<C-left>") 'enlarge-window-horizontally)
-(global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
-(global-set-key (kbd "C-x r M-w") 'copy-rectangle)
-(global-set-key (kbd "<f8>") 'magit-status)
-(global-set-key (kbd "C-M-y") 'yank-pop)
-(global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
-(global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
-
 ;;;;;;;;;;;;;;;;;;
 ;; hydras
 ;; trying out hydra package with a few examples set to the function keys
@@ -578,6 +551,31 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (add-hook 'python-mode-hook
           '(lambda ()
              (local-set-key (kbd "C-c i") 'python-insert-breakpoint)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; custom global keybindings
+(global-set-key (kbd "C-z") 'repeat)
+(global-set-key (kbd "<S-wheel-up>") 'increase-font-size)
+(global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
+(global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "M-i") 'helm-semantic-or-imenu) ; or C-c j i
+(global-set-key (kbd "<f11>") 'make-frame-fullscreen)
+(global-set-key (kbd "C-;") 'endless/comment-line)
+(global-set-key (kbd "C-c .") 'find-function-at-point)
+(global-set-key (kbd "M-C-<f5>") 'revert-this-buffer) ; purposely cumbersome to reduce accidental reversions
+(global-set-key (kbd "C-c k") 'copy-line)
+(global-set-key (kbd "M-n") 'next-line)
+(global-set-key (kbd "M-p") 'previous-line)
+(global-set-key (kbd "<C-up>") 'shrink-window)
+(global-set-key (kbd "<C-down>") 'enlarge-window)
+(global-set-key (kbd "<C-left>") 'enlarge-window-horizontally)
+(global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
+(global-set-key (kbd "C-x r M-w") 'copy-rectangle)
+(global-set-key (kbd "<f8>") 'magit-status)
+(global-set-key (kbd "C-M-y") 'yank-pop)
+(global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
+(global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
+(global-set-key (kbd "M-k") 'kill-whole-line) ; this is immeasurably more useful than kill-sentence
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set colors
