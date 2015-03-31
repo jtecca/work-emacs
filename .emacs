@@ -2,9 +2,6 @@
 ;;;; jeff tecca's .emacs
 ;;;; updated: 2015-03-31
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;; initial setup
-;; removing the gui elements first keeps them from showing on startup
 (when window-system
   (progn
     (tool-bar-mode 0)
@@ -63,9 +60,10 @@ if called with an arg, changes the date format to the windows-style format."
             (format-time-string "%m/%d/%Y %H:%M:%S")
           (format-time-string "%Y-%m-%d %H:%M:%S"))))
 
-(defun compress-region (reg-start reg-end)
+(defun broken/compress-region (reg-start reg-end)
   "Reduces multiple lines in a selected region down to one.  Does nothing if there is no active region."
   (interactive "r")
+  (error "Don't use this function.  It needs debugging.")
   (if (use-region-p)
       (while (> (count-lines reg-start reg-end) 1)
       (call-interactively 'delete-indentation))))
@@ -203,17 +201,15 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (cond
     ((string-equal initial-window-system "w32")
     (progn
-
       (setq default-directory "c:/Users/jeff.tecca/")
       (push "c:/MinGW/bin" exec-path)
       (push (expand-file-name "~/AppData/Local/Continuum/Anaconda") exec-path)
       (push (expand-file-name "~/../../bin/cmder/vendor/msysgit/bin") exec-path)
       (push (expand-file-name "~/bin/cmder/vendor/msysgit/bin/") exec-path)
-      (global-set-key (kbd "<f6>") (lambda () (interactive) (find-file "~/../../Dropbox/todo.org")))))
+      (global-set-key (kbd "<f6>") (lambda () (interactive) (find-file org-default-notes-file)))))
   ((string-equal initial-window-system "x")
    (progn
-     (set-face-attribute 'default nil :font "Ubuntu Mono-11")
-     (global-set-key (kbd "<f6>") (lambda () (interactive) (find-file "~/Dropbox/todo.org")))
+     (global-set-key (kbd "<f6>") (lambda () (interactive) (find-file org-default-notes-file)))
      (setq default-directory "~/")))
    ((string-equal initial-window-system "nil")
     (setq default-directory "~/")))
@@ -266,6 +262,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 ;; trying out hydra package with a few examples set to the function keys
 ;; just to see if it fits well with my workflow
 (require 'hydra)
+(hydra-add-font-lock)
 (defhydra hydra-zoom (global-map "<f9>")
   "zoom"
   ("i" text-scale-increase "in")
@@ -290,6 +287,22 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
   ("l" windmove-right)
   ("q" nil "quit" :color blue))
 
+; these needs work to have the keybindings show up with just the prefix
+(defhydra hydra-org (global-map "C-c o"
+                                :hint nil
+                                :color blue)
+  "
+  _c_: capture
+  _l_: store-link
+  _a_: agenda
+  _b_: iswitchb
+  "
+  ("c" org-capture)
+  ("l" org-store-link)
+  ("a" org-agenda)
+  ("b" org-iswitchb)
+  ("q" nil "quit" :color blue))
+
 ;;;;;;;;;;;;;;;;;;
 ;; markdown settings
 ;; set markdown filetypes
@@ -302,6 +315,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (setq frame-title-format "emacs - %b")
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
+(setq linum-dela t)
 (setq visible-bell nil)
 (setq smooth-scroll-margin 5)
 (setq scroll-conservatively 9999
@@ -371,9 +385,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (require 'sr-speedbar)
 (setq speedbar-show-unknown-files t)
 (setq sr-speedbar-skip-other-window-p t) ; C-x o won't go to speedbar if opened
-;; (make-face 'speedbar-face)
-;; (set-face-font 'speedbar-face "ProFontWindows-10")
-;; (setq speedbar-mode-hook '(lambda () (buffer-face-set 'speedbar-face)))
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
@@ -526,9 +537,9 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
   '(ace-jump-mode-enable-mark-sync))
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 (define-key global-map (kbd "C-c C-SPC") 'ace-jump-mode)
-(setq ace-jump-mode-submode-list
-      '(ace-jump-word-mode
-        ace-jump-char-mode
+(setq ace-jump-mode-submode-list ; i prefer char-mode for finer-grained jumping
+      '(ace-jump-char-mode
+        ace-jump-word-mode
         ace-jump-line-mode))
 (setq ace-jump-mode-gray-background t)
 (setq ace-jump-mode-scope 'window)
@@ -568,7 +579,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "M-i") 'helm-semantic-or-imenu) ; or C-c j i
-(global-set-key (kbd "<f11>") 'make-frame-fullscreen)
 (global-set-key (kbd "C-;") 'endless/comment-line)
 (global-set-key (kbd "C-c .") 'find-function-at-point)
 (global-set-key (kbd "M-C-<f5>") 'revert-this-buffer) ; purposely cumbersome to reduce accidental reversions
@@ -584,7 +594,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (global-set-key (kbd "C-M-y") 'yank-pop)
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
 (global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
-(global-set-key (kbd "C-c !") 'org-capture)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set colors
