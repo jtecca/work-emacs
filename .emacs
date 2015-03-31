@@ -356,6 +356,10 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq scroll-conservatively 10000)
 (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+(if (file-exists-p abbrev-file-name)
+    (quietly-read-abbrev-file))
+(setq save-abbrevs t)
+(setq-default abbrev-mode t)
 
 ;;;;;;;;;;;;;;;;;;
 ;; generic programming settings
