@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-03-23
+;;;; updated: 2015-03-31
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;; initial setup
@@ -10,8 +10,10 @@
     (tool-bar-mode 0)
     (scroll-bar-mode 0)))
 
+; list of site-specific customizations
 (setq custom-file  (expand-file-name "~/.emacs.d/custom.el"))
 (load custom-file)
+(setq org-default-notes-file (expand-file-name "~/Dropbox/org/todo.org"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; startup and load external packages
@@ -582,6 +584,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (global-set-key (kbd "C-M-y") 'yank-pop)
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
 (global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
+(global-set-key (kbd "C-c !") 'org-capture)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set colors
