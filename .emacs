@@ -60,20 +60,19 @@ if called with an arg, changes the date format to the windows-style format."
             (format-time-string "%m/%d/%Y %H:%M:%S")
           (format-time-string "%Y-%m-%d %H:%M:%S"))))
 
-(defun broken/compress-region (reg-start reg-end)
-  "Reduces multiple lines in a selected region down to one.  Does nothing if there is no active region."
+(defun compress-region (reg-start reg-end)
+  "Reduces multiple lines in a selected region down to one.  Does nothing if there is no active region.
+  Can do awful things with Paredit-like modes, be careful."
   (interactive "r")
-  (error "Don't use this function.  It needs debugging.")
   (if (use-region-p)
       (while (> (count-lines reg-start reg-end) 1)
-      (call-interactively 'delete-indentation))))
+        (call-interactively 'delete-indentation))))
 
 (defun prettify-json-document ()
-"Runs a python module to prettify a selected JSON document.
-A region must be used to highlight the JSON document to be parsed, otherwise nothing is parsed."
+  "Runs a python module to prettify a selected JSON document. A region must be used to highlight the JSON document to be parsed, otherwise nothing is parsed."
   (interactive)
   (if (use-region-p)
-        (shell-command-on-region (region-beginning) (region-end) "python -m json.tool" nil t)))
+      (shell-command-on-region (region-beginning) (region-end) "python -m json.tool" nil t)))
 
 (defun python-insert-breakpoint ()
   "Inserts a breakpoint to the buffer."
@@ -90,7 +89,6 @@ A region must be used to highlight the JSON document to be parsed, otherwise not
        (progn
          (set-frame-parameter nil 'fullscreen
                               (when (not (frame-parameter nil 'fullscreen)) 'fullboth))))))
-
 
 (defun revert-this-buffer ()
   "Reloads (reverts) the current buffer to its saved state in a file.
@@ -446,7 +444,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 ;; disable truncating lines for large tables
 (add-hook 'sql-interactive-mode-hook
           (function (lambda ()
-                      (setq truncate-lines nil))))
+                      (setq truncate-lines t))))
 
 ;;;;;;;;;;;;;;;;;;
 ;; company-mode
