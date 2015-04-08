@@ -10,7 +10,6 @@
 ; list of site-specific customizations
 (setq custom-file  (expand-file-name "~/.emacs.d/custom.el"))
 (load custom-file)
-(setq org-default-notes-file (expand-file-name "~/Dropbox/org/work-todo.org"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; startup and load external packages
