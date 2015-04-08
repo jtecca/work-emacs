@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-03-31
+;;;; updated: 2015-04-08
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -10,7 +10,7 @@
 ; list of site-specific customizations
 (setq custom-file  (expand-file-name "~/.emacs.d/custom.el"))
 (load custom-file)
-(setq org-default-notes-file (expand-file-name "~/Dropbox/org/todo.org"))
+(setq org-default-notes-file (expand-file-name "~/Dropbox/org/work-todo.org"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; startup and load external packages
