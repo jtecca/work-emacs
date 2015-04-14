@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-04-08
+;;;; updated: 2015-04-14
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -553,6 +553,11 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 ;; setup ace window for quick jumping between windows
 
 ;;;;;;;;;;;;;;;;;;
+;;;; magit settings
+(setq magit-last-seen-setup-instructions "1.4.0")
+;; (setq magit-auto-revert-mode nil)
+
+;;;;;;;;;;;;;;;;;;
 ;;;; python settings
 ;;; TODO also think about using yassnippet for common patterns
 ;;; TODO and research some good project management tools
@@ -595,6 +600,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (global-set-key (kbd "C-M-y") 'yank-pop)
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
 (global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
+(global-set-key (kbd "S-<f5>") 'menu-bar-open)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set colors
