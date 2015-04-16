@@ -351,7 +351,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (setq redisplay-dont-pause 1)
 (setf x-stretch-cursor 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(setq scroll-conservatively 10000)
 (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
 (if (file-exists-p abbrev-file-name)
     (quietly-read-abbrev-file))
@@ -366,7 +365,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 
 ;;;;;;;;;;;;;;;;;;
 ;; projectile setup
-(require 'projectile)
+(autoload 'projectile-mode "projectile-mode" "Functions for getting around a project." t)
 (add-hook 'prog-mode-hook 'projectile-global-mode)
 (setq projectile-enable-caching t)
 
@@ -383,7 +382,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 
 ;;;;;;;;;;;;;;;;;;
 ;; sr-speedbar setup
-(require 'sr-speedbar)
+(autoload 'sr-speedbar "sr-speedbar")
 (setq speedbar-show-unknown-files t)
 (setq sr-speedbar-skip-other-window-p t) ; C-x o won't go to speedbar if opened
 
