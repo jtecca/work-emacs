@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-04-14
+;;;; updated: 2015-04-16
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -60,7 +60,8 @@ if called with an arg, changes the date format to the windows-style format."
           (format-time-string "%Y-%m-%d %H:%M:%S"))))
 
 (defun compress-region (reg-start reg-end)
-  "Reduces multiple lines in a selected region down to one.  Does nothing if there is no active region.
+  "Reduces multiple lines in a selected region down to one.
+  Does nothing if there is no active region.
   Can do awful things with Paredit-like modes, be careful."
   (interactive "r")
   (if (use-region-p)
@@ -68,7 +69,9 @@ if called with an arg, changes the date format to the windows-style format."
         (call-interactively 'delete-indentation))))
 
 (defun prettify-json-document ()
-  "Runs a python module to prettify a selected JSON document. A region must be used to highlight the JSON document to be parsed, otherwise nothing is parsed."
+  "Runs a python module to prettify a selected JSON document.
+  A region must be used to highlight the JSON document to be parsed,
+  otherwise nothing is parsed."
   (interactive)
   (if (use-region-p)
       (shell-command-on-region (region-beginning) (region-end) "python -m json.tool" nil t)))
@@ -79,7 +82,8 @@ if called with an arg, changes the date format to the windows-style format."
   (insert "import ipdb; ipdb.set_trace()"))
 
 (defun make-frame-fullscreen ()
-  "If not running Emacs in a terminal (through a window manager), f11 maximizes the frame. otherwise returns nil."
+  "If not running Emacs in a terminal (through a window manager),
+  f11 maximizes the frame. otherwise returns nil."
   (interactive)
   (cond
       ((string-equal system-type "windows-nt")
@@ -236,11 +240,13 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; M-$ is the default keybinding for it
 (cond
  ((string-equal system-type "windows-nt")
-  (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin")
-  (setq ispell-program-name "aspell")
-  (setq ispell-personal-dictionary "C:/Program Files (x86)/Aspell/dict")
-  (require 'ispell)
-  (global-set-key (kbd "C-$") 'flyspell-mode))
+    (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin")
+  (autoload 'ispell "ispell")
+  (eval-after-load "ispell"
+    '(progn
+       (setq ispell-program-name "aspell")
+       (setq ispell-personal-dictionary "C:/Program Files (x86)/Aspell/dict")
+       (global-set-key (kbd "C-$") 'flyspell-mode))))
 ((string-equal system-type "gnu/linux")
  (global-set-key (kbd "C-$") 'flyspell-mode)))
 
@@ -258,7 +264,9 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 ;; hydras
 ;; trying out hydra package with a few examples set to the function keys
 ;; just to see if it fits well with my workflow
-(require 'hydra)
+(autoload 'hydra "hydra")
+(eval-after-load "hydra"
+  '(progn
 (hydra-add-font-lock)
 (defhydra hydra-zoom (global-map "<f9>")
   "zoom"
@@ -299,6 +307,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
   ("a" org-agenda)
   ("b" org-iswitchb)
   ("q" nil "quit" :color blue))
+))
 
 ;;;;;;;;;;;;;;;;;;
 ;; markdown settings
@@ -340,8 +349,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (toggle-word-wrap 1)
 (setq next-line-add-newlines t)
 (setq-default fill-column 79)
-(require 'fill-column-indicator)
-(turn-on-fci-mode)
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
 (delete-selection-mode 1)
@@ -362,6 +369,8 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (require 'highlight-numbers)
 (add-hook 'prog-mode-hook 'highlight-numbers-mode)
 (add-hook 'prog-mode-hook 'hs-minor-mode)
+(autoload 'fill-column-indicator "fill-column-indicator")
+(add-hook 'prog-mode-hook 'turn-on-fci-mode)
 
 ;;;;;;;;;;;;;;;;;;
 ;; projectile setup
@@ -371,14 +380,17 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 
 ;;;;;;;;;;;;;;;;;;
 ;; c/c++ settings
-(require 'cc-mode)
-(setq c-default-style "linux" c-basic-offset 4)
-(define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
-(setq gdb-many-windows t gdb-show-main t)
-(define-key c-mode-base-map (kbd "C-c c") (lambda ()
-                            (interactive)
-                            (setq-local compilation-read-command nil)
-                            (call-interactively 'compile)))
+;; (require 'cc-mode)
+(eval-after-load "cc-mode"
+  '(progn
+     (setq c-default-style "linux" c-basic-offset 4)
+     (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+     (setq gdb-many-windows t gdb-show-main t)
+     (define-key c-mode-base-map (kbd "C-c c") (lambda ()
+                                                 (interactive)
+                                                 (setq-local compilation-read-command nil)
+                                                 (call-interactively 'compile)))
+     ))
 
 ;;;;;;;;;;;;;;;;;;
 ;; sr-speedbar setup
@@ -388,11 +400,10 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
-(require 'helm-config)
+(autoload 'helm-config "helm-config")
 ;; look into helm-swoop as a find replacement
 ;; helm's default prefix keybinding is too close to C-x C-c
 (global-set-key (kbd "C-c j") 'helm-command-prefix)
-;; i - imenu, which shows major function definitions, variable defitinitions
 (global-unset-key (kbd "C-x c"))
 (global-unset-key (kbd "C-z"))
 (global-set-key (kbd "M-x") 'helm-M-x)
@@ -406,32 +417,35 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 
 ;;;;;;;;;;;;;;;;;;
 ;; tags setup
-(require 'ggtags) ; for gnu global tagging system
-(require 'helm-gtags) ; use helm to browse tags
-(setq
- helm-gtags-ignore-case t
- helm-gtags-auto-update t
- helm-gtags-use-input-at-cursor t
- helm-gtags-pulse-at-cursor t
- helm-gtags-prefix-key "\C-cg" ; so C-c g is your tag prefix key
- helm-gtags-suggested-key-mapping nil
- )
+(autoload 'ggtags "ggtags" "Use GNU Global for TAGS." t)
+(autoload 'helm-gtags "helm-gtags" "Use helm to interact with TAGS." t)
+(eval-after-load "helm-gtags"
+  '(progn
+     (setq
+      helm-gtags-ignore-case t
+      helm-gtags-auto-update t
+      helm-gtags-use-input-at-cursor t
+      helm-gtags-pulse-at-cursor t
+      helm-gtags-prefix-key "\C-cg" ; so C-c g is your tag prefix key
+      helm-gtags-suggested-key-mapping nil
+      )
 
-;; Enable helm-gtags-mode
-(add-hook 'dired-mode-hook 'helm-gtags-mode)
-(add-hook 'eshell-mode-hook 'helm-gtags-mode)
-(add-hook 'c-mode-hook 'helm-gtags-mode)
-(add-hook 'c++-mode-hook 'helm-gtags-mode)
-(add-hook 'asm-mode-hook 'helm-gtags-mode)
+     ;; Enable helm-gtags-mode
+     (add-hook 'dired-mode-hook 'helm-gtags-mode)
+     (add-hook 'eshell-mode-hook 'helm-gtags-mode)
+     (add-hook 'c-mode-hook 'helm-gtags-mode)
+     (add-hook 'c++-mode-hook 'helm-gtags-mode)
+     (add-hook 'asm-mode-hook 'helm-gtags-mode)
 
-(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-(define-key helm-gtags-mode-map (kbd "C-c g s") 'helm-gtags-select)
-(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
-;; remember to cd to project root and run 'gtags' to generate tags
-;; you'll have a GTAGS def db, GRTAGS ref database, and GPATH path name db
+     (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+     (define-key helm-gtags-mode-map (kbd "C-c g s") 'helm-gtags-select)
+     (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+     (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+     (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+     (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+     ;; remember to cd to project root and run 'gtags' to generate tags
+     ;; you'll have a GTAGS def db, GRTAGS ref database, and GPATH path name db
+     ))
 
 ;;;;;;;;;;;;;;;;;;
 ;; sql settings
@@ -446,25 +460,28 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 
 ;;;;;;;;;;;;;;;;;;
 ;; company-mode
-(require 'company)
-(require 'company-c-headers)
+(autoload 'company "company")
+(autoload 'company-c-headers "company-c-headers")
 (add-hook 'after-init-hook 'global-company-mode)
-;; on linux + clang, remove semantic backend
-(cond ((eq system-type 'gnu/linux)
-       (progn
-         (setq company-backends (delete 'company-semantic company-backends)))))
-;; define your project include dirs here to be seen by company-clang-complete
-;; ((nil . ((company-clang-arguments . ("-I/home/<user>/project_root/include1/"
-                                     ;; "-I/home/<user>/project_root/include2/")))))
-(add-to-list 'company-backends 'company-c-headers)
-(add-to-list 'company-c-headers-path-system "/usr/include/c++/4.9/")
-(add-to-list 'company-c-headers-path-system "/usr/include/c++/4.8/")
-(add-to-list 'company-c-headers-path-system "/usr/include/c++/4.7/")
-(global-set-key (kbd "M-'") 'company-complete)
+
+(eval-after-load "company"
+  '(progn
+     (require 'company-c-headers)
+     ;; on linux + clang, remove semantic backend
+     (cond ((eq system-type 'gnu/linux)
+            (progn
+              (setq company-backends (delete 'company-semantic company-backends)))))
+     ;; define your project include dirs here to be seen by company-clang-complete
+     ;; ((nil . ((company-clang-arguments . ("-I/home/<user>/project_root/include1/"
+     ;; "-I/home/<user>/project_root/include2/")))))
+     (add-to-list 'company-backends 'company-c-headers)
+     (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.9/")
+     (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.8/")
+     (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.7/")
+     (global-set-key (kbd "M-'") 'company-complete)))
 
 ;;;;;;;;;;;;;;;;;;
 ;; paredit settings
-(require 'paredit)
 (autoload 'enable-paredit-mode "paredit" "Turn on structural editing of Lisp code." t)
 (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
 (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
@@ -479,21 +496,25 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (add-hook 'scheme-mode-hook #'eldoc-mode)
 (add-hook 'slime-repl-mode-hook #'enable-paredit-mode)
 (add-hook 'slime-repl-mode-hook #'eldoc-mode)
-;; make eldoc aware of paredit
-(eldoc-add-command
- 'paredit-backward-delete
- 'paredit-close-round)
-;; make eldoc aware of ggtags
-(setq-local eldoc-documentation-function #'ggtags-eldoc-function)
-(cond
-;; something in windows is capturing C-), which messes up my paredit
-;; keybindings, so rebind them when on windows and remove old keybindings
-;; i hope this doesn't screw up my linux muscle memory for paredit...
-((string-equal initial-window-system "w32")
- (progn
-   (define-key paredit-mode-map (kbd "C-*") 'paredit-forward-slurp-sexp)
-   (define-key paredit-mode-map (kbd "C-&") 'paredit-backward-slurp-sexp)
-   (define-key paredit-mode-map (kbd "C-(") nil))))
+(eval-after-load "paredit"
+  '(progn
+     ;; make eldoc aware of paredit
+     (eldoc-add-command
+      'paredit-backward-delete
+      'paredit-close-round)
+     ;; make eldoc aware of ggtags
+     (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
+     (cond
+      ;; something in windows is capturing C-), which messes up my paredit
+      ;; keybindings, so rebind them when on windows and remove old keybindings
+      ;; i hope this doesn't screw up my linux muscle memory for paredit...
+      ((string-equal initial-window-system "w32")
+       (progn
+         (define-key paredit-mode-map (kbd "C-*") 'paredit-forward-slurp-sexp)
+         (define-key paredit-mode-map (kbd "C-&") 'paredit-backward-slurp-sexp)
+         (define-key paredit-mode-map (kbd "C-(") nil))))
+     ;; i use eval-region very frequently, so bind to to something accessable
+     (define-key paredit-mode-map (kbd "C-x C-r") 'eval-region)))
 
 ;;;;;;;;;;;;;;;;;;
 ;; smartparens setup
@@ -527,7 +548,6 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 ;;;;;;;;;;;;;;;;;;
 ;;;; ace-jump-mode
 ; load settings per source file
-(require 'ace-jump-mode)
 (autoload
   'ace-jump-mode-pop-mark
   "ace-jump-mode"
