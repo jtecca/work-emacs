@@ -400,7 +400,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
-(autoload 'helm-config "helm-config")
+(require 'helm-config)
 ;; look into helm-swoop as a find replacement
 ;; helm's default prefix keybinding is too close to C-x C-c
 (global-set-key (kbd "C-c j") 'helm-command-prefix)
@@ -627,7 +627,8 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (when
     window-system
   (set-face-background 'cursor "#ff1744")
-  (set-face-background 'default "#ffffff")
+  (set-face-background 'default "#ececec")
+  (set-face-foreground 'default "#262626")
   (set-face-background 'helm-selection "#76ff03")
   (set-face-background 'region "#e6ee9c")
   (set-face-background 'show-paren-match "#1de9b6")
