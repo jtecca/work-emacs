@@ -171,9 +171,9 @@ Stolen from https://tsdh.wordpress.com/2015/03/03/swapping-emacs-windows-using-d
 (if (file-exists-p temp-func-file)
     (load temp-func-file))
 
-(defmacro evalafter (pkg &rest body)
+(defmacro evalafter (pkg-function &rest body)
   "After PKG is loaded, eval body."
-  `(eval-after-load ,feature
+  `(eval-after-load ,pkg-function
      '(progn ,@body)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
