@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-04-16
+;;;; updated: 2015-04-23
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -313,6 +313,22 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
   ("b" org-iswitchb)
   ("q" nil "quit" :color blue))
 ))
+
+;;;;;;;;;;;;;;;;;;
+;; evil settings
+;; use C-z to switch between evil/emacs keybindings
+(autoload 'evil-mode "evil")
+(setq evil-shift-width 4)
+(setq evil-default-state 'emacs) ; you need to explicitly switch to evil mode
+(evil-mode 1)
+(evalafter "evil-mode"
+           (define-key evil-normal-state-map [escape] 'keyboard-quit)
+           (define-key evil-visual-state-map [escape] 'keyboard-quit)
+           (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+           (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+           (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+           (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+           (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit))
 
 ;;;;;;;;;;;;;;;;;;
 ;; markdown settings
