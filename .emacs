@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-04-23
+;;;; updated: 2015-05-06
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -319,7 +319,10 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 ;; use C-z to switch between evil/emacs keybindings
 (autoload 'evil-mode "evil")
 (setq evil-shift-width 4)
-(setq evil-default-state 'emacs) ; you need to explicitly switch to evil mode
+(add-hook 'prog-mode-hook 'turn-on-evil-mode)
+(add-hook 'text-mode-hook 'turn-on-evil-mode)
+;; (setq evil-default-state 'emacs) ; you need to explicitly switch to evil mode
+                                 ;; in non-prog- or text-modes.
 (evil-mode 1)
 (evalafter "evil-mode"
            (define-key evil-normal-state-map [escape] 'keyboard-quit)
@@ -384,6 +387,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
     (quietly-read-abbrev-file))
 (setq save-abbrevs t)
 (setq-default abbrev-mode t)
+(put 'dired-find-alternate-file 'disabled nil)
 
 ;;;;;;;;;;;;;;;;;;
 ;; generic programming settings
@@ -472,11 +476,12 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 ;; sql settings
 ;; i think there's readline issues with the default pgadmin psql
 ;; may need to try cygwin's psql.exe for output
-(setq sql-postgres-program "C:/Program Files (x86)/pgAdmin III/1.18/psql.exe")
+(setq sql-postgres-program "C:/Program Files (x86)/pgAdmin III/1.20/psql.exe")
 ;(setq sql-postgres-options (file-to-string "~/postgresql/connection.info"))
 ;; disable truncating lines for large tables
 (add-hook 'sql-interactive-mode-hook
           (function (lambda ()
+                      (linum-mode 1)
                       (setq truncate-lines t))))
 
 ;;;;;;;;;;;;;;;;;;
