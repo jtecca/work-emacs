@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-05-06
+;;;; updated: 2015-05-07
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -320,7 +320,9 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (autoload 'evil-mode "evil")
 (setq evil-shift-width 4)
 (add-hook 'prog-mode-hook 'turn-on-evil-mode)
+(add-hook 'prog-mode-hook 'linum-mode)
 (add-hook 'text-mode-hook 'turn-on-evil-mode)
+(add-hook 'text-mode-hook 'linum-mode)
 ;; (setq evil-default-state 'emacs) ; you need to explicitly switch to evil mode
                                  ;; in non-prog- or text-modes.
 (evil-mode 1)
