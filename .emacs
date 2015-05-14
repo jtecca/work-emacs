@@ -164,6 +164,11 @@ Stolen from https://tsdh.wordpress.com/2015/03/03/swapping-emacs-windows-using-d
           (set-window-buffer start-win be)
           (set-window-buffer end-win bs))))))
 
+(defun helm-esc-close ()
+  "Closes a helm buffer by hitting the ESC key.
+Stolen from: http://emacs.stackexchange.com/a/4064"
+  (define-key helm-map (kbd "ESC") 'helm-keyboard-quit))
+
 ;; load temporary site functions if file exists
 ;; this file is used to house multi-session functions
 ;; but not permanent enough to be placed in my .emacs
@@ -440,6 +445,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (setq helm-lisp-fuzzy-completion t)
+(add-hook 'after-init-hook #'helm-esc-close)
 (helm-mode 1)
 
 ;;;;;;;;;;;;;;;;;;
@@ -509,48 +515,10 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
      (global-set-key (kbd "M-'") 'company-complete)))
 
 ;;;;;;;;;;;;;;;;;;
-;; paredit settings
-(autoload 'enable-paredit-mode "paredit" "Turn on structural editing of Lisp code." t)
-(add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
-(add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
-(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-(add-hook 'ielm-mode-hook #'enable-paredit-mode)
-(add-hook 'ielm-mode-hook #'eldoc-mode)
-(add-hook 'lisp-mode-hook #'enable-paredit-mode)
-(add-hook 'lisp-mode-hook #'eldoc-mode)
-(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-(add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
-(add-hook 'scheme-mode-hook #'enable-paredit-mode)
-(add-hook 'scheme-mode-hook #'eldoc-mode)
-(add-hook 'slime-repl-mode-hook #'enable-paredit-mode)
-(add-hook 'slime-repl-mode-hook #'eldoc-mode)
-(eval-after-load "paredit"
-  '(progn
-     ;; make eldoc aware of paredit
-     (eldoc-add-command
-      'paredit-backward-delete
-      'paredit-close-round)
-     ;; make eldoc aware of ggtags
-     (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
-     (cond
-      ;; something in windows is capturing C-), which messes up my paredit
-      ;; keybindings, so rebind them when on windows and remove old keybindings
-      ;; i hope this doesn't screw up my linux muscle memory for paredit...
-      ((string-equal initial-window-system "w32")
-       (progn
-         (define-key paredit-mode-map (kbd "C-*") 'paredit-forward-slurp-sexp)
-         (define-key paredit-mode-map (kbd "C-&") 'paredit-backward-slurp-sexp)
-         (define-key paredit-mode-map (kbd "C-(") nil))))
-     ;; i use eval-region very frequently, so bind to to something accessable
-     (define-key paredit-mode-map (kbd "C-x C-r") 'eval-region)))
-
-;;;;;;;;;;;;;;;;;;
 ;; smartparens setup
-;; TODO: spend some time reading about this and configuring it
-;; TODO: smartparens includes a lot of paredit functionality, and the two shouldn't overlap
-;; TODO: so keeping it commented out for now, see https://github.com/Fuco1/smartparens/wiki/Quick-tour
-;; (require 'smartparens)
-;; (smartparens-global-mode nil)
+(require 'smartparens-config) ; load the default config
+(add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)
+(smartparens-global-mode t)
 
 ;;;;;;;;;;;;;;;;;;
 ;; org-mode settings
@@ -558,7 +526,8 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (add-hook 'org-mode-hook '(lambda () (org-indent-mode t)))
 ;; set the task keywords
 (setq org-todo-keywords
-      '((sequence "TODO" "WORKING" "STOPPED" "DONE")))
+      '((sequence "TODO" "WORKING" "STOPPED" "OOS" "DONE")))
+(setq org-log-done 'time) ; adds a timestamp when a TODO is marked as DONE
 ;; update counts after removing a line from an org todo-list
 (defun myorg-update-parent-cookie ()
   (when (equal major-mode 'org-mode)
@@ -627,7 +596,7 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom global keybindings
-(global-set-key (kbd "C-z") 'repeat)
+; (global-set-key (kbd "C-z") 'repeat) now used by evil to switch states
 (global-set-key (kbd "<S-wheel-up>") 'increase-font-size)
 (global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
 (global-set-key (kbd "M-o") 'other-window)
@@ -635,19 +604,24 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (global-set-key (kbd "C-;") 'endless/comment-line)
 (global-set-key (kbd "C-c .") 'find-function-at-point)
 (global-set-key (kbd "M-C-<f5>") 'revert-this-buffer) ; purposely cumbersome to reduce accidental reversions
-(global-set-key (kbd "C-c k") 'copy-line)
+; (global-set-key (kbd "C-c k") 'copy-line) ; not needed with evil bindings
 (global-set-key (kbd "M-n") 'next-line)
 (global-set-key (kbd "M-p") 'previous-line)
-(global-set-key (kbd "<C-up>") 'shrink-window)
+(global-set-key (kbd "<C-up>") 'shrink-window) ; not needed with evil bindings
 (global-set-key (kbd "<C-down>") 'enlarge-window)
 (global-set-key (kbd "<C-left>") 'enlarge-window-horizontally)
 (global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
-(global-set-key (kbd "C-x r M-w") 'copy-rectangle)
+; (global-set-key (kbd "C-x r M-w") 'copy-rectangle) ; not needed with evil bindings
 (global-set-key (kbd "<f8>") 'magit-status)
-(global-set-key (kbd "C-M-y") 'yank-pop)
+; (global-set-key (kbd "C-M-y") 'yank-pop) ; not needed with evil bindings
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
 (global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
 (global-set-key (kbd "S-<f5>") 'menu-bar-open)
+;; add smartparens slurp and barf commands to evil's normal mode
+(define-key evil-normal-state-map (kbd "M-]") 'sp-forward-slurp-sexp)
+(define-key evil-normal-state-map (kbd "M-}") 'sp-forward-barf-sexp)
+(define-key evil-normal-state-map (kbd "M-[") 'sp-backward-slurp-sexp)
+(define-key evil-normal-state-map (kbd "M-{") 'sp-backward-barf-sexp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set colors
