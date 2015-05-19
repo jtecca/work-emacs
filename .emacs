@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-05-07
+;;;; updated: 2015-05-19
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -18,6 +18,17 @@
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
+;; lightweight package manager (assumes emacs version > 24)
+;; maybe look into cask in the future
+(mapc
+ (lambda (package)
+   (unless (package-installed-p package)
+     (package-install package)))
+ '(ace-jump-mode company company-c-headers evil evil-smartparens f
+                 fill-column-indicator ggtags helm helm-gtags helm-projectile
+                 highlight-numbers hydra magit markdown-mode projectile
+                 rainbow-delimiters rainbow-mode s seq slime smartparens
+                 sr-speedbar))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; define custom functions
@@ -169,6 +180,16 @@ Stolen from https://tsdh.wordpress.com/2015/03/03/swapping-emacs-windows-using-d
 Stolen from: http://emacs.stackexchange.com/a/4064"
   (define-key helm-map (kbd "ESC") 'helm-keyboard-quit))
 
+(defun compile-dotemacs ()
+  "compile .emacs automagically on saving the .emacs file.
+stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
+  (interactive)
+  (require 'bytecomp)
+  (let ((dotemacs (expand-file-name "~/.emacs")))
+    (if (string= (buffer-file-name) (file-chase-links dotemacs))
+        (byte-compile-file dotemacs))))
+(add-hook 'after-save-hook 'compile-dotemacs)
+
 ;; load temporary site functions if file exists
 ;; this file is used to house multi-session functions
 ;; but not permanent enough to be placed in my .emacs
@@ -259,16 +280,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
        (global-set-key (kbd "C-$") 'flyspell-mode))))
 ((string-equal system-type "gnu/linux")
  (global-set-key (kbd "C-$") 'flyspell-mode)))
-
-(defun compile-dotemacs ()
-  "compile .emacs automagically on saving the .emacs file.
-stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
-  (interactive)
-  (require 'bytecomp)
-  (let ((dotemacs (expand-file-name "~/.emacs")))
-    (if (string= (buffer-file-name) (file-chase-links dotemacs))
-        (byte-compile-file dotemacs))))
-(add-hook 'after-save-hook 'compile-dotemacs)
 
 ;;;;;;;;;;;;;;;;;;
 ;; hydras
@@ -622,6 +633,12 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
 (define-key evil-normal-state-map (kbd "M-}") 'sp-forward-barf-sexp)
 (define-key evil-normal-state-map (kbd "M-[") 'sp-backward-slurp-sexp)
 (define-key evil-normal-state-map (kbd "M-{") 'sp-backward-barf-sexp)
+
+;;;;;;;;;;;;;;;;;;
+;;;; proced settings
+(defun proced-settings ()
+  (proced-toggle-auto-update))
+(add-hook 'proced-mode-hook 'proced-settings)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set colors
