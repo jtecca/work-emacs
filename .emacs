@@ -644,7 +644,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;;;; proced settings
 (require 'smart-mode-line)
 (sml/setup)
-(setq sml/theme 'respectful)
+(setq sml/apply-theme 'dark) ; setq sml/theme if calling before sml/setup
 (add-to-list 'sml/replacer-regexp-list '("^~/source/" ":SRC:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/Dropbox/org/" ":ORG:"))
 
@@ -686,6 +686,18 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-foreground 'org-level-5 "#008b8b")
   (set-face-foreground 'org-level-5 "#8b2500")
   )
+;; sml colors
+(if (package-installed-p 'smart-mode-line)
+    (progn
+      (set-face-foreground 'sml/git "#33691e")
+      (set-face-foreground 'sml/filename "#000000")
+      (set-face-foreground 'sml/position-percentage "#f4511e")
+      (set-face-bold 'sml/position-percentage t)
+      (set-face-foreground 'sml/vc-edited "#f44336")
+      (set-face-foreground 'sml/vc "#336611")
+      (set-face-foreground 'sml/col-number "#000000")
+      (set-face-foreground 'sml/line-number "#000000")
+      (set-face-bold 'sml/col-number t)))
 
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
