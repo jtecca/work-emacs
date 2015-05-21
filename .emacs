@@ -640,6 +640,14 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (proced-toggle-auto-update))
 (add-hook 'proced-mode-hook 'proced-settings)
 
+;;;;;;;;;;;;;;;;;;
+;;;; proced settings
+(require 'smart-mode-line)
+(sml/setup)
+(setq sml/theme 'respectful)
+(add-to-list 'sml/replacer-regexp-list '("^~/source/" ":SRC:"))
+(add-to-list 'sml/replacer-regexp-list '("^~/Dropbox/org/" ":ORG:"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set colors
 ;;; PROTIP: use (list-faces-display) to see all of the current faces
