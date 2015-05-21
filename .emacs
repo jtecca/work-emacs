@@ -687,7 +687,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-foreground 'org-level-5 "#8b2500")
   )
 ;; sml colors
-(if (package-installed-p 'smart-mode-line)
+(if (and (package-installed-p 'smart-mode-line) window-system)
     (progn
       (set-face-foreground 'sml/git "#33691e")
       (set-face-foreground 'sml/filename "#000000")
