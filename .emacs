@@ -704,14 +704,14 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
     (progn
       (set-face-foreground 'sml/git "#33691e")
       (set-face-foreground 'sml/filename "#000000")
-      (set-face-foreground 'sml/position-percentage "#f4511e")
+      (set-face-foreground 'sml/position-percentage "#0000ee")
       (set-face-bold 'sml/position-percentage t)
-      (set-face-foreground 'sml/vc-edited "#f44336")
+      (set-face-foreground 'sml/vc-edited "#ff1744")
       (set-face-foreground 'sml/vc "#336611")
       (set-face-foreground 'sml/col-number "#000000")
       (set-face-foreground 'sml/line-number "#000000")
       (set-face-bold 'sml/col-number t)
-      (set-face-background 'mode-line-inactive "#9a9a9a")
+      (set-face-background 'mode-line-inactive "#ababab")
       (set-face-background 'mode-line "#dfdfdf")))
 
 ;; if you want to inspect what face is being used under the cursor,
