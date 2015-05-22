@@ -650,6 +650,9 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;;;;;;;;;;;;;;;;;;
 ;;;; proced settings
 (require 'smart-mode-line)
+(add-to-list 'rm-blacklist "helm-mode")
+(add-to-list 'rm-blacklist "hs-minor-mode")
+(add-to-list 'rm-blacklist "undo-tree-mode")
 (sml/setup)
 (setq sml/apply-theme 'dark) ; setq sml/theme if calling before sml/setup
 (add-to-list 'sml/replacer-regexp-list '("^~/source/" ":SRC:"))
@@ -694,6 +697,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-background 'org-level-4 "#ffffff")
   (set-face-foreground 'org-level-5 "#008b8b")
   (set-face-foreground 'org-level-5 "#8b2500")
+  (set-face-foreground 'org-table "#333333")
   )
 ;; sml colors
 (if (and (package-installed-p 'smart-mode-line) window-system)
