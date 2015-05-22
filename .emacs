@@ -370,6 +370,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (setq scroll-conservatively 9999
       scroll-preserve-screen-position t)
 (setq cursor-type 'box)
+(hl-line-mode 1)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; autosave/backup/file options
@@ -679,6 +680,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-foreground 'font-lock-comment-face "#f44336")
   (set-face-background 'font-lock-comment-face "#ffefef")
   (set-face-foreground 'font-lock-variable-name-face "#f4511e")
+  (set-face-attribute 'hl-line nil :background "#cceecc" :foreground nil
+                      :inherit t)
   )
 ;; org colors level tweaks
 (when
