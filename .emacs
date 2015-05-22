@@ -247,25 +247,25 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
     (setq default-directory "~/")))
 
 ;; lisp setups
-(cond
- ((string-equal initial-window-system "w32")
-  (progn
-    (load (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el"))
-    (setq inferior-lisp-program "wx86cl64")))
- ((string-equal initial-window-system "x")
-  (progn
-    (setq inferior-lisp-program "sbcl")
-    (load (expand-file-name "~/quicklisp/slime-helper.el"))))
- ((and (string-equal initial-window-system "nil")
-       (not (string-equal system-type "windows-nt")))
-  (progn
-    (setq inferior-lisp-program "sbcl")
-    (load (expand-file-name "~/quicklisp/slime-helper.el"))))
- ((and (string-equal initial-window-system "nil")
-       (string-equal system-type "windows-nt"))
-  (progn
-    (setq inferior-lisp-program "wx86cl64")
-    (load (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el")))))
+;; (cond
+;;  ((string-equal initial-window-system "w32")
+;;   (progn
+;;     (load (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el"))
+;;     (setq inferior-lisp-program "wx86cl64")))
+;;  ((string-equal initial-window-system "x")
+;;   (progn
+;;     (setq inferior-lisp-program "sbcl")
+;;     (load (expand-file-name "~/quicklisp/slime-helper.el"))))
+;;  ((and (string-equal initial-window-system "nil")
+;;        (not (string-equal system-type "windows-nt")))
+;;   (progn
+;;     (setq inferior-lisp-program "sbcl")
+;;     (load (expand-file-name "~/quicklisp/slime-helper.el"))))
+;;  ((and (string-equal initial-window-system "nil")
+;;        (string-equal system-type "windows-nt"))
+;;   (progn
+;;     (setq inferior-lisp-program "wx86cl64")
+;;     (load (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el")))))
 
 ;; setup apsell for spell checking
 ;; M-$ is the default keybinding for it
@@ -333,14 +333,14 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;;;;;;;;;;;;;;;;;;
 ;; evil settings
 ;; use C-z to switch between evil/emacs keybindings
-(autoload 'evil-mode "evil")
+(require 'evil-leader)
+(global-evil-leader-mode)
+(require 'evil)
 (setq evil-shift-width 4)
 (add-hook 'prog-mode-hook 'turn-on-evil-mode)
 (add-hook 'prog-mode-hook 'linum-mode)
 (add-hook 'text-mode-hook 'turn-on-evil-mode)
 (add-hook 'text-mode-hook 'linum-mode)
-;; (setq evil-default-state 'emacs) ; you need to explicitly switch to evil mode
-                                 ;; in non-prog- or text-modes.
 (evil-mode 1)
 (evalafter "evil-mode"
            (define-key evil-normal-state-map [escape] 'keyboard-quit)
@@ -349,7 +349,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
            (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
            (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
            (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-           (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit))
+           (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+           (global-set-key [escape] 'keyboard-quit))
 
 ;;;;;;;;;;;;;;;;;;
 ;; markdown settings
@@ -504,7 +505,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
                       (setq truncate-lines t))))
 
 ;;;;;;;;;;;;;;;;;;
-;; company-mode
+;; company-mode settings
 (autoload 'company "company")
 (autoload 'company-c-headers "company-c-headers")
 (add-hook 'after-init-hook 'global-company-mode)
@@ -530,6 +531,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (require 'smartparens-config) ; load the default config
 (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)
 (smartparens-global-mode t)
+;; note: keybindings are done at in the global keybinding section
 
 ;;;;;;;;;;;;;;;;;;
 ;; org-mode settings
@@ -607,38 +609,42 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom global keybindings
-; (global-set-key (kbd "C-z") 'repeat) now used by evil to switch states
 (global-set-key (kbd "<S-wheel-up>") 'increase-font-size)
 (global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
 (global-set-key (kbd "M-o") 'other-window)
-(global-set-key (kbd "M-i") 'helm-semantic-or-imenu) ; or C-c j i
 (global-set-key (kbd "C-;") 'endless/comment-line)
-(global-set-key (kbd "C-c .") 'find-function-at-point)
 (global-set-key (kbd "M-C-<f5>") 'revert-this-buffer) ; purposely cumbersome to reduce accidental reversions
-; (global-set-key (kbd "C-c k") 'copy-line) ; not needed with evil bindings
-(global-set-key (kbd "M-n") 'next-line)
-(global-set-key (kbd "M-p") 'previous-line)
-(global-set-key (kbd "<C-up>") 'shrink-window) ; not needed with evil bindings
 (global-set-key (kbd "<C-down>") 'enlarge-window)
 (global-set-key (kbd "<C-left>") 'enlarge-window-horizontally)
 (global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
-; (global-set-key (kbd "C-x r M-w") 'copy-rectangle) ; not needed with evil bindings
-(global-set-key (kbd "<f8>") 'magit-status)
-; (global-set-key (kbd "C-M-y") 'yank-pop) ; not needed with evil bindings
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
-(global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
-(global-set-key (kbd "S-<f5>") 'menu-bar-open)
-;; add smartparens slurp and barf commands to evil's normal mode
+;; add smartparens slurp and barf commands to evil editing states
+(define-key evil-insert-state-map (kbd "M-]") 'sp-forward-slurp-sexp)
 (define-key evil-normal-state-map (kbd "M-]") 'sp-forward-slurp-sexp)
-(define-key evil-normal-state-map (kbd "M-}") 'sp-forward-barf-sexp)
+(define-key evil-insert-state-map (kbd "M-[") 'sp-backward-slurp-sexp)
 (define-key evil-normal-state-map (kbd "M-[") 'sp-backward-slurp-sexp)
-(define-key evil-normal-state-map (kbd "M-{") 'sp-backward-barf-sexp)
+(define-key evil-insert-state-map (kbd "C-M-]") 'sp-forward-barf-sexp)
+(define-key evil-insert-state-map (kbd "C-M-[") 'sp-backward-barf-sexp)
+(define-key evil-normal-state-map (kbd "C-M-]") 'sp-forward-barf-sexp)
+(define-key evil-normal-state-map (kbd "C-M-[") 'sp-backward-barf-sexp)
+;; evil-leader keybindings
+(evil-leader/set-key
+  "x" 'helm-M-x
+  "b" 'helm-mini
+  "k" 'kill-buffer
+  "o" 'other-window
+  "i" 'helm-semantic-or-imenu
+  "." 'find-function-at-point
+  "<f8>" 'magit-status
+  "s" 'sr-speedbar-toggle
+  "<f5>" 'menu-bar-open)
+
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; proced settings
 (defun proced-settings ()
-  (proced-toggle-auto-update))
-(add-hook 'proced-mode-hook 'proced-settings)
+  (proced-toggle-auto-update)
+(add-hook 'proced-mode-hook 'proced-settings))
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; proced settings
@@ -697,7 +703,9 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
       (set-face-foreground 'sml/vc "#336611")
       (set-face-foreground 'sml/col-number "#000000")
       (set-face-foreground 'sml/line-number "#000000")
-      (set-face-bold 'sml/col-number t)))
+      (set-face-bold 'sml/col-number t)
+      (set-face-background 'mode-line-inactive "#9a9a9a")
+      (set-face-background 'mode-line "#dfdfdf")))
 
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
