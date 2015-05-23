@@ -24,11 +24,11 @@
  (lambda (package)
    (unless (package-installed-p package)
      (package-install package)))
- '(ace-jump-mode company company-c-headers evil evil-smartparens f
+ '(ace-jump-mode company company-c-headers evil evil-smartparens evil-leader f
                  fill-column-indicator ggtags helm helm-gtags helm-projectile
                  highlight-numbers hydra magit markdown-mode projectile
                  rainbow-delimiters rainbow-mode s seq slime smartparens
-                 sr-speedbar))
+                 sr-speedbar smart-mode-line))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; define custom functions
