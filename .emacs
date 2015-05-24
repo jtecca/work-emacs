@@ -246,6 +246,28 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
    ((string-equal initial-window-system "nil")
     (setq default-directory "~/")))
 
+;;;;;;;;;;;;;;;;;;
+;;;; os-dependent python settings
+(cond
+ ((string-equal initial-window-system "w32")
+  (progn
+    (setq
+     python-shell-interpreter "C:\\Users\\jeff.tecca\\AppData\\Local\\Continuum\\Anaconda\\python.exe"
+     python-shell-interpreter-args
+     "-i C:\\Users\\jeff.tecca\\AppData\\Local\\Continuum\\Anaconda\\Scripts\\ipython-script.py"
+     python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+     python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+     python-shell-completion-setup-code
+     "from IPython.core.completerlib import module_completion"
+     python-shell-completion-string-code
+     "';'.join(module_completion('''%s'''))\n"
+     python-shell-completion-string-code
+     "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")))
+  ((or (string-equal initial-window-system "x") (string-equal initial-window-system "nil"))
+   (progn
+     (when (executable-find "ipython")
+       (setq python-shell-interpreter "ipython")))))
+
 ;; lisp setups
 ;; (cond
 ;;  ((string-equal initial-window-system "w32")
@@ -524,8 +546,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
      (add-to-list 'company-backends 'company-c-headers)
      (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.9/")
      (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.8/")
-     (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.7/")
-     (global-set-key (kbd "M-'") 'company-complete)))
+     (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.7/")))
 
 ;;;;;;;;;;;;;;;;;;
 ;; smartparens setup
@@ -588,22 +609,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; (setq magit-auto-revert-mode nil)
 
 ;;;;;;;;;;;;;;;;;;
-;;;; python settings
-;;; TODO also think about using yassnippet for common patterns
-;;; TODO and research some good project management tools
-(setq
- python-shell-interpreter "C:\\Users\\jeff.tecca\\AppData\\Local\\Continuum\\Anaconda\\python.exe"
- python-shell-interpreter-args
- "-i C:\\Users\\jeff.tecca\\AppData\\Local\\Continuum\\Anaconda\\Scripts\\ipython-script.py"
- python-shell-prompt-regexp "In \\[[0-9]+\\]: "
- python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
- python-shell-completion-setup-code
-   "from IPython.core.completerlib import module_completion"
- python-shell-completion-string-code
-   "';'.join(module_completion('''%s'''))\n"
- python-shell-completion-string-code
-   "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-;; custom python keybindings
+;;;; global python settings
 (add-hook 'python-mode-hook
           '(lambda ()
              (local-set-key (kbd "C-c i") 'python-insert-breakpoint)))
@@ -619,6 +625,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (global-set-key (kbd "<C-left>") 'enlarge-window-horizontally)
 (global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
+(global-set-key (kbd "C-<tab>") 'company-complete)
 ;; add smartparens slurp and barf commands to evil editing states
 (define-key evil-insert-state-map (kbd "M-]") 'sp-forward-slurp-sexp)
 (define-key evil-normal-state-map (kbd "M-]") 'sp-forward-slurp-sexp)
@@ -639,7 +646,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   "<f8>" 'magit-status
   "s" 'sr-speedbar-toggle
   "<f5>" 'menu-bar-open)
-
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; proced settings
