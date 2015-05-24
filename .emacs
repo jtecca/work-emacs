@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-05-19
+;;;; updated: 2015-05-23
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -626,15 +626,15 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
 (global-set-key (kbd "C-<tab>") 'company-complete)
-;; add smartparens slurp and barf commands to evil editing states
-(define-key evil-insert-state-map (kbd "M-]") 'sp-forward-slurp-sexp)
-(define-key evil-normal-state-map (kbd "M-]") 'sp-forward-slurp-sexp)
-(define-key evil-insert-state-map (kbd "M-[") 'sp-backward-slurp-sexp)
-(define-key evil-normal-state-map (kbd "M-[") 'sp-backward-slurp-sexp)
-(define-key evil-insert-state-map (kbd "C-M-]") 'sp-forward-barf-sexp)
-(define-key evil-insert-state-map (kbd "C-M-[") 'sp-backward-barf-sexp)
-(define-key evil-normal-state-map (kbd "C-M-]") 'sp-forward-barf-sexp)
-(define-key evil-normal-state-map (kbd "C-M-[") 'sp-backward-barf-sexp)
+;; add smartparens slurp and barf commands to evil insert state
+(define-key evil-insert-state-map (kbd "C-M-'") 'sp-forward-slurp-sexp)
+(define-key evil-insert-state-map (kbd "C-M-;") 'sp-forward-barf-sexp)
+(define-key evil-normal-state-map (kbd "C-M-'") 'sp-forward-slurp-sexp)
+(define-key evil-normal-state-map (kbd "C-M-;") 'sp-forward-barf-sexp)
+(define-key evil-insert-state-map (kbd "C-M-:") 'sp-backward-slurp-sexp)
+(define-key evil-insert-state-map (kbd "C-M-\"") 'sp-backward-barf-sexp)
+(define-key evil-normal-state-map (kbd "C-M-:") 'sp-backward-slurp-sexp)
+(define-key evil-normal-state-map (kbd "C-M-\"") 'sp-backward-barf-sexp)
 ;; evil-leader keybindings
 (evil-leader/set-key
   "x" 'helm-M-x
@@ -710,7 +710,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
     (progn
       (set-face-foreground 'sml/git "#33691e")
       (set-face-foreground 'sml/filename "#000000")
-      (set-face-foreground 'sml/position-percentage "#0000ee")
+      (set-face-foreground 'sml/position-percentage "#2979ff")
       (set-face-bold 'sml/position-percentage t)
       (set-face-foreground 'sml/vc-edited "#ff1744")
       (set-face-foreground 'sml/vc "#336611")
