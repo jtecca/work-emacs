@@ -24,7 +24,8 @@
  (lambda (package)
    (unless (package-installed-p package)
      (package-install package)))
- '(ace-jump-mode company company-c-headers evil evil-smartparens evil-leader f
+ '(ace-jump-mode company company-c-headers company-jedi
+                 evil evil-smartparens evil-leader f
                  fill-column-indicator ggtags helm helm-gtags helm-projectile
                  highlight-numbers hydra magit markdown-mode projectile
                  rainbow-delimiters rainbow-mode s seq slime smartparens
@@ -660,7 +661,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (add-to-list 'rm-blacklist "hs-minor-mode")
 (add-to-list 'rm-blacklist "undo-tree-mode")
 (sml/setup)
-(setq sml/apply-theme 'dark) ; setq sml/theme if calling before sml/setup
 (add-to-list 'sml/replacer-regexp-list '("^~/source/" ":SRC:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/Dropbox/org/" ":ORG:"))
 
@@ -692,6 +692,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-attribute 'hl-line nil :background "#cceecc" :foreground nil
                       :inherit t)
   )
+
 ;; org colors level tweaks
 (when
     window-system
@@ -705,6 +706,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-foreground 'org-level-5 "#8b2500")
   (set-face-foreground 'org-table "#333333")
   )
+
 ;; sml colors
 (if (and (package-installed-p 'smart-mode-line) window-system)
     (progn
