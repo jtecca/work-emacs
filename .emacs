@@ -696,32 +696,34 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; org colors level tweaks
 (when
     window-system
-  (set-face-foreground 'org-level-1 "#242424")
   (set-face-bold 'org-level-1 nil)
-  (set-face-foreground 'org-level-2 "#00008b")
-  (set-face-foreground 'org-level-3 "#551a8b")
-  (set-face-foreground 'org-level-4 "#8b0000")
-  (set-face-background 'org-level-4 "#ffffff")
-  (set-face-foreground 'org-level-5 "#008b8b")
-  (set-face-foreground 'org-level-5 "#8b2500")
+  (set-face-foreground 'org-level-1 "#242424")
+  (set-face-foreground 'org-level-2 "##121212")
+  (set-face-foreground 'org-level-3 "##1a1a1a")
+  (set-face-foreground 'org-level-4 "##1f1f1f")
+  (set-face-background 'org-level-4 "##292929")
+  (set-face-foreground 'org-level-5 "##2e2e2e")
+  (set-face-foreground 'org-level-5 "##3d3d3d")
   (set-face-foreground 'org-table "#333333")
   )
 
 ;; sml colors
 (if (and (package-installed-p 'smart-mode-line) window-system)
     (progn
-      (set-face-foreground 'sml/git "#33691e")
+      (set-face-foreground 'sml/git "##Ff4500")
       (set-face-foreground 'sml/filename "#000000")
       (set-face-foreground 'sml/position-percentage "#2979ff")
       (set-face-bold 'sml/position-percentage t)
       (set-face-foreground 'sml/vc-edited "#ff1744")
-      (set-face-foreground 'sml/vc "#336611")
+      (set-face-foreground 'sml/vc "#Ff4500")
       (set-face-foreground 'sml/col-number "#000000")
       (set-face-foreground 'sml/line-number "#000000")
       (set-face-bold 'sml/col-number t)
       (set-face-background 'mode-line-inactive "#ababab")
-      (set-face-background 'mode-line "#dfdfdf")
-      (set-face-attribute 'mode-line nil :font "DejaVu Sans Mono-9")))
+      (set-face-foreground 'mode-line-inactive "#000000")
+      (set-face-background 'mode-line "#Fdf5e6")
+      (set-face-attribute 'mode-line nil :font "DejaVu Sans Mono-9")
+      (set-face-attribute 'mode-line-inactive nil :font "DejaVu Sans Mono-9")))
 
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
