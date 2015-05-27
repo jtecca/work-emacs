@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-05-23
+;;;; updated: 2015-05-27
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -720,7 +720,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
       (set-face-foreground 'sml/line-number "#000000")
       (set-face-bold 'sml/col-number t)
       (set-face-background 'mode-line-inactive "#ababab")
-      (set-face-background 'mode-line "#dfdfdf")))
+      (set-face-background 'mode-line "#dfdfdf")
+      (set-face-attribute 'mode-line nil :font "DejaVu Sans Mono-9")))
 
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
