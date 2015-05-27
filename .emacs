@@ -660,19 +660,19 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (add-to-list 'rm-blacklist "helm-mode")
 (add-to-list 'rm-blacklist "hs-minor-mode")
 (add-to-list 'rm-blacklist "undo-tree-mode")
+(setq sml/no-confirm-load-theme t)
 (sml/setup)
 (add-to-list 'sml/replacer-regexp-list '("^~/source/" ":SRC:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/Dropbox/org/" ":ORG:"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; set colors
+;;;; set color settings
 ;;; PROTIP: use (list-faces-display) to see all of the current faces
 (when
     window-system
   (set-face-background 'cursor "#ff1744")
   (set-face-background 'default "#ececec")
   (set-face-foreground 'default "#262626")
-  (set-face-background 'helm-selection "#76ff03")
   (set-face-background 'region "#e6ee9c")
   (set-face-background 'show-paren-match "#1de9b6")
   (set-face-background 'lazy-highlight "#Ffff8d")
@@ -683,17 +683,17 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-foreground 'font-lock-builtin-face "#0d47a1")
   (set-face-foreground 'font-lock-function-name-face "#2979ff")
   (set-face-bold 'font-lock-function-name-face t)
-  (set-face-foreground 'font-lock-keyword-face "#8e24aa")
-  (set-face-foreground 'font-lock-type-face "#26a69a")
+  (set-face-foreground 'font-lock-keyword-face "#6200ea")
+  (set-face-foreground 'font-lock-type-face "#00acc1")
   (set-face-foreground 'font-lock-string-face "#33691e")
   (set-face-foreground 'font-lock-comment-face "#f44336")
   (set-face-background 'font-lock-comment-face "#ffefef")
-  (set-face-foreground 'font-lock-variable-name-face "#f4511e")
-  (set-face-attribute 'hl-line nil :background "#cceecc" :foreground nil
+  (set-face-foreground 'font-lock-variable-name-face "#ff6f00")
+  (set-face-attribute 'hl-line nil :background "#cfd8dc" :foreground nil
                       :inherit t)
   )
 
-;; org colors level tweaks
+;; org color settings
 (when
     window-system
   (set-face-bold 'org-level-1 nil)
@@ -707,24 +707,42 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-foreground 'org-table "#333333")
   )
 
-;; sml colors
+;; sml color settings
 (if (and (package-installed-p 'smart-mode-line) window-system)
     (progn
-      (set-face-foreground 'sml/git "##Ff4500")
+      (set-face-foreground 'sml/git "#ff9100")
       (set-face-foreground 'sml/filename "#000000")
-      (set-face-foreground 'sml/position-percentage "#2979ff")
+      (set-face-foreground 'sml/position-percentage "#2962ff")
       (set-face-bold 'sml/position-percentage t)
       (set-face-foreground 'sml/vc-edited "#ff1744")
-      (set-face-foreground 'sml/vc "#Ff4500")
+      (set-face-foreground 'sml/vc "#ff9100")
       (set-face-foreground 'sml/col-number "#000000")
       (set-face-foreground 'sml/line-number "#000000")
       (set-face-bold 'sml/col-number t)
-      (set-face-background 'mode-line-inactive "#ababab")
+      (set-face-background 'mode-line-inactive "#78909c")
       (set-face-foreground 'mode-line-inactive "#000000")
-      (set-face-background 'mode-line "#Fdf5e6")
+      (set-face-background 'mode-line "#cfd8dc")
       (set-face-attribute 'mode-line nil :font "DejaVu Sans Mono-9")
       (set-face-attribute 'mode-line-inactive nil :font "DejaVu Sans Mono-9")))
 
+;; helm color settings
+(if (and (package-installed-p 'helm) window-system)
+    (progn
+      (set-face-background 'helm-selection "#ffe082")
+      (set-face-background 'helm-source-header "#2962ff") ; original "#abd7f0"
+      (set-face-foreground 'helm-source-header "#ffffff")
+      (set-face-background 'helm-ff-dotted-directory "#cfd8dc")
+      ;; for reasons for e-a-f, see:
+      ;; https://github.com/emacs-helm/helm/issues/846
+      (with-eval-after-load 'helm-command-map
+        (set-face-foreground 'helm-M-x-key "#ff1744"))
+      ))
+
+;; highlight numbers color settings
+(if (and (package-installed-p 'highlight-numbers) window-system)
+    (progn
+      (set-face-foreground 'highlight-numbers-number "#00b8d4")
+      ))
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
 
