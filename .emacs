@@ -710,12 +710,12 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; sml color settings
 (if (and (package-installed-p 'smart-mode-line) window-system)
     (progn
-      (set-face-foreground 'sml/git "#ff9100")
+      (set-face-foreground 'sml/git "#e65100")
       (set-face-foreground 'sml/filename "#000000")
       (set-face-foreground 'sml/position-percentage "#2962ff")
       (set-face-bold 'sml/position-percentage t)
       (set-face-foreground 'sml/vc-edited "#ff1744")
-      (set-face-foreground 'sml/vc "#ff9100")
+      (set-face-foreground 'sml/vc "#689f38")
       (set-face-foreground 'sml/col-number "#000000")
       (set-face-foreground 'sml/line-number "#000000")
       (set-face-bold 'sml/col-number t)
@@ -728,7 +728,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; helm color settings
 (if (and (package-installed-p 'helm) window-system)
     (progn
-      (set-face-background 'helm-selection "#ffe082")
+      (set-face-background 'helm-selection "#ffcc80")
       (set-face-background 'helm-source-header "#2962ff") ; original "#abd7f0"
       (set-face-foreground 'helm-source-header "#ffffff")
       (set-face-background 'helm-ff-dotted-directory "#cfd8dc")
