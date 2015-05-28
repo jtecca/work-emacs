@@ -668,14 +668,14 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set color settings
 ;;; PROTIP: use (list-faces-display) to see all of the current faces
-(when
-    window-system
+(when window-system
   (set-face-background 'cursor "#ff1744")
   (set-face-background 'default "#ececec")
   (set-face-foreground 'default "#262626")
-  (set-face-background 'region "#e6ee9c")
+  (set-face-background 'region "#fff59d")
+  (set-face-foreground 'linum "#757575")
   (set-face-background 'show-paren-match "#1de9b6")
-  (set-face-background 'lazy-highlight "#Ffff8d")
+  (set-face-background 'lazy-highlight "#fff59d")
   (set-face-background 'isearch "#673ab7")
   (set-face-foreground 'isearch "#ffffff")
   (set-face-bold 'isearch t)
@@ -688,7 +688,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-foreground 'font-lock-string-face "#33691e")
   (set-face-foreground 'font-lock-comment-face "#f44336")
   (set-face-background 'font-lock-comment-face "#ffefef")
-  (set-face-foreground 'font-lock-variable-name-face "#ff6f00")
+  (set-face-foreground 'font-lock-variable-name-face "#e65100")
   (set-face-attribute 'hl-line nil :background "#cfd8dc" :foreground nil
                       :inherit t)
   )
@@ -710,7 +710,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; sml color settings
 (if (and (package-installed-p 'smart-mode-line) window-system)
     (progn
-      (set-face-foreground 'sml/git "#e65100")
+      (set-face-foreground 'sml/git "#9c27b0")
       (set-face-foreground 'sml/filename "#000000")
       (set-face-foreground 'sml/position-percentage "#2962ff")
       (set-face-bold 'sml/position-percentage t)
@@ -728,14 +728,26 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; helm color settings
 (if (and (package-installed-p 'helm) window-system)
     (progn
-      (set-face-background 'helm-selection "#ffcc80")
-      (set-face-background 'helm-source-header "#2962ff") ; original "#abd7f0"
+      (set-face-background 'helm-selection "#ffeb3b")
+      (set-face-background 'helm-source-header "#3f51b5")
       (set-face-foreground 'helm-source-header "#ffffff")
       (set-face-background 'helm-ff-dotted-directory "#cfd8dc")
+      (set-face-background 'helm-ff-executable "#7cb342")
+      (set-face-foreground 'helm-ff-executable "#000000")
+      (set-face-foreground 'helm-ff-directory "#263238")
+      (set-face-background 'helm-ff-directory "#eceff1")
+      (set-face-background 'helm-visible-mark "#b9f6ca")
+      )
       ;; for reasons for e-a-f, see:
       ;; https://github.com/emacs-helm/helm/issues/846
-      (with-eval-after-load 'helm-command-map
-        (set-face-foreground 'helm-M-x-key "#ff1744"))
+      (with-eval-after-load 'helm-command
+        (set-face-foreground 'helm-M-x-key "#ff1744")))
+
+;; magit color settings
+(if (and (package-installed-p 'magit) window-system)
+    (progn
+      (set-face-background 'magit-item-highlight "#ffea00")
+      (set-face-background 'magit-item-mark "#b9f6ca")
       ))
 
 ;; highlight numbers color settings
