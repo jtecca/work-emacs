@@ -674,7 +674,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-background 'default "#ececec")
   (set-face-foreground 'default "#262626")
   (set-face-background 'region "#fff59d")
-  (set-face-foreground 'linum "#757575")
   (set-face-background 'show-paren-match "#1de9b6")
   (set-face-background 'lazy-highlight "#fff59d")
   (set-face-background 'isearch "#673ab7")
@@ -692,6 +691,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-foreground 'font-lock-variable-name-face "#e65100")
   (set-face-attribute 'hl-line nil :background "#cfd8dc" :foreground nil
                       :inherit t)
+  (with-eval-after-load 'linum-mode
+    (set-face-foreground 'linum "#757575"))
   )
 
 ;; org color settings
@@ -747,8 +748,9 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; magit color settings
 (if (and (package-installed-p 'magit) window-system)
     (progn
-      (set-face-background 'magit-item-highlight "#ffea00")
-      (set-face-background 'magit-item-mark "#b9f6ca")
+      (with-eval-after-load 'magit
+        (set-face-background 'magit-item-highlight "#ffea00")
+        (set-face-background 'magit-item-mark "#b9f6ca"))
       ))
 
 ;; highlight numbers color settings
