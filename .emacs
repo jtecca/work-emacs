@@ -646,7 +646,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   "." 'find-function-at-point
   "<f8>" 'magit-status
   "s" 'sr-speedbar-toggle
-  "<f5>" 'menu-bar-open)
+  "<f5>" 'menu-bar-open
+  "a" 'other-window)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; proced settings
