@@ -239,6 +239,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
       (push (expand-file-name "~/AppData/Local/Continuum/Anaconda") exec-path)
       (push (expand-file-name "~/../../bin/cmder/vendor/msysgit/bin") exec-path)
       (push (expand-file-name "~/bin/cmder/vendor/msysgit/bin/") exec-path)
+      (push (expand-file-name "~/AppData/Local/Chromium/Application/") exec-path)
       (global-set-key (kbd "<f6>") (lambda () (interactive) (find-file org-default-notes-file)))))
   ((string-equal initial-window-system "x")
    (progn
@@ -357,6 +358,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; evil settings
 ;; use C-z to switch between evil/emacs keybindings
 (require 'evil-leader)
+(evil-leader/set-leader "<SPC>")
 (global-evil-leader-mode)
 (require 'evil)
 (setq evil-shift-width 4)
@@ -639,15 +641,19 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; evil-leader keybindings
 (evil-leader/set-key
   "x" 'helm-M-x
+  "h" 'helm-M-x ; this binding might be easier to hit than x
   "b" 'helm-mini
   "k" 'kill-buffer
   "o" 'other-window
   "i" 'helm-semantic-or-imenu
+  "f" 'helm-find-files
   "." 'find-function-at-point
   "<f8>" 'magit-status
   "s" 'sr-speedbar-toggle
   "<f5>" 'menu-bar-open
-  "a" 'other-window)
+  "w" 'ca-write-file ; if you don't want confirmation, than :w<RET>
+  "<f1>" 'insert-date
+  "<f2>" 'insert-datetime)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; proced settings
