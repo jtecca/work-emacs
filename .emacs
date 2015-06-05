@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-05-27
+;;;; updated: 2015-06-05
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -621,7 +621,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; custom global keybindings
 (global-set-key (kbd "<S-wheel-up>") 'increase-font-size)
 (global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
-(global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "M-o") 'other-window) ; duplicated to use in insert mode
 (global-set-key (kbd "C-;") 'endless/comment-line)
 (global-set-key (kbd "M-C-<f5>") 'revert-this-buffer) ; purposely cumbersome to reduce accidental reversions
 (global-set-key (kbd "<C-down>") 'enlarge-window)
@@ -639,6 +639,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (define-key evil-normal-state-map (kbd "C-M-:") 'sp-backward-slurp-sexp)
 (define-key evil-normal-state-map (kbd "C-M-\"") 'sp-backward-barf-sexp)
 ;; evil-leader keybindings
+;; PROTIP: use command-history to get an idea about frequently used commands
+;; that should be bound to evil-leader
 (evil-leader/set-key
   "x" 'helm-M-x
   "h" 'helm-M-x ; this binding might be easier to hit than x
@@ -671,6 +673,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (sml/setup)
 (add-to-list 'sml/replacer-regexp-list '("^~/source/" ":SRC:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/Dropbox/org/" ":ORG:"))
+(add-to-list 'sml/replacer-regexp-list '("^~/AppData/Roaming/" ":ROAM:"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set color settings
@@ -698,40 +701,38 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (set-face-attribute 'hl-line nil :background "#cfd8dc" :foreground nil
                       :inherit t)
   (with-eval-after-load 'linum-mode
-    (set-face-foreground 'linum "#757575"))
-  )
+    (set-face-foreground 'linum "#757575")))
 
 ;; org color settings
-(when
-    window-system
-  (set-face-bold 'org-level-1 nil)
-  (set-face-foreground 'org-level-1 "#242424")
-  (set-face-foreground 'org-level-2 "##121212")
-  (set-face-foreground 'org-level-3 "##1a1a1a")
-  (set-face-foreground 'org-level-4 "##1f1f1f")
-  (set-face-background 'org-level-4 "##292929")
-  (set-face-foreground 'org-level-5 "##2e2e2e")
-  (set-face-foreground 'org-level-5 "##3d3d3d")
-  (set-face-foreground 'org-table "#333333")
-  )
+(when window-system
+  (with-eval-after-load 'org-mode
+    (set-face-bold 'org-level-1 nil)
+    (set-face-foreground 'org-level-1 "#242424")
+    (set-face-foreground 'org-level-2 "##121212")
+    (set-face-foreground 'org-level-3 "##1a1a1a")
+    (set-face-foreground 'org-level-4 "##1f1f1f")
+    (set-face-background 'org-level-4 "##292929")
+    (set-face-foreground 'org-level-5 "##2e2e2e")
+    (set-face-foreground 'org-level-5 "##3d3d3d")
+    (set-face-foreground 'org-table "#333333"))
 
-;; sml color settings
-(if (and (package-installed-p 'smart-mode-line) window-system)
-    (progn
-      (set-face-foreground 'sml/git "#9c27b0")
-      (set-face-foreground 'sml/filename "#000000")
-      (set-face-foreground 'sml/position-percentage "#2962ff")
-      (set-face-bold 'sml/position-percentage t)
-      (set-face-foreground 'sml/vc-edited "#ff1744")
-      (set-face-foreground 'sml/vc "#689f38")
-      (set-face-foreground 'sml/col-number "#000000")
-      (set-face-foreground 'sml/line-number "#000000")
-      (set-face-bold 'sml/col-number t)
-      (set-face-background 'mode-line-inactive "#78909c")
-      (set-face-foreground 'mode-line-inactive "#000000")
-      (set-face-background 'mode-line "#cfd8dc")
-      (set-face-attribute 'mode-line nil :font "DejaVu Sans Mono-9")
-      (set-face-attribute 'mode-line-inactive nil :font "DejaVu Sans Mono-9")))
+  ;; sml color settings
+  (if (and (package-installed-p 'smart-mode-line) window-system)
+      (progn
+        (set-face-foreground 'sml/git "#9c27b0")
+        (set-face-foreground 'sml/filename "#000000")
+        (set-face-foreground 'sml/position-percentage "#2962ff")
+        (set-face-bold 'sml/position-percentage t)
+        (set-face-foreground 'sml/vc-edited "#ff1744")
+        (set-face-foreground 'sml/vc "#689f38")
+        (set-face-foreground 'sml/col-number "#000000")
+        (set-face-foreground 'sml/line-number "#000000")
+        (set-face-bold 'sml/col-number t)
+        (set-face-background 'mode-line-inactive "#78909c")
+        (set-face-foreground 'mode-line-inactive "#000000")
+        (set-face-background 'mode-line "#cfd8dc")
+        (set-face-attribute 'mode-line nil :font "DejaVu Sans Mono-9")
+        (set-face-attribute 'mode-line-inactive nil :font "DejaVu Sans Mono-9"))))
 
 ;; helm color settings
 (if (and (package-installed-p 'helm) window-system)
@@ -746,7 +747,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
       (set-face-background 'helm-ff-directory "#eceff1")
       (set-face-background 'helm-visible-mark "#b9f6ca")
       )
-      ;; for reasons for e-a-f, see:
+      ;; for reasons for e-a-l, see:
       ;; https://github.com/emacs-helm/helm/issues/846
       (with-eval-after-load 'helm-command
         (set-face-foreground 'helm-M-x-key "#ff1744")))
