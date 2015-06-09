@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-06-05
+;;;; updated: 2015-06-09
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -306,55 +306,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
  (global-set-key (kbd "C-$") 'flyspell-mode)))
 
 ;;;;;;;;;;;;;;;;;;
-;; hydras
-;; trying out hydra package with a few examples set to the function keys
-;; just to see if it fits well with my workflow
-(autoload 'hydra "hydra")
-(eval-after-load "hydra"
-  '(progn
-(hydra-add-font-lock)
-(defhydra hydra-zoom (global-map "<f9>")
-  "zoom"
-  ("i" text-scale-increase "in")
-  ("o" text-scale-decrease "out")
-  ("q" nil "quit" :color blue))
-
-(require 'hydra-examples)
-(defhydra hydra-splitter (global-map "<f10>")
-  "splitter"
-  ("h" hydra-move-splitter-left)
-  ("j" hydra-move-splitter-down)
-  ("k" hydra-move-splitter-up)
-  ("l" hydra-move-splitter-right)
-  ("q" nil "quit" :color blue))
-
-(require 'windmove)
-(defhydra hydra-windmove (global-map "<f11>")
-  "windmove"
-  ("h" windmove-left)
-  ("j" windmove-down)
-  ("k" windmove-up)
-  ("l" windmove-right)
-  ("q" nil "quit" :color blue))
-
-; these needs work to have the keybindings show up with just the prefix
-(defhydra hydra-org (global-map "C-c o"
-                                :hint nil
-                                :color blue)
-  "
-  _c_: capture
-  _l_: store-link
-  _a_: agenda
-  _b_: iswitchb
-  "
-  ("c" org-capture)
-  ("l" org-store-link)
-  ("a" org-agenda)
-  ("b" org-iswitchb)
-  ("q" nil "quit" :color blue))
-))
-
-;;;;;;;;;;;;;;;;;;
 ;; evil settings
 ;; use C-z to switch between evil/emacs keybindings
 (require 'evil-leader)
@@ -378,6 +329,55 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
            (global-set-key [escape] 'keyboard-quit))
 
 ;;;;;;;;;;;;;;;;;;
+;; hydras
+;; trying out hydra package with a few examples set to the function keys
+;; just to see if it fits well with my workflow
+(autoload 'hydra "hydra")
+(eval-after-load "hydra"
+  '(progn
+(hydra-add-font-lock)
+(defhydra hydra-zoom (evil-leader--default-map "<f9>")
+  "zoom"
+  ("i" text-scale-increase "in")
+  ("o" text-scale-decrease "out")
+  ("q" nil "quit" :color blue))
+
+(require 'hydra-examples)
+(defhydra hydra-splitter (evil-leader--default-map "<f10>")
+  "splitter"
+  ("h" hydra-move-splitter-left)
+  ("j" hydra-move-splitter-down)
+  ("k" hydra-move-splitter-up)
+  ("l" hydra-move-splitter-right)
+  ("q" nil "quit" :color blue))
+
+(require 'windmove)
+(defhydra hydra-windmove (evil-leader--default-map "<f11>")
+  "windmove"
+  ("h" windmove-left)
+  ("j" windmove-down)
+  ("k" windmove-up)
+  ("l" windmove-right)
+  ("q" nil "quit" :color blue))
+
+; these needs work to have the keybindings show up with just the prefix
+(defhydra hydra-org (evil-leader--default-map "<f7>"
+                                :hint nil
+                                :color blue)
+  "
+  _c_: capture
+  _l_: store-link
+  _a_: agenda
+  _b_: iswitchb
+  "
+  ("c" org-capture)
+  ("l" org-store-link)
+  ("a" org-agenda)
+  ("b" org-iswitchb)
+  ("q" nil "quit" :color blue))
+))
+
+;;;;;;;;;;;;;;;;;;
 ;; markdown settings
 ;; set markdown filetypes
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
@@ -393,7 +393,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (setq visible-bell nil)
 (setq smooth-scroll-margin 5)
 (setq scroll-conservatively 9999
-      scroll-preserve-screen-position t)
+      scroll-preserve-screen-position t
+      scroll-step 1)
 (setq cursor-type 'box)
 (hl-line-mode 1)
 
@@ -470,9 +471,11 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 
 ;;;;;;;;;;;;;;;;;;
 ;; helm
+(require 'helm)
 (require 'helm-config)
 ;; look into helm-swoop as a find replacement
 ;; helm's default prefix keybinding is too close to C-x C-c
+(helm-autoresize-mode 1)
 (global-set-key (kbd "C-c j") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
 (global-unset-key (kbd "C-z"))
@@ -619,6 +622,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom global keybindings
+(global-unset-key (kbd "C-x C-d")) ; i usually just mean to get to dired
 (global-set-key (kbd "<S-wheel-up>") 'increase-font-size)
 (global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
 (global-set-key (kbd "M-o") 'other-window) ; duplicated to use in insert mode
@@ -642,18 +646,20 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; PROTIP: use command-history to get an idea about frequently used commands
 ;; that should be bound to evil-leader
 (evil-leader/set-key
-  "x" 'helm-M-x
   "h" 'helm-M-x ; this binding might be easier to hit than x
   "b" 'helm-mini
+  "d" 'dired
+  "e" 'eshell
   "k" 'kill-buffer
   "o" 'other-window
   "i" 'helm-semantic-or-imenu
   "f" 'helm-find-files
+  "w" 'delete-window
+  ;; splitting windows are baked into C-w s or C-w v
   "." 'find-function-at-point
   "<f8>" 'magit-status
-  "s" 'sr-speedbar-toggle
+  "t" 'sr-speedbar-toggle
   "<f5>" 'menu-bar-open
-  "w" 'ca-write-file ; if you don't want confirmation, than :w<RET>
   "<f1>" 'insert-date
   "<f2>" 'insert-datetime)
 
@@ -765,6 +771,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
     (progn
       (set-face-foreground 'highlight-numbers-number "#00b8d4")
       ))
+
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
 
