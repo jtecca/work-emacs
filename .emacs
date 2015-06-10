@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-06-09
+;;;; updated: 2015-06-10
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -24,7 +24,7 @@
  (lambda (package)
    (unless (package-installed-p package)
      (package-install package)))
- '(ace-jump-mode company company-c-headers company-jedi
+ '(ace-jump-mode company company-c-headers company-jedi diminish
                  evil evil-smartparens evil-leader f
                  fill-column-indicator ggtags helm helm-gtags helm-projectile
                  highlight-numbers hydra magit markdown-mode projectile
@@ -326,7 +326,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
            (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
            (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
            (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-           (global-set-key [escape] 'keyboard-quit))
+           (global-set-key [escape] 'keyboard-quit)
+           (setq evil-move-cursor-back nil))
 
 ;;;;;;;;;;;;;;;;;;
 ;; hydras
@@ -396,7 +397,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
       scroll-preserve-screen-position t
       scroll-step 1)
 (setq cursor-type 'box)
-(hl-line-mode 1)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; autosave/backup/file options
@@ -429,10 +429,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (setf x-stretch-cursor 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
-(if (file-exists-p abbrev-file-name)
-    (quietly-read-abbrev-file))
-(setq save-abbrevs t)
-(setq-default abbrev-mode t)
 (put 'dired-find-alternate-file 'disabled nil)
 
 ;;;;;;;;;;;;;;;;;;
@@ -442,6 +438,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (add-hook 'prog-mode-hook 'hs-minor-mode)
 (autoload 'fill-column-indicator "fill-column-indicator")
 (add-hook 'prog-mode-hook 'turn-on-fci-mode)
+(add-hook 'prog-mode-hook 'turn-on-auto-fill)
 
 ;;;;;;;;;;;;;;;;;;
 ;; projectile setup
@@ -681,96 +678,109 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (add-to-list 'sml/replacer-regexp-list '("^~/Dropbox/org/" ":ORG:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/AppData/Roaming/" ":ROAM:"))
 
+;;;;;;;;;;;;;;;;;;
+;;;; diminish settings
+;; clean up the mode list
+(require 'diminish)
+(evalafter 'hs (diminish 'hs-minor-mode))
+(evalafter 'projectile (diminish 'projectile-mode))
+(evalafter 'evil-smartparens (diminish 'evil-smartparens-mode))
+(evalafter 'evil-smartparens (diminish 'smartparens-mode))
+(evalafter 'helm (diminish 'helm-mode))
+(evalafter 'evil (diminish 'undo-tree-mode))
+(evalafter 'magit (diminish 'magit-auto-revert-mode))
+(evalafter 'company (diminish 'company-mode))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; set color settings
 ;;; PROTIP: use (list-faces-display) to see all of the current faces
-(when window-system
-  (set-face-background 'cursor "#ff1744")
-  (set-face-background 'default "#ececec")
-  (set-face-foreground 'default "#262626")
-  (set-face-background 'region "#fff59d")
-  (set-face-background 'show-paren-match "#1de9b6")
-  (set-face-background 'lazy-highlight "#fff59d")
-  (set-face-background 'isearch "#673ab7")
-  (set-face-foreground 'isearch "#ffffff")
-  (set-face-bold 'isearch t)
-  (set-face-foreground 'comint-highlight-prompt "#4caf50")
-  (set-face-foreground 'font-lock-builtin-face "#0d47a1")
-  (set-face-foreground 'font-lock-function-name-face "#2979ff")
-  (set-face-bold 'font-lock-function-name-face t)
-  (set-face-foreground 'font-lock-keyword-face "#6200ea")
-  (set-face-foreground 'font-lock-type-face "#00acc1")
-  (set-face-foreground 'font-lock-string-face "#33691e")
-  (set-face-foreground 'font-lock-comment-face "#f44336")
-  (set-face-background 'font-lock-comment-face "#ffefef")
-  (set-face-foreground 'font-lock-variable-name-face "#e65100")
-  (set-face-attribute 'hl-line nil :background "#cfd8dc" :foreground nil
-                      :inherit t)
-  (with-eval-after-load 'linum-mode
-    (set-face-foreground 'linum "#757575")))
+;; (when window-system
+;;   (set-face-background 'cursor "#ff1744")
+;;   (set-face-background 'default "#ececec")
+;;   (set-face-foreground 'default "#262626")
+;;   (set-face-background 'region "#fff59d")
+;;   (set-face-background 'show-paren-match "#1de9b6")
+;;   (set-face-background 'lazy-highlight "#fff59d")
+;;   (set-face-background 'isearch "#673ab7")
+;;   (set-face-foreground 'isearch "#ffffff")
+;;   (set-face-bold 'isearch t)
+;;   (set-face-foreground 'comint-highlight-prompt "#4caf50")
+;;   (set-face-foreground 'font-lock-builtin-face "#0d47a1")
+;;   (set-face-foreground 'font-lock-function-name-face "#2979ff")
+;;   (set-face-bold 'font-lock-function-name-face t)
+;;   (set-face-foreground 'font-lock-keyword-face "#6200ea")
+;;   (set-face-foreground 'font-lock-type-face "#00acc1")
+;;   (set-face-foreground 'font-lock-string-face "#33691e")
+;;   (set-face-foreground 'font-lock-comment-face "#f44336")
+;;   (set-face-background 'font-lock-comment-face "#ffefef")
+;;   (set-face-foreground 'font-lock-variable-name-face "#e65100")
+;;   (set-face-attribute 'hl-line nil :background "#cfd8dc" :foreground nil
+;;                       :inherit t)
+;;   (with-eval-after-load 'linum-mode
+;;     (set-face-foreground 'linum "#757575")))
 
-;; org color settings
-(when window-system
-  (with-eval-after-load 'org-mode
-    (set-face-bold 'org-level-1 nil)
-    (set-face-foreground 'org-level-1 "#242424")
-    (set-face-foreground 'org-level-2 "##121212")
-    (set-face-foreground 'org-level-3 "##1a1a1a")
-    (set-face-foreground 'org-level-4 "##1f1f1f")
-    (set-face-background 'org-level-4 "##292929")
-    (set-face-foreground 'org-level-5 "##2e2e2e")
-    (set-face-foreground 'org-level-5 "##3d3d3d")
-    (set-face-foreground 'org-table "#333333"))
+;; ;; org color settings
+;; (when window-system
+;;   (with-eval-after-load 'org-mode
+;;     (set-face-bold 'org-level-1 nil)
+;;     (set-face-foreground 'org-level-1 "#242424")
+;;     (set-face-foreground 'org-level-2 "##121212")
+;;     (set-face-foreground 'org-level-3 "##1a1a1a")
+;;     (set-face-foreground 'org-level-4 "##1f1f1f")
+;;     (set-face-background 'org-level-4 "##292929")
+;;     (set-face-foreground 'org-level-5 "##2e2e2e")
+;;     (set-face-foreground 'org-level-5 "##3d3d3d")
+;;     (set-face-foreground 'org-table "#333333"))
 
-  ;; sml color settings
-  (if (and (package-installed-p 'smart-mode-line) window-system)
-      (progn
-        (set-face-foreground 'sml/git "#9c27b0")
-        (set-face-foreground 'sml/filename "#000000")
-        (set-face-foreground 'sml/position-percentage "#2962ff")
-        (set-face-bold 'sml/position-percentage t)
-        (set-face-foreground 'sml/vc-edited "#ff1744")
-        (set-face-foreground 'sml/vc "#689f38")
-        (set-face-foreground 'sml/col-number "#000000")
-        (set-face-foreground 'sml/line-number "#000000")
-        (set-face-bold 'sml/col-number t)
-        (set-face-background 'mode-line-inactive "#78909c")
-        (set-face-foreground 'mode-line-inactive "#000000")
-        (set-face-background 'mode-line "#cfd8dc")
-        (set-face-attribute 'mode-line nil :font "DejaVu Sans Mono-9")
-        (set-face-attribute 'mode-line-inactive nil :font "DejaVu Sans Mono-9"))))
+;;   ;; sml color settings
+;;   (if (and (package-installed-p 'smart-mode-line) window-system)
+;;       (progn
+;;         (set-face-foreground 'sml/git "#9c27b0")
+;;         (set-face-foreground 'sml/filename "#000000")
+;;         (set-face-foreground 'sml/position-percentage "#2962ff")
+;;         (set-face-bold 'sml/position-percentage t)
+;;         (set-face-foreground 'sml/vc-edited "#ff1744")
+;;         (set-face-foreground 'sml/vc "#689f38")
+;;         (set-face-foreground 'sml/col-number "#000000")
+;;         (set-face-foreground 'sml/line-number "#000000")
+;;         (set-face-bold 'sml/col-number t)
+;;         (set-face-background 'mode-line-inactive "#78909c")
+;;         (set-face-foreground 'mode-line-inactive "#000000")
+;;         (set-face-background 'mode-line "#cfd8dc")
+;;         (set-face-attribute 'mode-line nil :font "DejaVu Sans Mono-9")
+;;         (set-face-attribute 'mode-line-inactive nil :font "DejaVu Sans Mono-9"))))
 
-;; helm color settings
-(if (and (package-installed-p 'helm) window-system)
-    (progn
-      (set-face-background 'helm-selection "#ffeb3b")
-      (set-face-background 'helm-source-header "#3f51b5")
-      (set-face-foreground 'helm-source-header "#ffffff")
-      (set-face-background 'helm-ff-dotted-directory "#cfd8dc")
-      (set-face-background 'helm-ff-executable "#7cb342")
-      (set-face-foreground 'helm-ff-executable "#000000")
-      (set-face-foreground 'helm-ff-directory "#263238")
-      (set-face-background 'helm-ff-directory "#eceff1")
-      (set-face-background 'helm-visible-mark "#b9f6ca")
-      )
-      ;; for reasons for e-a-l, see:
-      ;; https://github.com/emacs-helm/helm/issues/846
-      (with-eval-after-load 'helm-command
-        (set-face-foreground 'helm-M-x-key "#ff1744")))
+;; ;; helm color settings
+;; (if (and (package-installed-p 'helm) window-system)
+;;     (progn
+;;       (set-face-background 'helm-selection "#ffeb3b")
+;;       (set-face-background 'helm-source-header "#3f51b5")
+;;       (set-face-foreground 'helm-source-header "#ffffff")
+;;       (set-face-background 'helm-ff-dotted-directory "#cfd8dc")
+;;       (set-face-background 'helm-ff-executable "#7cb342")
+;;       (set-face-foreground 'helm-ff-executable "#000000")
+;;       (set-face-foreground 'helm-ff-directory "#263238")
+;;       (set-face-background 'helm-ff-directory "#eceff1")
+;;       (set-face-background 'helm-visible-mark "#b9f6ca")
+;;       )
+;;       ;; for reasons for e-a-l, see:
+;;       ;; https://github.com/emacs-helm/helm/issues/846
+;;       (with-eval-after-load 'helm-command
+;;         (set-face-foreground 'helm-M-x-key "#ff1744")))
 
-;; magit color settings
-(if (and (package-installed-p 'magit) window-system)
-    (progn
-      (with-eval-after-load 'magit
-        (set-face-background 'magit-item-highlight "#ffea00")
-        (set-face-background 'magit-item-mark "#b9f6ca"))
-      ))
+;; ;; magit color settings
+;; (if (and (package-installed-p 'magit) window-system)
+;;     (progn
+;;       (with-eval-after-load 'magit
+;;         (set-face-background 'magit-item-highlight "#ffea00")
+;;         (set-face-background 'magit-item-mark "#b9f6ca"))
+;;       ))
 
-;; highlight numbers color settings
-(if (and (package-installed-p 'highlight-numbers) window-system)
-    (progn
-      (set-face-foreground 'highlight-numbers-number "#00b8d4")
-      ))
+;; ;; highlight numbers color settings
+;; (if (and (package-installed-p 'highlight-numbers) window-system)
+;;     (progn
+;;       (set-face-foreground 'highlight-numbers-number "#00b8d4")
+;;       ))
 
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
