@@ -31,6 +31,10 @@
                  rainbow-delimiters rainbow-mode s seq slime smartparens
                  sr-speedbar smart-mode-line))
 
+;; load theme
+;; TODO: why doesn't my custom file properly load a theme?
+(load-theme 'cyberpunk t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; define custom functions
 (defun file-to-string (filepath)
@@ -669,14 +673,13 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;;;;;;;;;;;;;;;;;;
 ;;;; proced settings
 (require 'smart-mode-line)
-(add-to-list 'rm-blacklist "helm-mode")
-(add-to-list 'rm-blacklist "hs-minor-mode")
-(add-to-list 'rm-blacklist "undo-tree-mode")
 (setq sml/no-confirm-load-theme t)
 (sml/setup)
 (add-to-list 'sml/replacer-regexp-list '("^~/source/" ":SRC:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/Dropbox/org/" ":ORG:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/AppData/Roaming/" ":ROAM:"))
+(add-to-list 'sml/replacer-regexp-list '("^~/Documents/" ":DOC:"))
+(add-to-list 'sml/replacer-regexp-list '("^~/Downloads/" ":DL:"))
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; diminish settings
