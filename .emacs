@@ -322,16 +322,15 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (add-hook 'text-mode-hook 'turn-on-evil-mode)
 (add-hook 'text-mode-hook 'linum-mode)
 (evil-mode 1)
-(evalafter "evil-mode"
-           (define-key evil-normal-state-map [escape] 'keyboard-quit)
-           (define-key evil-visual-state-map [escape] 'keyboard-quit)
-           (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-           (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-           (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-           (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-           (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-           (global-set-key [escape] 'keyboard-quit)
-           (setq evil-move-cursor-back nil))
+(define-key evil-normal-state-map [escape] 'keyboard-quit)
+(define-key evil-visual-state-map [escape] 'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(global-set-key [escape] 'keyboard-quit)
+(setq evil-move-cursor-back nil)
 
 ;;;;;;;;;;;;;;;;;;
 ;; hydras
@@ -569,6 +568,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; set the task keywords
 (setq org-todo-keywords
       '((sequence "TODO" "WORKING" "STOPPED" "OOS" "DONE")))
+(setq org-src-fontify-natively t)
 (setq org-log-done 'time) ; adds a timestamp when a TODO is marked as DONE
 ;; update counts after removing a line from an org todo-list
 (defun myorg-update-parent-cookie ()
