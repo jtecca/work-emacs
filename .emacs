@@ -33,7 +33,7 @@
 
 ;; load theme
 ;; TODO: why doesn't my custom file properly load a theme?
-(load-theme 'cyberpunk t)
+(when (package-installed-p 'cyberpunk-theme) (load-theme 'cyberpunk t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; define custom functions
@@ -460,7 +460,9 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
      (define-key c-mode-base-map (kbd "C-c c") (lambda ()
                                                  (interactive)
                                                  (setq-local compilation-read-command nil)
-                                                 (call-interactively 'compile)))
+                                                 (call-interactively
+                                                  'compile)))
+     (define-key c-mode-base-map (kbd "C-c C-f") 'ff-find-other-file)
      ))
 
 ;;;;;;;;;;;;;;;;;;
