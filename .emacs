@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-06-10
+;;;; updated: 2015-06-20
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -32,9 +32,8 @@
                  sr-speedbar smart-mode-line))
 
 ;; load theme
-;; TODO: why doesn't my custom file properly load a theme?
-(when (package-installed-p 'cyberpunk-theme) (load-theme 'cyberpunk t))
-
+(push "/home/jtecc/.emacs.d/elpa/noctilux-theme/" custom-theme-load-path)
+(load-theme 'noctilux t)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; define custom functions
 (defun file-to-string (filepath)
