@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-06-20
+;;;; updated: 2015-06-23
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -32,8 +32,18 @@
                  sr-speedbar smart-mode-line))
 
 ;; load theme
-(push "/home/jtecc/.emacs.d/elpa/noctilux-theme/" custom-theme-load-path)
-(load-theme 'noctilux t)
+(cond
+ ((string-equal initial-window-system "w32")
+  (progn
+    (push (expand-file-name "~/AppData/Roaming/.emacs.d/noctilux-theme/")
+          custom-theme-load-path)
+    (load-theme 'noctilux t)))
+ ((string-equal initial-window-system "x")
+  (progn
+    (push (expand-file-name "~/.emacs.d/noctilux-theme/")
+          custom-theme-load-path)
+    (load-theme 'noctilux t))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; define custom functions
 (defun file-to-string (filepath)
@@ -432,9 +442,11 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
 (put 'dired-find-alternate-file 'disabled nil)
+(setq gc-cons-threshold 50000000) ; garbage collection threshold at 50MB
+(setq use-dialog-box nil)
 
 ;;;;;;;;;;;;;;;;;;
-;; generic programming settings
+;;  generic programming settings
 (require 'highlight-numbers)
 (add-hook 'prog-mode-hook 'highlight-numbers-mode)
 (add-hook 'prog-mode-hook 'hs-minor-mode)
@@ -648,22 +660,24 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; PROTIP: use command-history to get an idea about frequently used commands
 ;; that should be bound to evil-leader
 (evil-leader/set-key
-  "h" 'helm-M-x ; this binding might be easier to hit than x
+  "h" 'helm-M-x
   "b" 'helm-mini
+  "y" 'helm-show-kill-ring
+  "i" 'helm-semantic-or-imenu
+  "f" 'helm-find-files
   "d" 'dired
   "e" 'eshell
   "k" 'kill-buffer
-  "o" 'other-window
-  "i" 'helm-semantic-or-imenu
-  "f" 'helm-find-files
   "w" 'delete-window
   ;; splitting windows are baked into C-w s or C-w v
   "." 'find-function-at-point
-  "<f8>" 'magit-status
   "t" 'sr-speedbar-toggle
   "<f5>" 'menu-bar-open
   "<f1>" 'insert-date
-  "<f2>" 'insert-datetime)
+  "<f2>" 'insert-datetime
+  "<f8>" 'magit-status
+  "<SPC>" 'other-window
+  )
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; proced settings
@@ -674,6 +688,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;;;;;;;;;;;;;;;;;;
 ;;;; proced settings
 (require 'smart-mode-line)
+(setq sml/theme nil)
 (setq sml/no-confirm-load-theme t)
 (sml/setup)
 (add-to-list 'sml/replacer-regexp-list '("^~/source/" ":SRC:"))
