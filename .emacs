@@ -422,7 +422,11 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; general editor settings
+(prefer-coding-system 'utf-8)
 (set-language-environment "utf-8")
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
 (setq confirm-kill-emacs (quote y-or-n-p))
 (setq standard-indent 4)
 (setq-default indent-tabs-mode nil)
@@ -444,6 +448,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (put 'dired-find-alternate-file 'disabled nil)
 (setq gc-cons-threshold 50000000) ; garbage collection threshold at 50MB
 (setq use-dialog-box nil)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 
 ;;;;;;;;;;;;;;;;;;
 ;;  generic programming settings
