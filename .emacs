@@ -430,6 +430,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (setq confirm-kill-emacs (quote y-or-n-p))
 (setq standard-indent 4)
 (setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
 (fset 'yes-or-no-p 'y-or-n-p)
 (column-number-mode 1)
 (toggle-word-wrap 1)
