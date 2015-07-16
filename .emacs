@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-06-23
+;;;; updated: 2015-07-15
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -204,6 +204,13 @@ stolen from: http://www.emacswiki.org/emacs/AutoRecompile"
         (byte-compile-file dotemacs))))
 (add-hook 'after-save-hook 'compile-dotemacs)
 
+(defun jt/load-external-lisp (slime-helper-path inferior-lisp-name)
+  "loads the site slime-helper.el file and makes sure that is is byte-compiled.
+compiles slime-helper.el if it is not compiled and loads it regardless.  also
+sets the default inferior lisp program name."
+  (byte-recompile-file slime-helper-path nil 0 t)
+  (setq inferior-lisp-program inferior-lisp-name))
+
 ;; load temporary site functions if file exists
 ;; this file is used to house multi-session functions
 ;; but not permanent enough to be placed in my .emacs
@@ -284,25 +291,25 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
        (setq python-shell-interpreter "ipython")))))
 
 ;; lisp setups
-;; (cond
-;;  ((string-equal initial-window-system "w32")
-;;   (progn
-;;     (load (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el"))
-;;     (setq inferior-lisp-program "wx86cl64")))
-;;  ((string-equal initial-window-system "x")
-;;   (progn
-;;     (setq inferior-lisp-program "sbcl")
-;;     (load (expand-file-name "~/quicklisp/slime-helper.el"))))
-;;  ((and (string-equal initial-window-system "nil")
-;;        (not (string-equal system-type "windows-nt")))
-;;   (progn
-;;     (setq inferior-lisp-program "sbcl")
-;;     (load (expand-file-name "~/quicklisp/slime-helper.el"))))
-;;  ((and (string-equal initial-window-system "nil")
-;;        (string-equal system-type "windows-nt"))
-;;   (progn
-;;     (setq inferior-lisp-program "wx86cl64")
-;;     (load (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el")))))
+(cond
+ ((string-equal initial-window-system "w32")
+  (jt/load-external-lisp
+   (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el")
+   "wx86cl64"))
+ ((string-equal initial-window-system "x")
+  (jt/load-external-lisp
+   (expand-file-name "~/quicklisp/slime-helper.el")
+   "sbcl"))
+ ((and (string-equal initial-window-system "nil")
+       (not (string-equal system-type "windows-nt")))
+  (jt/load-external-lisp
+   (expand-file-name "~/quicklisp/slime-helper.el")
+   "sbcl"))
+ ((and (string-equal initial-window-system "nil")
+       (string-equal system-type "windows-nt"))
+  (jt/load-external-lisp
+   (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el")
+   "wx86cl64")))
 
 ;; setup apsell for spell checking
 ;; M-$ is the default keybinding for it
@@ -632,7 +639,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;;;;;;;;;;;;;;;;;;
 ;;;; magit settings
 (setq magit-last-seen-setup-instructions "1.4.0")
-;; (setq magit-auto-revert-mode nil)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; global python settings
@@ -713,7 +719,9 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (evalafter 'evil-smartparens (diminish 'smartparens-mode))
 (evalafter 'helm (diminish 'helm-mode))
 (evalafter 'evil (diminish 'undo-tree-mode))
-(evalafter 'magit (diminish 'magit-auto-revert-mode))
+;;; this has changed with the recent update to magit 2.x branch
+;;; see if this still needs to be here
+;;(evalafter 'magit (diminish 'magit-auto-revert-mode))
 (evalafter 'company (diminish 'company-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
