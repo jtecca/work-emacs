@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-07-15
+;;;; updated: 2015-07-23
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -24,12 +24,12 @@
  (lambda (package)
    (unless (package-installed-p package)
      (package-install package)))
- '(ace-jump-mode company company-c-headers company-jedi diminish
-                 evil evil-smartparens evil-leader f
-                 fill-column-indicator ggtags helm helm-gtags helm-projectile
-                 highlight-numbers hydra magit markdown-mode projectile
-                 rainbow-delimiters rainbow-mode s seq slime smartparens
-                 sr-speedbar smart-mode-line))
+ '(avy company company-c-headers company-jedi diminish delight
+       evil evil-smartparens evil-leader f
+       fill-column-indicator ggtags helm helm-gtags helm-projectile
+       highlight-numbers hydra magit markdown-mode projectile
+       rainbow-delimiters rainbow-mode s seq slime smartparens
+       sr-speedbar smart-mode-line))
 
 ;; load theme
 (cond
@@ -63,7 +63,7 @@
                       (- (face-attribute 'default :height) 10)))
 
 (defun insert-date (arg)
-"inserts the current date into the buffer.
+"Inserts the current date into the buffer.
 
 if called with an arg, changes the format to the windows-style format."
   (interactive "P")
@@ -76,7 +76,7 @@ if called with an arg, changes the format to the windows-style format."
   (insert (format-time-string "%H:%M:%S")))
 
 (defun insert-datetime (arg)
-"inserts the date and time into the buffer.
+"Inserts the date and time into the buffer.
 
 if called with an arg, changes the date format to the windows-style format."
 (interactive "P")
@@ -240,14 +240,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   (next-line)
   (back-to-indentation))
 
-(defadvice isearch-repeat-forward (after forward-recenter-pos activate compile)
-  "After a repeated isearch-forward (C-s), recenter the next found item to the center of the buffer."
-  (recenter))
-
-(defadvice isearch-repeat-backward (after backward-recenter-pos activate compile)
-  "After a repeated isearch-backwar (C-r), recenter the next found item to the center of the buffer."
-  (recenter))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; os-specific settings
 ;; maximize the frame on startup
@@ -332,36 +324,30 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (evil-leader/set-leader "<SPC>")
 (global-evil-leader-mode)
 (require 'evil)
-(setq evil-shift-width 4)
-(add-hook 'prog-mode-hook 'turn-on-evil-mode)
 (add-hook 'prog-mode-hook 'linum-mode)
-(add-hook 'text-mode-hook 'turn-on-evil-mode)
+(add-hook 'prog-mode-hook 'turn-on-evil-mode)
 (add-hook 'text-mode-hook 'linum-mode)
-(evil-mode 1)
+(add-hook 'text-mode-hook 'turn-on-evil-mode)
 (define-key evil-normal-state-map [escape] 'keyboard-quit)
 (define-key evil-visual-state-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(evil-mode 1)
 (global-set-key [escape] 'keyboard-quit)
+(setq evil-insert-state-cursor '("red" box))
 (setq evil-move-cursor-back nil)
+(setq evil-replace-state-cursor '(box))
+(setq evil-shift-width 4)
+(setq evil-visual-state-cursor '(box))
 
 ;;;;;;;;;;;;;;;;;;
 ;; hydras
 ;; trying out hydra package with a few examples set to the function keys
 ;; just to see if it fits well with my workflow
 (autoload 'hydra "hydra")
-(eval-after-load "hydra"
-  '(progn
-(hydra-add-font-lock)
-(defhydra hydra-zoom (evil-leader--default-map "<f9>")
-  "zoom"
-  ("i" text-scale-increase "in")
-  ("o" text-scale-decrease "out")
-  ("q" nil "quit" :color blue))
-
 (require 'hydra-examples)
 (defhydra hydra-splitter (evil-leader--default-map "<f10>")
   "splitter"
@@ -395,7 +381,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   ("a" org-agenda)
   ("b" org-iswitchb)
   ("q" nil "quit" :color blue))
-))
 
 ;;;;;;;;;;;;;;;;;;
 ;; markdown settings
@@ -551,14 +536,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; sql settings
 ;; i think there's readline issues with the default pgadmin psql
 ;; may need to try cygwin's psql.exe for output
-(setq sql-postgres-program "C:/Program Files (x86)/pgAdmin III/1.20/psql.exe")
-;(setq sql-postgres-options (file-to-string "~/postgresql/connection.info"))
-;; disable truncating lines for large tables
-(add-hook 'sql-interactive-mode-hook
-          (function (lambda ()
-                      (linum-mode 1)
-                      (setq truncate-lines t))))
-
 ;;;;;;;;;;;;;;;;;;
 ;; company-mode settings
 (autoload 'company "company")
@@ -583,9 +560,9 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;;;;;;;;;;;;;;;;;;
 ;; smartparens setup
 (require 'smartparens-config) ; load the default config
+(require 'evil-smartparens)
 (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)
 (smartparens-global-mode t)
-;; note: keybindings are done at in the global keybinding section
 
 ;;;;;;;;;;;;;;;;;;
 ;; org-mode settings
@@ -603,38 +580,16 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
       (ignore-errors
         (org-back-to-heading)
         (org-update-parent-todo-statistics)))))
-
 (defadvice org-kill-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
-
 (defadvice kill-whole-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
-
-;;;;;;;;;;;;;;;;;;
-;;;; ace-jump-mode
-; load settings per source file
-(autoload
-  'ace-jump-mode-pop-mark
-  "ace-jump-mode"
-  "Quick move minor mode"
-  t)
-(eval-after-load "ace-jump-mode"
-  '(ace-jump-mode-enable-mark-sync))
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-(define-key global-map (kbd "C-c C-SPC") 'ace-jump-mode)
-(setq ace-jump-mode-submode-list ; i prefer char-mode for finer-grained jumping
-      '(ace-jump-char-mode
-        ace-jump-word-mode
-        ace-jump-line-mode))
-(setq ace-jump-mode-gray-background t)
-(setq ace-jump-mode-scope 'window)
-;; PROTIP: you can use C-c C-c to switch between char, word, and line modes
-;; after you enter a character to search for.  however, it doesn't work
-;; when you haven't entered anything to search for
-;;; For more information
-;; Intro Doc: https://github.com/winterTTr/ace-jump-mode/wiki
-;; FAQ      : https://github.com/winterTTr/ace-jump-mode/wiki/AceJump-FAQ
-;; setup ace window for quick jumping between windows
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)
+   (emacs-lisp . t)
+   (lisp . t)
+   (lilypond . t)))
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; magit settings
@@ -659,6 +614,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
 (global-set-key (kbd "C-<tab>") 'company-complete)
+(global-set-key (kbd "M-g g") 'avy-goto-line)
+(global-set-key (kbd "C-s") 'swiper)
 ;; add smartparens slurp and barf commands to evil insert state
 (define-key evil-insert-state-map (kbd "C-M-'") 'sp-forward-slurp-sexp)
 (define-key evil-insert-state-map (kbd "C-M-;") 'sp-forward-barf-sexp)
@@ -677,18 +634,20 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   "y" 'helm-show-kill-ring
   "i" 'helm-semantic-or-imenu
   "f" 'helm-find-files
-  "d" 'dired
-  "e" 'eshell
   "k" 'kill-buffer
   "w" 'delete-window
-  ;; splitting windows are baked into C-w s or C-w v
-  "." 'find-function-at-point
-  "t" 'sr-speedbar-toggle
-  "<f5>" 'menu-bar-open
+   "<f5>" 'menu-bar-open
   "<f1>" 'insert-date
   "<f2>" 'insert-datetime
   "<f8>" 'magit-status
   "<SPC>" 'other-window
+  "g" 'avy-goto-word-or-subword-1
+  "c" 'avy-goto-char
+ "." 'find-function-at-point
+  ;; 'u'tility commands are grouped together below
+  "ud" 'dired
+  "ue" 'eshell
+  "ut" 'sr-speedbar-toggle
   )
 
 ;;;;;;;;;;;;;;;;;;
@@ -709,113 +668,19 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (add-to-list 'sml/replacer-regexp-list '("^~/Documents/" ":DOC:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/Downloads/" ":DL:"))
 
-;;;;;;;;;;;;;;;;;;
-;;;; diminish settings
-;; clean up the mode list
-(require 'diminish)
-(evalafter 'hs (diminish 'hs-minor-mode))
-(evalafter 'projectile (diminish 'projectile-mode))
-(evalafter 'evil-smartparens (diminish 'evil-smartparens-mode))
-(evalafter 'evil-smartparens (diminish 'smartparens-mode))
-(evalafter 'helm (diminish 'helm-mode))
-(evalafter 'evil (diminish 'undo-tree-mode))
-;;; this has changed with the recent update to magit 2.x branch
-;;; see if this still needs to be here
-;;(evalafter 'magit (diminish 'magit-auto-revert-mode))
-(evalafter 'company (diminish 'company-mode))
+(require 'delight)
+(delight '((hs-minor-mode nil hideshow)
+           (auto-fill-function nil)
+           (projectile-mode nil projectile)
+           (evil-smartparens-mode nil evil-smartparens)
+           (smartparens-mode nil evil-smartparens)
+           (helm-mode nil helm)
+           (undo-tree-mode nil evil)
+           (company-mode nil company)
+           (org-indent-mode nil org-indent)
+           ))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; set color settings
-;;; PROTIP: use (list-faces-display) to see all of the current faces
-;; (when window-system
-;;   (set-face-background 'cursor "#ff1744")
-;;   (set-face-background 'default "#ececec")
-;;   (set-face-foreground 'default "#262626")
-;;   (set-face-background 'region "#fff59d")
-;;   (set-face-background 'show-paren-match "#1de9b6")
-;;   (set-face-background 'lazy-highlight "#fff59d")
-;;   (set-face-background 'isearch "#673ab7")
-;;   (set-face-foreground 'isearch "#ffffff")
-;;   (set-face-bold 'isearch t)
-;;   (set-face-foreground 'comint-highlight-prompt "#4caf50")
-;;   (set-face-foreground 'font-lock-builtin-face "#0d47a1")
-;;   (set-face-foreground 'font-lock-function-name-face "#2979ff")
-;;   (set-face-bold 'font-lock-function-name-face t)
-;;   (set-face-foreground 'font-lock-keyword-face "#6200ea")
-;;   (set-face-foreground 'font-lock-type-face "#00acc1")
-;;   (set-face-foreground 'font-lock-string-face "#33691e")
-;;   (set-face-foreground 'font-lock-comment-face "#f44336")
-;;   (set-face-background 'font-lock-comment-face "#ffefef")
-;;   (set-face-foreground 'font-lock-variable-name-face "#e65100")
-;;   (set-face-attribute 'hl-line nil :background "#cfd8dc" :foreground nil
-;;                       :inherit t)
-;;   (with-eval-after-load 'linum-mode
-;;     (set-face-foreground 'linum "#757575")))
-
-;; ;; org color settings
-;; (when window-system
-;;   (with-eval-after-load 'org-mode
-;;     (set-face-bold 'org-level-1 nil)
-;;     (set-face-foreground 'org-level-1 "#242424")
-;;     (set-face-foreground 'org-level-2 "##121212")
-;;     (set-face-foreground 'org-level-3 "##1a1a1a")
-;;     (set-face-foreground 'org-level-4 "##1f1f1f")
-;;     (set-face-background 'org-level-4 "##292929")
-;;     (set-face-foreground 'org-level-5 "##2e2e2e")
-;;     (set-face-foreground 'org-level-5 "##3d3d3d")
-;;     (set-face-foreground 'org-table "#333333"))
-
-;;   ;; sml color settings
-;;   (if (and (package-installed-p 'smart-mode-line) window-system)
-;;       (progn
-;;         (set-face-foreground 'sml/git "#9c27b0")
-;;         (set-face-foreground 'sml/filename "#000000")
-;;         (set-face-foreground 'sml/position-percentage "#2962ff")
-;;         (set-face-bold 'sml/position-percentage t)
-;;         (set-face-foreground 'sml/vc-edited "#ff1744")
-;;         (set-face-foreground 'sml/vc "#689f38")
-;;         (set-face-foreground 'sml/col-number "#000000")
-;;         (set-face-foreground 'sml/line-number "#000000")
-;;         (set-face-bold 'sml/col-number t)
-;;         (set-face-background 'mode-line-inactive "#78909c")
-;;         (set-face-foreground 'mode-line-inactive "#000000")
-;;         (set-face-background 'mode-line "#cfd8dc")
-;;         (set-face-attribute 'mode-line nil :font "DejaVu Sans Mono-9")
-;;         (set-face-attribute 'mode-line-inactive nil :font "DejaVu Sans Mono-9"))))
-
-;; ;; helm color settings
-;; (if (and (package-installed-p 'helm) window-system)
-;;     (progn
-;;       (set-face-background 'helm-selection "#ffeb3b")
-;;       (set-face-background 'helm-source-header "#3f51b5")
-;;       (set-face-foreground 'helm-source-header "#ffffff")
-;;       (set-face-background 'helm-ff-dotted-directory "#cfd8dc")
-;;       (set-face-background 'helm-ff-executable "#7cb342")
-;;       (set-face-foreground 'helm-ff-executable "#000000")
-;;       (set-face-foreground 'helm-ff-directory "#263238")
-;;       (set-face-background 'helm-ff-directory "#eceff1")
-;;       (set-face-background 'helm-visible-mark "#b9f6ca")
-;;       )
-;;       ;; for reasons for e-a-l, see:
-;;       ;; https://github.com/emacs-helm/helm/issues/846
-;;       (with-eval-after-load 'helm-command
-;;         (set-face-foreground 'helm-M-x-key "#ff1744")))
-
-;; ;; magit color settings
-;; (if (and (package-installed-p 'magit) window-system)
-;;     (progn
-;;       (with-eval-after-load 'magit
-;;         (set-face-background 'magit-item-highlight "#ffea00")
-;;         (set-face-background 'magit-item-mark "#b9f6ca"))
-;;       ))
-
-;; ;; highlight numbers color settings
-;; (if (and (package-installed-p 'highlight-numbers) window-system)
-;;     (progn
-;;       (set-face-foreground 'highlight-numbers-number "#00b8d4")
-;;       ))
-
+;; THEMING NOTE:
 ;; if you want to inspect what face is being used under the cursor,
 ;; use C-u C-x = and search for 'face'.
-
-; -------------------------------------------
+;; end .emacs
