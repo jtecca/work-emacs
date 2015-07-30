@@ -287,7 +287,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
  ((string-equal initial-window-system "w32")
   (jt/load-external-lisp
    (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el")
-   "wx86cl64"))
+   "sbcl"))
  ((string-equal initial-window-system "x")
   (jt/load-external-lisp
    (expand-file-name "~/quicklisp/slime-helper.el")
@@ -301,7 +301,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
        (string-equal system-type "windows-nt"))
   (jt/load-external-lisp
    (expand-file-name "~/AppData/Roaming/quicklisp/slime-helper.el")
-   "wx86cl64")))
+   "sbcl")))
 
 ;; setup apsell for spell checking
 ;; M-$ is the default keybinding for it
