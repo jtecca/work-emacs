@@ -615,7 +615,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
 (global-set-key (kbd "C-<tab>") 'company-complete)
 (global-set-key (kbd "M-g g") 'avy-goto-line)
-(global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "C-s") 'swiper-helm)
+(global-unset-key (kbd "C-r")) ; swiper-helm is bi-directional searching
 ;; add smartparens slurp and barf commands to evil insert state
 (define-key evil-insert-state-map (kbd "C-M-'") 'sp-forward-slurp-sexp)
 (define-key evil-insert-state-map (kbd "C-M-;") 'sp-forward-barf-sexp)
@@ -678,6 +679,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
            (undo-tree-mode nil evil)
            (company-mode nil company)
            (org-indent-mode nil org-indent)
+           (ivy-mode nil ivy)
            ))
 
 ;; THEMING NOTE:
