@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-07-23
+;;;; updated: 2015-08-06
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -29,7 +29,7 @@
        fill-column-indicator ggtags helm helm-gtags helm-projectile
        highlight-numbers hydra magit markdown-mode projectile
        rainbow-delimiters rainbow-mode s seq slime smartparens
-       sr-speedbar smart-mode-line))
+       sr-speedbar smart-mode-line swiper swiper-helm))
 
 ;; load theme
 (cond
