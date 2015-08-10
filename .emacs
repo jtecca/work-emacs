@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-07-23
+;;;; updated: 2015-08-10
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -30,19 +30,6 @@
        highlight-numbers hydra magit markdown-mode projectile
        rainbow-delimiters rainbow-mode s seq slime smartparens
        sr-speedbar smart-mode-line))
-
-;; load theme
-(cond
- ((string-equal initial-window-system "w32")
-  (progn
-    (push (expand-file-name "~/AppData/Roaming/.emacs.d/noctilux-theme/")
-          custom-theme-load-path)
-    (load-theme 'noctilux t)))
- ((string-equal initial-window-system "x")
-  (progn
-    (push (expand-file-name "~/.emacs.d/noctilux-theme/")
-          custom-theme-load-path)
-    (load-theme 'noctilux t))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; define custom functions
