@@ -607,23 +607,31 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (global-set-key (kbd "M-o") 'other-window) ; duplicated to use in insert mode
 (global-set-key (kbd "C-;") 'endless/comment-line)
 (global-set-key (kbd "M-C-<f5>") 'revert-this-buffer) ; purposely cumbersome to reduce accidental reversions
-(global-set-key (kbd "<C-down>") 'enlarge-window)
-(global-set-key (kbd "<C-left>") 'enlarge-window-horizontally)
-(global-set-key (kbd "<C-right>") 'shrink-window-horizontally)
+(global-set-key (kbd "<C-up>") 'enlarge-window)
+(global-set-key (kbd "<C-down>") 'shrink-window)
+(global-set-key (kbd "<C-right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "<C-left>") 'shrink-window-horizontally)
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
 (global-set-key (kbd "C-<tab>") 'company-complete)
-(global-set-key (kbd "M-g g") 'avy-goto-line)
+(global-set-key (kbd "M-g g") 'avy-goto-word-or-subword-1)
+(global-set-key (kbd "M-g M-g") 'avy-goto-word-or-subword-1)
 (global-set-key (kbd "C-s") 'swiper-helm)
-(global-unset-key (kbd "C-r")) ; swiper-helm is bi-directional searching
+;; swiper-helm is bi-directional searching
+;; so free up the keybinding for reverse search
+(global-unset-key (kbd "C-r"))
 ;; add smartparens slurp and barf commands to evil insert state
-(define-key evil-insert-state-map (kbd "C-M-'") 'sp-forward-slurp-sexp)
-(define-key evil-insert-state-map (kbd "C-M-;") 'sp-forward-barf-sexp)
-(define-key evil-normal-state-map (kbd "C-M-'") 'sp-forward-slurp-sexp)
-(define-key evil-normal-state-map (kbd "C-M-;") 'sp-forward-barf-sexp)
-(define-key evil-insert-state-map (kbd "C-M-:") 'sp-backward-slurp-sexp)
-(define-key evil-insert-state-map (kbd "C-M-\"") 'sp-backward-barf-sexp)
-(define-key evil-normal-state-map (kbd "C-M-:") 'sp-backward-slurp-sexp)
-(define-key evil-normal-state-map (kbd "C-M-\"") 'sp-backward-barf-sexp)
+(define-key smartparens-mode-map (kbd "C-M-'") 'sp-forward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "C-M-;") 'sp-forward-barf-sexp)
+(define-key smartparens-mode-map (kbd "C-M-:") 'sp-backward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "C-M-\"") 'sp-backward-barf-sexp)
+(define-key smartparens-mode-map (kbd "M-n") 'sp-forward-sexp)
+(define-key smartparens-mode-map (kbd "M-p") 'sp-backward-sexp)
+(define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp)
+(define-key smartparens-mode-map (kbd "C-M-u") 'sp-up-sexp)
+(define-key smartparens-mode-map (kbd "C-M-n") 'sp-next-sexp)
+(define-key smartparens-mode-map (kbd "C-M-p") 'sp-previous-sexp)
+(define-key smartparens-mode-map (kbd "C-S-a") 'sp-beginning-of-sexp)
+(define-key smartparens-mode-map (kbd "C-S-e") 'sp-end-of-sexp)
 ;; evil-leader keybindings
 ;; PROTIP: use command-history to get an idea about frequently used commands
 ;; that should be bound to evil-leader
