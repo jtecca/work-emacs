@@ -624,8 +624,6 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (define-key smartparens-mode-map (kbd "C-M-;") 'sp-forward-barf-sexp)
 (define-key smartparens-mode-map (kbd "C-M-:") 'sp-backward-slurp-sexp)
 (define-key smartparens-mode-map (kbd "C-M-\"") 'sp-backward-barf-sexp)
-(define-key smartparens-mode-map (kbd "M-n") 'sp-forward-sexp)
-(define-key smartparens-mode-map (kbd "M-p") 'sp-backward-sexp)
 (define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp)
 (define-key smartparens-mode-map (kbd "C-M-u") 'sp-up-sexp)
 (define-key smartparens-mode-map (kbd "C-M-n") 'sp-next-sexp)
