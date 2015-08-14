@@ -158,16 +158,11 @@ which I think was in turn stolen from the emacswiki.org."
       (error "No number at point"))
   (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
 
-(defun start-defpackage ()
-  "Inserts a template project header for a CL file.
-  Shamelessly stolen from http://www.xach.com/lisp/scratch-lisp-file.el"
-  (interactive)
-  (goto-char 0)
-  (let* ((file (file-name-nondirectory (buffer-file-name)))
-         (package (file-name-sans-extension file)))
-    (insert ";;;; " file "\n")
-    (insert "\n(defpackage :" package "\n (:use #:cl))\n\n")
-    (insert "(in-package :" package ")\n\n")))
+(defun start-quickproject (folder)
+  "Initializes a new Common Lisp project using quickproject.  Assumes that you
+  have all of the prerequisites installed: ASDF, Quicklisp, Quickproject."
+  (interactive "SInitialize new CL project in which directory? > ")
+  (print folder))
 
 (defun th/swap-window-buffers-by-dnd (drag-event)
   "Swaps the buffers displayed in the DRAG-EVENT's start and end
