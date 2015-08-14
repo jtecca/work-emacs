@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; jeff tecca's .emacs
-;;;; updated: 2015-08-10
+;;;; updated: 2015-08-14
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when window-system
   (progn
@@ -19,17 +19,43 @@
                          ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 ;; lightweight package manager (assumes emacs version > 24)
-;; maybe look into cask in the future
+;; try out use-package in the future
 (mapc
  (lambda (package)
    (unless (package-installed-p package)
      (package-install package)))
- '(avy company company-c-headers company-jedi diminish delight
-       evil evil-smartparens evil-leader f
-       fill-column-indicator ggtags helm helm-gtags helm-projectile
-       highlight-numbers hydra magit markdown-mode projectile
-       rainbow-delimiters rainbow-mode s seq slime smartparens
-       sr-speedbar smart-mode-line swiper swiper-helm))
+'(avy
+company
+company-c-headers
+company-jedi
+delight
+diminish
+evil
+evil-leader
+evil-smartparens
+f
+fill-column-indicator
+ggtags
+helm
+helm-gtags
+helm-projectile
+highlight-numbers
+hydra
+magit
+markdown-mode
+projectile
+popwin
+rainbow-delimiters
+rainbow-mode
+s
+seq
+slime
+smart-mode-line
+smartparens
+sr-speedbar
+swiper
+swiper-helm
+transpose-frame))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; define custom functions
@@ -421,6 +447,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (setq standard-indent 4)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
+(setq apropos-do-all t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (column-number-mode 1)
 (toggle-word-wrap 1)
@@ -439,7 +466,23 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (put 'dired-find-alternate-file 'disabled nil)
 (setq gc-cons-threshold 50000000) ; garbage collection threshold at 50MB
 (setq use-dialog-box nil)
+(require 'uniquify)
+(toggle-uniquify-buffer-names 1)
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
+(require 'transpose-frame)
+(require 'popwin)
+(popwin-mode 1)
+;; any helm buffers should be handled by popwin
+(push '("^\*helm.+*$" :regexp t :height 20) popwin:special-display-config)
+;; popwin slime buffers
+(push "*slime-apropos*" popwin:special-display-config)
+(push "*slime-macroexpansion*" popwin:special-display-config)
+(push "*slime-description*" popwin:special-display-config)
+(push '("*slime-compilation*" :noselect t) popwin:special-display-config)
+(push "*slime-xref*" popwin:special-display-config)
+(push '(sldb-mode :stick t) popwin:special-display-config)
+;; (push 'slime-repl-mode popwin:special-display-config)
+;; (push 'slime-connection-list-mode popwin:special-display-config)
 
 ;;;;;;;;;;;;;;;;;;
 ;;  generic programming settings
@@ -606,6 +649,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (global-set-key (kbd "<S-wheel-down>") 'decrease-font-size)
 (global-set-key (kbd "M-o") 'other-window) ; duplicated to use in insert mode
 (global-set-key (kbd "C-;") 'endless/comment-line)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "M-C-<f5>") 'revert-this-buffer) ; purposely cumbersome to reduce accidental reversions
 (global-set-key (kbd "<C-up>") 'enlarge-window)
 (global-set-key (kbd "<C-down>") 'shrink-window)
@@ -616,6 +660,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (global-set-key (kbd "M-g g") 'avy-goto-word-or-subword-1)
 (global-set-key (kbd "M-g M-g") 'avy-goto-word-or-subword-1)
 (global-set-key (kbd "C-s") 'swiper-helm)
+(global-set-key (kbd "C-c t") 'transpose-frame)
+(global-set-key (kbd "C-c r") 'rotate-frame)
 ;; swiper-helm is bi-directional searching
 ;; so free up the keybinding for reverse search
 (global-unset-key (kbd "C-r"))
@@ -649,6 +695,7 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
   "g" 'avy-goto-word-or-subword-1
   "c" 'avy-goto-char
  "." 'find-function-at-point
+ "t" 'transpose-frame
   ;; 'u'tility commands are grouped together below
   "ud" 'dired
   "ue" 'eshell
@@ -672,6 +719,8 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 (add-to-list 'sml/replacer-regexp-list '("^~/AppData/Roaming/" ":ROAM:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/Documents/" ":DOC:"))
 (add-to-list 'sml/replacer-regexp-list '("^~/Downloads/" ":DL:"))
+(add-to-list 'sml/replacer-regexp-list '("^warehouse/" ":WH:"))
+(add-to-list 'sml/replacer-regexp-list '("^qa-automation/" ":QA:"))
 
 (require 'delight)
 (delight '((hs-minor-mode nil hideshow)
