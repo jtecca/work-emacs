@@ -339,67 +339,67 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;;;;;;;;;;;;;;;;;;
 ;; evil settings
 ;; use C-z to switch between evil/emacs keybindings
-(require 'evil-leader)
-(evil-leader/set-leader "<SPC>")
-(global-evil-leader-mode)
-(require 'evil)
-(add-hook 'prog-mode-hook 'linum-mode)
-(add-hook 'prog-mode-hook 'turn-on-evil-mode)
-(add-hook 'text-mode-hook 'linum-mode)
-(add-hook 'text-mode-hook 'turn-on-evil-mode)
-(define-key evil-normal-state-map [escape] 'keyboard-quit)
-(define-key evil-visual-state-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(evil-mode 1)
-(global-set-key [escape] 'keyboard-quit)
-(setq evil-insert-state-cursor '("red" box))
-(setq evil-move-cursor-back nil)
-(setq evil-replace-state-cursor '(box))
-(setq evil-shift-width 4)
-(setq evil-visual-state-cursor '(box))
+;; (require 'evil-leader)
+;; (evil-leader/set-leader "<SPC>")
+;; (global-evil-leader-mode)
+;; (require 'evil)
+;; (add-hook 'prog-mode-hook 'linum-mode)
+;; (add-hook 'prog-mode-hook 'turn-on-evil-mode)
+;; (add-hook 'text-mode-hook 'linum-mode)
+;; (add-hook 'text-mode-hook 'turn-on-evil-mode)
+;; (define-key evil-normal-state-map [escape] 'keyboard-quit)
+;; (define-key evil-visual-state-map [escape] 'keyboard-quit)
+;; (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+;; (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+;; (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+;; (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+;; (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+;; (evil-mode 1)
+;; (global-set-key [escape] 'keyboard-quit)
+;; (setq evil-insert-state-cursor '("red" box))
+;; (setq evil-move-cursor-back nil)
+;; (setq evil-replace-state-cursor '(box))
+;; (setq evil-shift-width 4)
+;; (setq evil-visual-state-cursor '(box))
 
 ;;;;;;;;;;;;;;;;;;
 ;; hydras
 ;; trying out hydra package with a few examples set to the function keys
 ;; just to see if it fits well with my workflow
-(autoload 'hydra "hydra")
-(require 'hydra-examples)
-(defhydra hydra-splitter (evil-leader--default-map "<f10>")
-  "splitter"
-  ("h" hydra-move-splitter-left)
-  ("j" hydra-move-splitter-down)
-  ("k" hydra-move-splitter-up)
-  ("l" hydra-move-splitter-right)
-  ("q" nil "quit" :color blue))
+;; (autoload 'hydra "hydra")
+;; (require 'hydra-examples)
+;; (defhydra hydra-splitter (evil-leader--default-map "<f10>")
+;;   "splitter"
+;;   ("h" hydra-move-splitter-left)
+;;   ("j" hydra-move-splitter-down)
+;;   ("k" hydra-move-splitter-up)
+;;   ("l" hydra-move-splitter-right)
+;;   ("q" nil "quit" :color blue))
 
-(require 'windmove)
-(defhydra hydra-windmove (evil-leader--default-map "<f11>")
-  "windmove"
-  ("h" windmove-left)
-  ("j" windmove-down)
-  ("k" windmove-up)
-  ("l" windmove-right)
-  ("q" nil "quit" :color blue))
+;; (require 'windmove)
+;; (defhydra hydra-windmove (evil-leader--default-map "<f11>")
+;;   "windmove"
+;;   ("h" windmove-left)
+;;   ("j" windmove-down)
+;;   ("k" windmove-up)
+;;   ("l" windmove-right)
+;;   ("q" nil "quit" :color blue))
 
-; these needs work to have the keybindings show up with just the prefix
-(defhydra hydra-org (evil-leader--default-map "<f7>"
-                                :hint nil
-                                :color blue)
-  "
-  _c_: capture
-  _l_: store-link
-  _a_: agenda
-  _b_: iswitchb
-  "
-  ("c" org-capture)
-  ("l" org-store-link)
-  ("a" org-agenda)
-  ("b" org-iswitchb)
-  ("q" nil "quit" :color blue))
+;; ; these needs work to have the keybindings show up with just the prefix
+;; (defhydra hydra-org (evil-leader--default-map "<f7>"
+;;                                 :hint nil
+;;                                 :color blue)
+;;   "
+;;   _c_: capture
+;;   _l_: store-link
+;;   _a_: agenda
+;;   _b_: iswitchb
+;;   "
+;;   ("c" org-capture)
+;;   ("l" org-store-link)
+;;   ("a" org-agenda)
+;;   ("b" org-iswitchb)
+;;   ("q" nil "quit" :color blue))
 
 ;;;;;;;;;;;;;;;;;;
 ;; markdown settings
@@ -674,28 +674,28 @@ before the 'd' in defadvice.  Otherwise, the cursor would end up in the line abo
 ;; evil-leader keybindings
 ;; PROTIP: use command-history to get an idea about frequently used commands
 ;; that should be bound to evil-leader
-(evil-leader/set-key
-  "h" 'helm-M-x
-  "b" 'helm-mini
-  "y" 'helm-show-kill-ring
-  "i" 'helm-semantic-or-imenu
-  "f" 'helm-find-files
-  "k" 'kill-buffer
-  "w" 'delete-window
-   "<f5>" 'menu-bar-open
-  "<f1>" 'insert-date
-  "<f2>" 'insert-datetime
-  "<f8>" 'magit-status
-  "<SPC>" 'other-window
-  "g" 'avy-goto-word-or-subword-1
-  "c" 'avy-goto-char
- "." 'find-function-at-point
- "t" 'transpose-frame
-  ;; 'u'tility commands are grouped together below
-  "ud" 'dired
-  "ue" 'eshell
-  "ut" 'sr-speedbar-toggle
-  )
+;; (evil-leader/set-key
+;;   "h" 'helm-M-x
+;;   "b" 'helm-mini
+;;   "y" 'helm-show-kill-ring
+;;   "i" 'helm-semantic-or-imenu
+;;   "f" 'helm-find-files
+;;   "k" 'kill-buffer
+;;   "w" 'delete-window
+;;    "<f5>" 'menu-bar-open
+;;   "<f1>" 'insert-date
+;;   "<f2>" 'insert-datetime
+;;   "<f8>" 'magit-status
+;;   "<SPC>" 'other-window
+;;   "g" 'avy-goto-word-or-subword-1
+;;   "c" 'avy-goto-char
+;;  "." 'find-function-at-point
+;;  "t" 'transpose-frame
+;;   ;; 'u'tility commands are grouped together below
+;;   "ud" 'dired
+;;   "ue" 'eshell
+;;   "ut" 'sr-speedbar-toggle
+;;   )
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; proced settings
